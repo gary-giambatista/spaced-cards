@@ -9,11 +9,11 @@ import { SuperMemoGrade, SuperMemoItem, supermemo } from "supermemo";
 
 export default function Home() {
 	const [mode, setMode] = useState("overview");
-
+	const [drawerOpen, setDrawerOpen] = useState(true);
 	return (
 		<main className="flex">
-			<Deck_Selector />
-			<div className=" flex w-full">
+			<div className="flex w-full" onClick={() => setDrawerOpen(!drawerOpen)}>
+				<Deck_Selector drawerOpen={drawerOpen} />
 				{mode === "overview" ? <Overview /> : <Study />}
 			</div>
 		</main>
