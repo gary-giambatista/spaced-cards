@@ -31,7 +31,7 @@ const sampleDecks = [
 function Deck_Selector({ drawerOpen, setDrawerOpen }) {
 	return (
 		<section
-			className={`flex-shrink relative h-dvh bg-slate-400 transition-all ${
+			className={`flex-shrink relative bg-slate-400 transition-all ${
 				drawerOpen ? "w-80" : "w-0"
 			} `}
 		>
