@@ -28,14 +28,35 @@ const sampleDecks = [
 	},
 ];
 
-function Deck_Selector({ drawerOpen }) {
+function Deck_Selector({ drawerOpen, setDrawerOpen }) {
 	return (
-		<div
-			className={`flex-shrink h-dvh bg-slate-400 transition-all ${
+		<section
+			className={`flex-shrink relative h-dvh bg-slate-400 transition-all ${
 				drawerOpen ? "w-80" : "w-0"
 			} `}
 		>
-			<div className="delay-75">Deck_Selector</div>
+			<div
+				onClick={() => setDrawerOpen(!drawerOpen)}
+				className="absolute flex justify-center items-center bg-slate-800 h-14 w-8 -right-8 top-1/2 transform -translate-y-1/2 cursor-pointer"
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke-width="1.5"
+					stroke="currentColor"
+					className={`w-6 h-6 transition-transform ${
+						drawerOpen ? "rotate-180" : ""
+					}`}
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						d="m8.25 4.5 7.5 7.5-7.5 7.5"
+					/>
+				</svg>
+			</div>
+			<div className="overflow-hidden delay-75">Deck_Selector</div>
 			{sampleDecks.map((deck) => {
 				return (
 					<div
@@ -49,7 +70,7 @@ function Deck_Selector({ drawerOpen }) {
 					</div>
 				);
 			})}
-		</div>
+		</section>
 	);
 }
 

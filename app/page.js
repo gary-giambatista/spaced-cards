@@ -12,8 +12,8 @@ export default function Home() {
 	const [drawerOpen, setDrawerOpen] = useState(true);
 	return (
 		<main className="flex">
-			<div className="flex w-full" onClick={() => setDrawerOpen(!drawerOpen)}>
-				<Deck_Selector drawerOpen={drawerOpen} />
+			<div className="flex w-full">
+				<Deck_Selector drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
 				{mode === "overview" ? <Overview /> : <Study />}
 			</div>
 		</main>
