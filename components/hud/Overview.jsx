@@ -3,9 +3,8 @@ import Hud_Header from "./Hud_Header";
 
 function Overview({ setMode }) {
 	return (
-		<section className={`flex-grow bg-slate-600 p-4`}>
-			{/* <Hud_Header setMode={setMode} /> */}
-			<div className="grid grid-cols-1 md:grid-cols-3 2xl:grid-cols-5 gap-4">
+		<section className={`@container flex-grow bg-slate-600 p-4`}>
+			<div className="grid grid-cols-1 @md:grid-cols-2 @2xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5 @7xl:grid-cols-6 @[1921px]:grid-cols-8 gap-4">
 				{cards.map((card) => {
 					return (
 						<div
@@ -51,3 +50,4 @@ const cards = [
 		id: 5,
 	},
 ];
+//old screen CSS grid grid-cols-1 md:grid-cols-3 2xl:grid-cols-5 gap-4

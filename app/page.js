@@ -57,3 +57,6 @@ export default function Home() {
 		</main>
 	);
 }
+
+// Notes
+// JS logic to hide drawer not necessary, because using media query to set the drawer to absolute fixes display issues

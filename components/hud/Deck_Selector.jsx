@@ -31,7 +31,7 @@ const sampleDecks = [
 function Deck_Selector({ drawerOpen, setDrawerOpen }) {
 	return (
 		<section
-			className={`absolute h-full sm:relative flex-shrink bg-slate-400 transition-all ${
+			className={`absolute h-full sm:relative flex-shrink bg-slate-400 transition-all z-10 ${
 				drawerOpen ? "w-80 min-w-80" : "w-0 min-w-0"
 			} `}
 		>
