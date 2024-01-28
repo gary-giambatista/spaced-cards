@@ -12,7 +12,7 @@ export default function Home() {
 	const [mode, setMode] = useState("overview");
 	const [drawerOpen, setDrawerOpen] = useState(true);
 	return (
-		<main className="flex h-dvh">
+		<main className="flex h-full">
 			<Deck_Selector drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
 			<div className="flex flex-col w-full p-4 gap-4 bg-slate-300">
 				<Hud_Header setMode={setMode} />

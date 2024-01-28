@@ -32,7 +32,7 @@ function Deck_Selector({ drawerOpen, setDrawerOpen }) {
 	return (
 		<section
 			className={`flex-shrink relative bg-slate-400 transition-all ${
-				drawerOpen ? "w-80" : "w-0"
+				drawerOpen ? "w-80 min-w-80" : "w-0 min-w-0"
 			} `}
 		>
 			<div
