@@ -31,7 +31,7 @@ const sampleDecks = [
 function Deck_Selector({ drawerOpen, setDrawerOpen }) {
 	return (
 		<section
-			className={`flex-shrink relative bg-slate-400 transition-all ${
+			className={`absolute h-full sm:relative flex-shrink bg-slate-400 transition-all ${
 				drawerOpen ? "w-80 min-w-80" : "w-0 min-w-0"
 			} `}
 		>
@@ -43,15 +43,15 @@ function Deck_Selector({ drawerOpen, setDrawerOpen }) {
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
 					viewBox="0 0 24 24"
-					stroke-width="1.5"
+					strokeWidth="1.5"
 					stroke="currentColor"
 					className={`w-6 h-6 transition-transform ${
 						drawerOpen ? "rotate-180" : ""
 					}`}
 				>
 					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
+						strokeLinecap="round"
+						strokeLinejoin="round"
 						d="m8.25 4.5 7.5 7.5-7.5 7.5"
 					/>
 				</svg>
