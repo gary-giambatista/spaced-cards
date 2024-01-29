@@ -15,6 +15,7 @@ export default function Home() {
 	const [isSmallScreen, setIsSmallScreen] = useState(
 		typeof window === "undefined" ? false : window.innerWidth <= 820
 	);
+	const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
 	let timeout = false;
 
 	//1.
@@ -47,9 +48,9 @@ export default function Home() {
 		<main className="flex h-full">
 			<Deck_Selector drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
 			<div className="flex flex-col w-full p-4 gap-4 bg-slate-300 overflow-y-auto">
-				<Hud_Header setMode={setMode} />
+				<Hud_Header setMode={setMode} mode={mode} />
 				{mode === "overview" ? (
-					<Overview setMode={setMode} />
+					<Overview setMode={setMode} isAddCardModalOpen={isAddCardModalOpen} />
 				) : (
 					<Study setMode={setMode} />
 				)}
