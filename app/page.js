@@ -55,7 +55,11 @@ export default function Home() {
 					setIsAddCardModalOpen={setIsAddCardModalOpen}
 				/>
 				{mode === "overview" ? (
-					<Overview setMode={setMode} isAddCardModalOpen={isAddCardModalOpen} />
+					<Overview
+						setMode={setMode}
+						isAddCardModalOpen={isAddCardModalOpen}
+						setIsAddCardModalOpen={setIsAddCardModalOpen}
+					/>
 				) : (
 					<Study setMode={setMode} />
 				)}
