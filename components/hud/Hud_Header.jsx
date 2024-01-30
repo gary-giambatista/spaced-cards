@@ -1,6 +1,6 @@
 import React from "react";
 
-function Hud_Header({ setMode, mode }) {
+function Hud_Header({ setMode, mode, isCardModalOpen, setIsAddCardModalOpen }) {
 	return (
 		<section className="flex justify-between items-center h-9 md:h-12 w-full relative">
 			<div className="flex justify-center items-center md:mx-auto gap-2">
@@ -21,7 +21,10 @@ function Hud_Header({ setMode, mode }) {
 					Study
 				</button>
 			</div>
-			<button className="h-9 w-10 lg:w-36 absolute right-0 flex justify-center items-center gap-1 bg-green-800 rounded-md hover:bg-green-900">
+			<button
+				onClick={() => setIsAddCardModalOpen((prevState) => !prevState)}
+				className="h-9 w-10 lg:w-36 absolute right-0 flex justify-center items-center gap-1 bg-green-800 rounded-md hover:bg-green-900"
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
