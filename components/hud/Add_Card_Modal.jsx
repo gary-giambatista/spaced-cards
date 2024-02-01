@@ -10,9 +10,9 @@ function Add_Card_Modal({ isAddCardModalOpen, setIsAddCardModalOpen }) {
 		//Consider modifying the local decks object to avoid refetching after each card is added to the deck
 	}
 	return (
-		<div className="absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center md:items-center backdrop-blur-sm">
-			<div className="w-80 h-1/3 md:h-1/2 md:w-1/2 bg-green-700 relative">
-				<div className="w-full flex justify-between p-4">
+		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center  @lg:items-center backdrop-blur-sm p-2">
+			<div className="bg-green-700 relative rounded-md">
+				<div className="w-full flex justify-between p-4 @lg:p-6">
 					<h2 className="text-xl text-center">Create a new card</h2>
 					<button
 						className=""
@@ -35,58 +35,69 @@ function Add_Card_Modal({ isAddCardModalOpen, setIsAddCardModalOpen }) {
 					</button>
 				</div>
 				<form
-					className="w-full h-full flex flex-col"
+					className="w-full h-full flex flex-col gap-4 p-4 @lg:p-6 pt-0 @lg:pt-0"
 					method="post"
 					onSubmit={handleSubmit}
 				>
-					<label className="w-full flex flex-col md:flex-row gap-2">
+					<label className="flex flex-col">
 						Question:{" "}
 						<input
-							className="w-full text-black"
+							className="w-full p-2 rounded-md text-black"
 							name="question_input"
 							placeholder="Your question here"
 							defaultValue=""
 						/>
 					</label>
-					<label>
+					<label className="flex flex-col">
 						Answer:{" "}
 						<input
-							className="text-black"
+							className="w-full p-2 rounded-md text-black"
 							name="answer_input"
 							placeholder="Your answer here"
 							defaultValue=""
 						/>
 					</label>
-					<label>
+					<label className="flex flex-col">
 						Hint:{" "}
 						<input
-							className="text-black"
+							className="w-full p-2 rounded-md text-black"
 							name="hint_input"
 							placeholder="Your hint here"
 							defaultValue=""
 						/>
 					</label>
-					<label>
+					<label className="flex flex-col">
 						Notes:{" "}
 						<textarea
 							type="textarea"
-							className="text-black"
+							className="w-full p-2 rounded-md text-black resize-none"
 							name="notes_input"
 							placeholder="Your notes here"
 							defaultValue=""
-							rows={4}
+							rows={2}
 							cols={40}
 						/>
 					</label>
 					<hr />
-					<label>
+					<label className="flex items-center gap-4">
 						Create mirrored duplicate card:{" "}
-						<input type="checkbox" name="mirror_or_not" defaultChecked={true} />
+						<input
+							className="appearance-none bg-white rounded-sm border-2 border-green-500 checked:bg-green-800 w-4 h-4 "
+							type="checkbox"
+							name="mirror_or_not"
+							defaultChecked={true}
+						/>
 					</label>
 
 					<hr />
-					<button type="reset">Reset form</button>
-					<button type="submit">Submit form</button>
+					<div className="flex justify-evenly items-center">
+						<button className="bg-red-400 py-3 px-5 rounded-md" type="reset">
+							Reset
+						</button>
+						<button className="bg-green-400 py-3 px-5 rounded-md" type="submit">
+							Create
+						</button>
+					</div>
 				</form>
 			</div>
 		</div>
@@ -96,4 +107,4 @@ function Add_Card_Modal({ isAddCardModalOpen, setIsAddCardModalOpen }) {
 export default Add_Card_Modal;
 
 //Todo: Disable Add Card button after click or change to cancel
-//Todo: build/style this modal component
+//Todo: fix the checkbox with custom SVG
