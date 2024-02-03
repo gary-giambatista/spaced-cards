@@ -45,7 +45,7 @@ export default function Home() {
 	}, [isSmallScreen]);
 
 	return (
-		<main className="flex h-full">
+		<main className="flex h-full relative">
 			<Deck_Selector drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
 			<div className="flex flex-col w-full p-4 gap-4 bg-slate-300 overflow-y-auto">
 				<Hud_Header

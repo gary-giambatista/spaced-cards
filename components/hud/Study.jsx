@@ -3,9 +3,9 @@ import Hud_Header from "./Hud_Header";
 
 function Study({ setMode }) {
 	return (
-		<section className={`flex-grow bg-slate-600`}>
-			{/* <Hud_Header setMode={setMode} /> */}
-			Study
+		<section className={`flex-grow h-full bg-slate-600`}>
+			<div className="flex justify-center items-center"> Card Here</div>
+			<div className="flex justify-center items-center">Notes</div>
 		</section>
 	);
 }
