@@ -82,7 +82,7 @@ function Add_Card_Modal({ isAddCardModalOpen, setIsAddCardModalOpen }) {
 					<label className="flex items-center gap-4">
 						Create mirrored duplicate card:{" "}
 						<input
-							className="appearance-none bg-white rounded-sm border-2 border-green-500 checked:bg-green-800 w-4 h-4 "
+							className="accent-green-300 cursor-pointer  rounded-sm border-2 w-4 h-4 "
 							type="checkbox"
 							name="mirror_or_not"
 							defaultChecked={true}
@@ -106,5 +106,6 @@ function Add_Card_Modal({ isAddCardModalOpen, setIsAddCardModalOpen }) {
 
 export default Add_Card_Modal;
 
+// WIP checkbox styles: appearance-none bg-white rounded-sm border-2 border-green-500 checked:bg-green-800 w-4 h-4
 //Todo: Disable Add Card button after click or change to cancel
-//Todo: fix the checkbox with custom SVG
+//Todo: add another card? saves extra writes
