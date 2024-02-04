@@ -17,7 +17,8 @@ export default function Home() {
 	);
 	const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
 	let timeout = false;
-
+	const [selectedDeck, setSelectedDeck] = useState(decks[0]);
+	console.log(selectedDeck);
 	//1.
 	useEffect(() => {
 		window.addEventListener("resize", () => {
@@ -46,7 +47,12 @@ export default function Home() {
 
 	return (
 		<main className="flex h-full relative">
-			<Deck_Selector drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
+			<Deck_Selector
+				drawerOpen={drawerOpen}
+				setDrawerOpen={setDrawerOpen}
+				decks={decks}
+				setSelectedDeck={setSelectedDeck}
+			/>
 			<div className="flex flex-col w-full p-4 gap-4 bg-slate-300 overflow-y-auto">
 				<Hud_Header
 					setMode={setMode}
@@ -70,3 +76,81 @@ export default function Home() {
 
 // Notes
 // JS logic to hide drawer not necessary, because using media query to set the drawer to absolute fixes display issues
+//Todo: Create useEffect in page.js to fetch LS of decks
+//Todo: Complete the Deck_Selector's functionality (add deck, update LS)
+//Todo: Connect Hud_Header, Overview, and Card and their child components to selectedDeck
+
+const decks = [
+	{
+		name: "Test Deck",
+		id: 1,
+		reviews_due: 1,
+		cards: [
+			{
+				id: 1,
+				question: "Question 1",
+				answer: "Answer 1",
+				hint: "Hint 1",
+				note: "Note 1",
+				interval: 0,
+				repetition: 0,
+				efactor: 2.5,
+				reviews_due: "ISO date",
+			},
+		],
+	},
+	{
+		name: "Test Deck2",
+		id: 2,
+		reviews_due: 2,
+		cards: [
+			{
+				id: 1,
+				question: "Question 1",
+				answer: "Answer 1",
+				hint: "Hint 1",
+				note: "Note 1",
+				interval: 0,
+				repetition: 0,
+				efactor: 2.5,
+				reviews_due: "ISO date",
+			},
+		],
+	},
+	{
+		name: "Test Deck3",
+		id: 3,
+		reviews_due: 3,
+		cards: [
+			{
+				id: 1,
+				question: "Question 1",
+				answer: "Answer 1",
+				hint: "Hint 1",
+				note: "Note 1",
+				interval: 0,
+				repetition: 0,
+				efactor: 2.5,
+				reviews_due: "ISO date",
+			},
+		],
+	},
+	{
+		name: "Test Deck4",
+		id: 4,
+		reviews_due: 4,
+		cards: [
+			{
+				id: 1,
+				question: "Question 1",
+				answer: "Answer 1",
+				hint: "Hint 1",
+				note: "Note 1",
+				interval: 0,
+				repetition: 0,
+				efactor: 2.5,
+				reviews_due: "ISO date",
+			},
+		],
+	},
+];

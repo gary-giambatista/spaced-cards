@@ -28,13 +28,14 @@ const sampleDecks = [
 	},
 ];
 
-function Deck_Selector({ drawerOpen, setDrawerOpen }) {
+function Deck_Selector({ drawerOpen, setDrawerOpen, decks, setSelectedDeck }) {
 	return (
 		<section
 			className={`absolute h-full sm:relative flex-shrink bg-slate-400 transition-all z-10 ${
 				drawerOpen ? "w-80 min-w-80" : "w-0 min-w-0"
 			} `}
 		>
+			{/* Chevron */}
 			<div
 				onClick={() => setDrawerOpen(!drawerOpen)}
 				className="absolute flex justify-center items-center bg-slate-800 h-14 w-8 -right-8 top-1/2 transform -translate-y-1/2 cursor-pointer"
@@ -56,16 +57,18 @@ function Deck_Selector({ drawerOpen, setDrawerOpen }) {
 					/>
 				</svg>
 			</div>
+			{/* Deck Rows */}
 			<div className="overflow-hidden delay-75">Deck_Selector</div>
-			{sampleDecks.map((deck) => {
+			{decks.map((deck) => {
 				return (
 					<div
+						onClick={() => setSelectedDeck(deck)}
 						className={`flex justify-between px-2 overflow-hidden ${
 							drawerOpen ? "opacity-100" : "opacity-0"
 						}`}
 						key={deck.id}
 					>
-						<div className="line-clamp-1">{deck.title}</div>
+						<div className="line-clamp-1">{deck.name}</div>
 						<div className="">{deck.reviews_due}</div>
 					</div>
 				);
