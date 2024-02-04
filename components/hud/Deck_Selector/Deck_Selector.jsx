@@ -29,9 +29,12 @@ const sampleDecks = [
 ];
 
 function Deck_Selector({ drawerOpen, setDrawerOpen, decks, setSelectedDeck }) {
+	function createDeck() {
+		console.log("deck created!");
+	}
 	return (
 		<section
-			className={`absolute h-full sm:relative flex-shrink bg-slate-400 transition-all z-10 ${
+			className={`absolute h-full sm:relative flex-shrink bg-slate-400 transition-all p-2 z-10 ${
 				drawerOpen ? "w-80 min-w-80" : "w-0 min-w-0"
 			} `}
 		>
@@ -58,12 +61,12 @@ function Deck_Selector({ drawerOpen, setDrawerOpen, decks, setSelectedDeck }) {
 				</svg>
 			</div>
 			{/* Deck Rows */}
-			<div className="overflow-hidden delay-75">Deck_Selector</div>
+			{/* <div className="overflow-hidden delay-75">Deck_Selector</div> */}
 			{decks.map((deck) => {
 				return (
 					<div
 						onClick={() => setSelectedDeck(deck)}
-						className={`flex justify-between px-2 overflow-hidden ${
+						className={`flex justify-between overflow-hidden py-1 ${
 							drawerOpen ? "opacity-100" : "opacity-0"
 						}`}
 						key={deck.id}
@@ -73,8 +76,35 @@ function Deck_Selector({ drawerOpen, setDrawerOpen, decks, setSelectedDeck }) {
 					</div>
 				);
 			})}
+			<div
+				onClick={() => createDeck()}
+				className={`flex items-center py-2 gap-2 overflow-hidden cursor-pointer ${
+					drawerOpen ? "opacity-100" : "opacity-0"
+				}`}
+			>
+				<div className="line-clamp-1">Add Deck</div>
+				<button>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						fill="none"
+						viewBox="0 0 24 24"
+						strokeWidth={1.5}
+						stroke="currentColor"
+						className="w-8 h-8 p-1 bg-green-800 rounded-md"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							d="M12 4.5v15m7.5-7.5h-15"
+						/>
+					</svg>
+				</button>
+			</div>
 		</section>
 	);
 }
 
 export default Deck_Selector;
+
+//todo: sorting/search for decks?
+//Todo: Complete Add Deck feature
