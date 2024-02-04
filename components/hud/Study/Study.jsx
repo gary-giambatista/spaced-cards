@@ -1,21 +1,29 @@
 import React, { useState } from "react";
-import Hud_Header from "./Hud_Header";
+import Hud_Header from "../Hud_Header";
+import Card from "./Card";
 
 function Study({ setMode }) {
+	const [isQuestionShowing, setIsQuestionShowing] = useState(true);
 	const [isNoteOpen, setIsNoteOpen] = useState(false);
+	const [isHintOpen, setIsHintOpen] = useState(false);
 	return (
 		<section
 			className={`flex flex-col gap-4 flex-grow bg-slate-600 p-4 overflow-y-auto`}
 		>
-			<div className="h-3/4 flex justify-center items-center  bg-slate-400">
-				Card here
-			</div>
+			<Card
+				isHintOpen={isHintOpen}
+				setIsHintOpen={setIsHintOpen}
+				isQuestionShowing={isQuestionShowing}
+				setIsQuestionShowing={setIsQuestionShowing}
+			/>
+			{/* Answers */}
 			<div className="flex justify-between items-center">
 				<button className="basis-1/3 bg-red-400">Hard</button>
 				<button className="basis-1/3 bg-yellow-400">Medium</button>
 				<button className="basis-1/3 bg-green-400">Easy</button>
 			</div>
 
+			{/* Notes */}
 			<div className="flex flex-col gap-1 justify-center items-center bg-slate-500">
 				<div
 					onClick={() => setIsNoteOpen((prevState) => !prevState)}
