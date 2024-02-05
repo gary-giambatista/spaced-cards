@@ -17,8 +17,9 @@ export default function Home() {
 	);
 	const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
 	let timeout = false;
+	const [deckss, setDecks] = useState(decks); //place holder for now swap with decks data below -- fetch from LS or DB
 	const [selectedDeck, setSelectedDeck] = useState(decks[0]);
-	console.log(selectedDeck);
+	// console.log(selectedDeck);
 	//1.
 	useEffect(() => {
 		window.addEventListener("resize", () => {
@@ -52,6 +53,7 @@ export default function Home() {
 				setDrawerOpen={setDrawerOpen}
 				decks={decks}
 				setSelectedDeck={setSelectedDeck}
+				setDecks={setDecks}
 			/>
 			<div className="flex flex-col w-full p-4 gap-4 bg-slate-300 overflow-y-auto">
 				<Hud_Header
