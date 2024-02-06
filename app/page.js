@@ -17,9 +17,15 @@ export default function Home() {
 	);
 	const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
 	let timeout = false;
-	const [deckss, setDecks] = useState(decks); //place holder for now swap with decks data below -- fetch from LS or DB
-	const [selectedDeck, setSelectedDeck] = useState(decks[0]);
+	const [decks, setDecks] = useState(null);
+	const [selectedDeck, setSelectedDeck] = useState(decks ? decks[0] : null);
 	// console.log(selectedDeck);
+
+	// Get existing decks
+	useEffect(() => {
+		setDecks(JSON.parse(localStorage.getItem("decks")));
+	}, []);
+
 	//1.
 	useEffect(() => {
 		window.addEventListener("resize", () => {
@@ -52,8 +58,8 @@ export default function Home() {
 				drawerOpen={drawerOpen}
 				setDrawerOpen={setDrawerOpen}
 				decks={decks}
-				setSelectedDeck={setSelectedDeck}
 				setDecks={setDecks}
+				setSelectedDeck={setSelectedDeck}
 			/>
 			<div className="flex flex-col w-full p-4 gap-4 bg-slate-300 overflow-y-auto">
 				<Hud_Header
@@ -82,7 +88,7 @@ export default function Home() {
 //Todo: Complete the Deck_Selector's functionality (add deck, update LS)
 //Todo: Connect Hud_Header, Overview, and Card and their child components to selectedDeck
 
-const decks = [
+const deckss = [
 	{
 		name: "Test Deck",
 		id: 1,

@@ -33,8 +33,8 @@ function Deck_Selector({
 	drawerOpen,
 	setDrawerOpen,
 	decks,
-	setSelectedDeck,
 	setDecks,
+	setSelectedDeck,
 }) {
 	return (
 		<section
@@ -66,7 +66,7 @@ function Deck_Selector({
 			</div>
 			{/* Deck Rows */}
 			{/* <div className="overflow-hidden delay-75">Deck_Selector</div> */}
-			{decks.map((deck) => {
+			{decks?.map((deck) => {
 				return (
 					<div
 						onClick={() => setSelectedDeck(deck)}

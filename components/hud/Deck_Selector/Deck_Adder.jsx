@@ -1,20 +1,46 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 function Deck_Adder({ drawerOpen, setSelectedDeck, setDecks }) {
 	const [isAddingDeck, setIsAddingDeck] = useState(false);
 	const [newDeckName, setNewDeckName] = useState("");
 
+	const randomNumber = useMemo(() => {
+		return Math.floor(Math.random() * (100000 - 1) + 1);
+	}, [isAddingDeck]);
+
+	// const deck = [
+	// 	{
+	// 		name: newDeckName,
+	// 		id: randomNumber,
+	// 		reviews_due: 0,
+	// 		cards: [],
+	// 	},
+	// ];
+
 	function createDeck() {
 		console.log("deck created!");
 		setIsAddingDeck(false);
 		setNewDeckName("");
-		// LS get decks in page.js
+		// LS get decks in page.js - useEffect on page mount
+		const existingDecks = JSON.parse(localStorage.getItem("decks"));
 		// LS set and update decks
+		localStorage.setItem(
+			"decks",
+			JSON.stringify([
+				{
+					name: newDeckName,
+					id: randomNumber,
+					reviews_due: 0,
+					cards: [],
+				},
+			])
+		);
 		// setDecks(ls.get)
 		// LS get decks? will this update the rest of the app correctly?
 
 		// setSelectedDeck("New Deck HERE");
 	}
+
 	return (
 		<div
 			className={`flex items-center py-2 gap-2 overflow-hidden px-2 ${
