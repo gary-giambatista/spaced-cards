@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 
-function Deck_Adder({ drawerOpen, setSelectedDeck, setDecks }) {
+function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 	const [isAddingDeck, setIsAddingDeck] = useState(false);
 	const [newDeckName, setNewDeckName] = useState("");
 
@@ -8,37 +8,48 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, setDecks }) {
 		return Math.floor(Math.random() * (100000 - 1) + 1);
 	}, [isAddingDeck]);
 
-	// const deck = [
-	// 	{
-	// 		name: newDeckName,
-	// 		id: randomNumber,
-	// 		reviews_due: 0,
-	// 		cards: [],
-	// 	},
-	// ];
+	const lastModified = useMemo(() => {
+		return Date.now();
+	}, [isAddingDeck]);
 
+	const newDeck = {
+		name: newDeckName,
+		id: randomNumber,
+		last_modified: lastModified,
+		reviews_due: 0,
+		cards: [],
+	};
+
+	//Todo: Clean up and optimize
 	function createDeck() {
 		console.log("deck created!");
+
+		// Reset component state
 		setIsAddingDeck(false);
 		setNewDeckName("");
 		// LS get decks in page.js - useEffect on page mount
-		const existingDecks = JSON.parse(localStorage.getItem("decks"));
-		// LS set and update decks
-		localStorage.setItem(
-			"decks",
-			JSON.stringify([
-				{
-					name: newDeckName,
-					id: randomNumber,
-					reviews_due: 0,
-					cards: [],
-				},
-			])
-		);
-		// setDecks(ls.get)
-		// LS get decks? will this update the rest of the app correctly?
+		// const existingDecks = JSON.parse(localStorage.getItem("decks"));
 
-		// setSelectedDeck("New Deck HERE");
+		// LS set and update decks
+		if (decks) {
+			const updatedDeck = [];
+			// setDecks(decks.unshift(newDeck));
+			// console.log("Decks (Creating): ", decks);
+			for (const deck of decks) {
+				updatedDeck.push(deck);
+			}
+			updatedDeck.unshift(newDeck);
+			localStorage.setItem("decks", JSON.stringify(updatedDeck));
+			setDecks(updatedDeck);
+			setSelectedDeck(updatedDeck[0]);
+		} else {
+			localStorage.setItem("decks", JSON.stringify([newDeck]));
+			setDecks([newDeck]);
+			setSelectedDeck(newDeck[0]);
+		}
+
+		//Update state in page.js re-rendering everything
+		//setSelectedDeck() -> prioritizing index 0, but this will have the be updated with better logic, and perhaps switching to using a Map instead of object
 	}
 
 	return (

@@ -18,13 +18,14 @@ export default function Home() {
 	const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
 	let timeout = false;
 	const [decks, setDecks] = useState(null);
-	const [selectedDeck, setSelectedDeck] = useState(decks ? decks[0] : null);
-	// console.log(selectedDeck);
+	const [selectedDeck, setSelectedDeck] = useState(decks ? decks[0] : null); //unshifting new decks, so this should always be the newest deck added
+	console.log("Decks Page: ", decks);
+	console.log("Selected Deck Page: ", selectedDeck);
 
 	// Get existing decks
 	useEffect(() => {
 		setDecks(JSON.parse(localStorage.getItem("decks")));
-	}, []);
+	}, [selectedDeck]);
 
 	//1.
 	useEffect(() => {

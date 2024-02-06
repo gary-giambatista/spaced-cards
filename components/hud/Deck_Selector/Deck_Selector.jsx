@@ -84,6 +84,7 @@ function Deck_Selector({
 			<Deck_Adder
 				drawerOpen={drawerOpen}
 				setSelectedDeck={setSelectedDeck}
+				decks={decks}
 				setDecks={setDecks}
 			/>
 		</section>
