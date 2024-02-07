@@ -34,6 +34,7 @@ function Deck_Selector({
 	setDrawerOpen,
 	decks,
 	setDecks,
+	selectedDeck,
 	setSelectedDeck,
 }) {
 	return (
@@ -72,6 +73,8 @@ function Deck_Selector({
 						onClick={() => setSelectedDeck(deck)}
 						className={`flex justify-between overflow-hidden py-1 px-2 ${
 							drawerOpen ? "opacity-100" : "opacity-0"
+						} ${
+							deck.id === selectedDeck.id ? "bg-slate-500" : "bg-transparent"
 						}`}
 						key={deck.id}
 					>

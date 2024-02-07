@@ -60,6 +60,7 @@ export default function Home() {
 				setDrawerOpen={setDrawerOpen}
 				decks={decks}
 				setDecks={setDecks}
+				selectedDeck={selectedDeck}
 				setSelectedDeck={setSelectedDeck}
 			/>
 			<div className="flex flex-col w-full p-4 gap-4 bg-slate-300 overflow-y-auto">
