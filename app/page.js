@@ -18,7 +18,7 @@ export default function Home() {
 	const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
 	let timeout = false;
 	const [decks, setDecks] = useState(null);
-	const [selectedDeck, setSelectedDeck] = useState(null); //unshifting new decks, so this should always be the newest deck added
+	const [selectedDeck, setSelectedDeck] = useState(null);
 	console.log("Decks Page: ", decks);
 	console.log("Selected Deck Page: ", selectedDeck);
 
@@ -99,8 +99,6 @@ export default function Home() {
 
 // Notes
 // JS logic to hide drawer not necessary, because using media query to set the drawer to absolute fixes display issues
-//Todo: Create useEffect in page.js to fetch LS of decks
-//Todo: Complete the Deck_Selector's functionality (add deck, update LS)
 //Todo: Connect Hud_Header, Overview, and Card and their child components to selectedDeck
 
 const deckss = [
