@@ -20,36 +20,30 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 		cards: [],
 	};
 
-	//Todo: Clean up and optimize
+	//Todo: Optimize newDeck with Map?
 	function createDeck() {
 		console.log("deck created!");
 
 		// Reset component state
 		setIsAddingDeck(false);
 		setNewDeckName("");
-		// LS get decks in page.js - useEffect on page mount
-		// const existingDecks = JSON.parse(localStorage.getItem("decks"));
 
-		// LS set and update decks
+		// Update decks
 		if (decks) {
-			const updatedDeck = [];
-			// setDecks(decks.unshift(newDeck));
-			// console.log("Decks (Creating): ", decks);
-			for (const deck of decks) {
-				updatedDeck.push(deck);
-			}
-			updatedDeck.unshift(newDeck);
+			const updatedDeck = [newDeck, ...decks];
 			localStorage.setItem("decks", JSON.stringify(updatedDeck));
+
+			// Update state in page.js re-rendering everything
 			setDecks(updatedDeck);
 			setSelectedDeck(updatedDeck[0]);
 		} else {
+			//Create decks
 			localStorage.setItem("decks", JSON.stringify([newDeck]));
-			setDecks([newDeck]);
-			setSelectedDeck(newDeck[0]);
-		}
 
-		//Update state in page.js re-rendering everything
-		//setSelectedDeck() -> prioritizing index 0, but this will have the be updated with better logic, and perhaps switching to using a Map instead of object
+			// Update state in page.js re-rendering everything
+			setDecks([newDeck]);
+			setSelectedDeck(newDeck);
+		}
 	}
 
 	return (
@@ -132,3 +126,13 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 }
 
 export default Deck_Adder;
+
+const testObject = {
+	id: 1,
+	obj2: {
+		id: 2,
+		obj3: {
+			id: 3,
+		},
+	},
+};
