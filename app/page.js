@@ -18,14 +18,27 @@ export default function Home() {
 	const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
 	let timeout = false;
 	const [decks, setDecks] = useState(null);
-	const [selectedDeck, setSelectedDeck] = useState(decks ? decks[0] : null); //unshifting new decks, so this should always be the newest deck added
+	const [selectedDeck, setSelectedDeck] = useState(null); //unshifting new decks, so this should always be the newest deck added
 	console.log("Decks Page: ", decks);
 	console.log("Selected Deck Page: ", selectedDeck);
 
-	// Get existing decks
+	// Get existing decks, otherwise null
 	useEffect(() => {
 		setDecks(JSON.parse(localStorage.getItem("decks")));
 	}, [selectedDeck]);
+
+	// Set selected deck
+	useEffect(() => {
+		// If decks exist in Local Storage
+		if (JSON.parse(localStorage.getItem("decks"))) {
+			// Set selectedDeck to first deck
+			setSelectedDeck(JSON.parse(localStorage.getItem("decks"))[0]);
+		}
+		// const deckOrNull = JSON.parse(localStorage.getItem("decks"))
+		// 	? JSON.parse(localStorage.getItem("decks"))[0]
+		// 	: null;
+		// setSelectedDeck(deckOrNull);
+	}, []);
 
 	//1.
 	useEffect(() => {

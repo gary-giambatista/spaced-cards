@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 	const [isAddingDeck, setIsAddingDeck] = useState(false);
@@ -46,6 +46,15 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 		}
 	}
 
+	const inputRef = useRef(null);
+
+	const handleKeyPress = (event) => {
+		if (event.key === "Enter") {
+			// Trigger button click
+			inputRef.current.nextElementSibling.click();
+		}
+	};
+
 	return (
 		<div
 			className={`flex items-center py-2 gap-2 overflow-hidden px-2 ${
@@ -57,6 +66,8 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 				<>
 					<input
 						className="w-full p-2 rounded-md text-black"
+						ref={inputRef}
+						onKeyUp={handleKeyPress}
 						name="deck_name"
 						placeholder="Your deck name"
 						value={newDeckName}
@@ -103,7 +114,14 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 				// Show When not adding a deck
 				<>
 					<div className="line-clamp-1">Add Deck</div>
-					<button onClick={() => setIsAddingDeck((prevState) => !prevState)}>
+					<button
+						onClick={() => {
+							setIsAddingDeck((prevState) => !prevState);
+							setTimeout(() => {
+								inputRef.current.focus();
+							}, 0);
+						}}
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
