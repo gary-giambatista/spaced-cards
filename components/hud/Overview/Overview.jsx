@@ -9,6 +9,7 @@ function Overview({
 	isAddCardModalOpen,
 	setIsAddCardModalOpen,
 	selectedDeck,
+	setSelectedDeck,
 }) {
 	return (
 		<section className={`@container flex-grow bg-slate-600 p-4`}>
@@ -16,9 +17,11 @@ function Overview({
 				<Add_Card_Modal
 					isAddCardModalOpen={isAddCardModalOpen}
 					setIsAddCardModalOpen={setIsAddCardModalOpen}
+					selectedDeck={selectedDeck}
+					setSelectedDeck={setSelectedDeck}
 				/>
 			) : null}
-			{selectedDeck.cards.length > 0 ? (
+			{selectedDeck?.cards?.length > 0 ? (
 				<Card_Rows selectedDeck={selectedDeck} />
 			) : (
 				<Empty_Deck

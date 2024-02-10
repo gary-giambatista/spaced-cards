@@ -90,6 +90,7 @@ export default function Home() {
 						isAddCardModalOpen={isAddCardModalOpen}
 						setIsAddCardModalOpen={setIsAddCardModalOpen}
 						selectedDeck={selectedDeck}
+						setSelectedDeck={setSelectedDeck}
 					/>
 				) : (
 					<Study setMode={setMode} />

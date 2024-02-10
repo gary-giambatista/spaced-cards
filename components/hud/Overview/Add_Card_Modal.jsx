@@ -1,6 +1,23 @@
-import React from "react";
+import React, { useMemo } from "react";
 
-function Add_Card_Modal({ isAddCardModalOpen, setIsAddCardModalOpen }) {
+function Add_Card_Modal({
+	isAddCardModalOpen,
+	setIsAddCardModalOpen,
+	selectedDeck,
+	setSelectedDeck,
+}) {
+	const randomNumber = useMemo(() => {
+		return Math.floor(Math.random() * (100000 - 1) + 1);
+	}, [isAddCardModalOpen]);
+
+	const lastModified = useMemo(() => {
+		return Date.now();
+	}, [isAddCardModalOpen]);
+
+	//1. Update selectedDeck -> doing so will refetch local storage decks
+	//2. newCards = [selectedDeck.cards..., newCard]
+	//3. setSelectedDeck() -> is it possible to just updated the cards[]?
+
 	function handleSubmit(e) {
 		e.preventDefault();
 		const form = e.target;
@@ -8,6 +25,23 @@ function Add_Card_Modal({ isAddCardModalOpen, setIsAddCardModalOpen }) {
 		const formJson = Object.fromEntries(formData.entries());
 		console.log(formJson);
 		//Consider modifying the local decks object to avoid refetching after each card is added to the deck
+		const newCard = {
+			id: randomNumber,
+			question: formJson.question_input,
+			answer: formJson.answer_input,
+			hint: formJson.hint_input,
+			note: formJson.notes_input,
+			interval: 0,
+			repetition: 0,
+			efactor: 2.5,
+			due_date: "ISO date",
+			review_due: true,
+		};
+
+		setSelectedDeck((prevState) => ({
+			...prevState,
+			cards: [...prevState.cards, newCard],
+		}));
 	}
 	return (
 		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center  @lg:items-center backdrop-blur-sm p-2">

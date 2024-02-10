@@ -7,6 +7,9 @@ function Hud_Header({
 	setIsAddCardModalOpen,
 	selectedDeck,
 }) {
+	/**
+	 * @param {Array} cards - selectedDeck's card array
+	 */
 	function checkRemainingReviews(cards) {
 		let remainingReviews = 0;
 
@@ -30,7 +33,7 @@ function Hud_Header({
 					Overview
 				</button>
 				<button
-					disabled={selectedDeck.cards.length === 0}
+					disabled={selectedDeck?.cards?.length === 0}
 					onClick={() => setMode("study")}
 					className={`h-9 w-36 px-4 rounded-r-md bg-slate-800 hover:bg-slate-500 outline disabled:cursor-not-allowed ${
 						mode === "study" ? "outline-slate-400" : "outline-slate-200"
@@ -71,5 +74,5 @@ function Hud_Header({
 
 export default Hud_Header;
 
-//Todo: fill in review numbers 0/22 completed/overall
+//Todo: make sure the remainingReviews logic works
 //Todo: Is this design with the + button okay? Or go with the column design? column design deleted
