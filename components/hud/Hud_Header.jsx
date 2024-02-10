@@ -1,6 +1,23 @@
 import React from "react";
 
-function Hud_Header({ setMode, mode, isCardModalOpen, setIsAddCardModalOpen }) {
+function Hud_Header({
+	setMode,
+	mode,
+	isCardModalOpen,
+	setIsAddCardModalOpen,
+	selectedDeck,
+}) {
+	function checkRemainingReviews(cards) {
+		let remainingReviews = 0;
+
+		cards.forEach((card) => {
+			if (card.review_due) {
+				remainingReviews += 1;
+			}
+		});
+
+		return remainingReviews;
+	}
 	return (
 		<section className="flex justify-between items-center h-9 md:h-12 w-full relative">
 			<div className="flex justify-center items-center md:mx-auto gap-2">
@@ -13,8 +30,9 @@ function Hud_Header({ setMode, mode, isCardModalOpen, setIsAddCardModalOpen }) {
 					Overview
 				</button>
 				<button
+					disabled={selectedDeck.cards.length === 0}
 					onClick={() => setMode("study")}
-					className={`h-9 w-36 px-4 rounded-r-md bg-slate-800 hover:bg-slate-500 outline ${
+					className={`h-9 w-36 px-4 rounded-r-md bg-slate-800 hover:bg-slate-500 outline disabled:cursor-not-allowed ${
 						mode === "study" ? "outline-slate-400" : "outline-slate-200"
 					}`}
 				>
@@ -43,7 +61,9 @@ function Hud_Header({ setMode, mode, isCardModalOpen, setIsAddCardModalOpen }) {
 					<div className="hidden lg:block">Add Card</div>
 				</button>
 			) : (
-				<div className="absolute right-0">0/22</div>
+				<div className="absolute right-0">{`${checkRemainingReviews(
+					selectedDeck.cards
+				)} / ${selectedDeck.reviews_due}`}</div>
 			)}
 		</section>
 	);

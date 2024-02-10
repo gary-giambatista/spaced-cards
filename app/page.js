@@ -82,6 +82,7 @@ export default function Home() {
 					mode={mode}
 					isAddCardModalOpen={isAddCardModalOpen}
 					setIsAddCardModalOpen={setIsAddCardModalOpen}
+					selectedDeck={selectedDeck}
 				/>
 				{mode === "overview" ? (
 					<Overview
@@ -117,7 +118,8 @@ const deckss = [
 				interval: 0,
 				repetition: 0,
 				efactor: 2.5,
-				reviews_due: "ISO date",
+				due_date: "ISO date",
+				review_due: true,
 			},
 		],
 	},
@@ -135,7 +137,8 @@ const deckss = [
 				interval: 0,
 				repetition: 0,
 				efactor: 2.5,
-				reviews_due: "ISO date",
+				due_date: "ISO date",
+				review_due: true,
 			},
 		],
 	},
@@ -153,7 +156,8 @@ const deckss = [
 				interval: 0,
 				repetition: 0,
 				efactor: 2.5,
-				reviews_due: "ISO date",
+				due_date: "ISO date",
+				review_due: true,
 			},
 		],
 	},
@@ -171,7 +175,8 @@ const deckss = [
 				interval: 0,
 				repetition: 0,
 				efactor: 2.5,
-				reviews_due: "ISO date",
+				due_date: "ISO date",
+				review_due: true,
 			},
 		],
 	},
