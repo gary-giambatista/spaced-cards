@@ -1,8 +1,15 @@
 import React from "react";
 import Hud_Header from "../Hud_Header";
 import Add_Card_Modal from "./Add_Card_Modal";
+import Card_Rows from "./Card_Rows";
+import Empty_Deck from "./Empty_Deck";
 
-function Overview({ setMode, isAddCardModalOpen, setIsAddCardModalOpen }) {
+function Overview({
+	setMode,
+	isAddCardModalOpen,
+	setIsAddCardModalOpen,
+	selectedDeck,
+}) {
 	return (
 		<section className={`@container flex-grow bg-slate-600 p-4`}>
 			{isAddCardModalOpen ? (
@@ -11,19 +18,14 @@ function Overview({ setMode, isAddCardModalOpen, setIsAddCardModalOpen }) {
 					setIsAddCardModalOpen={setIsAddCardModalOpen}
 				/>
 			) : null}
-			<div className="grid grid-cols-1 @md:grid-cols-2 @2xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5 @7xl:grid-cols-6 @[1921px]:grid-cols-8 gap-4">
-				{cards.map((card) => {
-					return (
-						<div
-							key={card.id}
-							className="flex flex-col h-80 w-full bg-slate-400 "
-						>
-							<div>{card.question}</div>
-							<div>{card.answer}</div>
-						</div>
-					);
-				})}
-			</div>
+			{selectedDeck.cards.length > 0 ? (
+				<Card_Rows selectedDeck={selectedDeck} />
+			) : (
+				<Empty_Deck
+					isAddCardModalOpen={isAddCardModalOpen}
+					setIsAddCardModalOpen={setIsAddCardModalOpen}
+				/>
+			)}
 		</section>
 	);
 }
