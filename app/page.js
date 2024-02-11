@@ -19,27 +19,35 @@ export default function Home() {
 	let timeout = false;
 	const [decks, setDecks] = useState(null);
 	const [selectedDeck, setSelectedDeck] = useState(null);
+
 	console.log("1 Decks Page DECK: ", decks);
 	// console.log("Selected Deck PAGE: ", selectedDeck);
 
-	// Get existing decks, otherwise null
+	// Handle updating decks when selectedDeck is modified
 	useEffect(() => {
-		//add LS update?
-		// localStorage.setItem("decks", JSON.stringify(decks));
-		// setDecks(JSON.parse(localStorage.getItem("decks")));
-
 		console.log("2 useEffect SD: ", selectedDeck);
+
 		if (decks) {
-			let updatedDecks = [...decks];
-			console.log("3 UPDATED DECKS: ", updatedDecks);
-			updatedDecks.forEach((deck, index) => {
-				if (deck.id === selectedDeck.id) {
-					deck.cards = selectedDeck.cards;
+			decks.forEach((deck) => {
+				// Update deck's only if selectedDeck's card length is different
+				if (
+					deck.id === selectedDeck.id &&
+					deck.cards.length !== selectedDeck.cards.length
+				) {
+					// Copy decks to avoid mutating state directly
+					let updatedDecks = [...decks];
+					console.log("3 UPDATED DECKS: ", updatedDecks);
+
+					// Update the correct deck
+					updatedDecks.forEach((deck) => {
+						if (deck.id === selectedDeck.id) {
+							deck.cards = selectedDeck.cards;
+						}
+					});
+					setDecks(updatedDecks);
 				}
 			});
-			setDecks(updatedDecks);
 		}
-		// else setDecks(JSON.parse(localStorage.getItem("decks")));
 		console.log("4 decks: DID decks UPDATE? ", decks);
 	}, [selectedDeck]);
 
@@ -127,6 +135,21 @@ export default function Home() {
 // Notes
 // JS logic to hide drawer not necessary, because using media query to set the drawer to absolute fixes display issues
 //Todo: Connect Hud_Header, Overview, and Card and their child components to selectedDeck
+//Todo: break out useEffects functions into a folder and render inside here?
+
+//Experiment state setter
+// decks.forEach((deck) => {
+// 	if (deck.id === selectedDeck.id) {
+// 		setDecks((prevState) => {
+// 			return {
+// 				...prevState,
+// 				deck: {
+// 					cards: selectedDeck.cards,
+// 				},
+// 			};
+// 		});
+// 	}
+// });
 
 const deckss = [
 	{

@@ -31,15 +31,11 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 		// Update decks
 		if (decks) {
 			const updatedDeck = [newDeck, ...decks];
-			// localStorage.setItem("decks", JSON.stringify(updatedDeck));
 
 			// Update state in page.js re-rendering everything
 			setDecks(updatedDeck);
 			setSelectedDeck(updatedDeck[0]);
 		} else {
-			//Create decks
-			// localStorage.setItem("decks", JSON.stringify([newDeck]));
-
 			// Update state in page.js re-rendering everything
 			setDecks([newDeck]);
 			setSelectedDeck(newDeck);
