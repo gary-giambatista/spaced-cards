@@ -76,10 +76,10 @@ function Deck_Selector({
 						} ${
 							deck?.id === selectedDeck?.id ? "bg-slate-500" : "bg-transparent"
 						}`}
-						key={deck.id}
+						key={deck?.id}
 					>
-						<div className="line-clamp-1">{deck.name}</div>
-						<div className="">{deck.reviews_due}</div>
+						<div className="line-clamp-1">{deck?.name}</div>
+						<div className="">{deck?.reviews_due}</div>
 					</div>
 				);
 			})}

@@ -5,6 +5,8 @@ function Add_Card_Modal({
 	setIsAddCardModalOpen,
 	selectedDeck,
 	setSelectedDeck,
+	decks,
+	setDecks,
 }) {
 	const randomNumber = useMemo(() => {
 		return Math.floor(Math.random() * (100000 - 1) + 1);
@@ -15,8 +17,11 @@ function Add_Card_Modal({
 	}, [isAddCardModalOpen]);
 
 	//1. Update selectedDeck -> doing so will refetch local storage decks
-	//2. newCards = [selectedDeck.cards..., newCard]
-	//3. setSelectedDeck() -> is it possible to just updated the cards[]?
+	//2. Need to keep track of how many INITIAL reviews were due in Study vs. how many after being updated
+	//3. Connect Study to selectedDeck
+	//4. How to update decks in LS with selectedDeck's new cards -> map? --
+	// Loop through decks, checking for deck.id === selectedDeck.id
+	// set cards =
 
 	function handleSubmit(e) {
 		e.preventDefault();
@@ -42,6 +47,29 @@ function Add_Card_Modal({
 			...prevState,
 			cards: [...prevState.cards, newCard],
 		}));
+		console.log("Selected DECK MODAL: ", selectedDeck);
+
+		// setDecks((prevState) => {
+		// 	const updatedDecks = prevState.map((deck) => {
+		// 		if (deck.id === selectedDeck.id) {
+		// 			deck = selectedDeck;
+		// 		}
+		// 	});
+		// 	return updatedDecks;
+		// });
+
+		// let updatedDecks = [...decks];
+		// console.log(updatedDecks);
+		// updatedDecks.forEach((deck, index) => {
+		// 	if (deck.id === selectedDeck.id) {
+		// 		deck[index] = selectedDeck;
+		// 	}
+		// });
+		// console.log("updated DECKS: ", updatedDecks);
+
+		// localStorage.setItem("decks", JSON.stringify(updatedDecks));
+
+		form.reset();
 	}
 	return (
 		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center  @lg:items-center backdrop-blur-sm p-2">

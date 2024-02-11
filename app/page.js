@@ -19,18 +19,35 @@ export default function Home() {
 	let timeout = false;
 	const [decks, setDecks] = useState(null);
 	const [selectedDeck, setSelectedDeck] = useState(null);
-	console.log("Decks Page: ", decks);
-	console.log("Selected Deck Page: ", selectedDeck);
+	console.log("1 Decks Page DECK: ", decks);
+	// console.log("Selected Deck PAGE: ", selectedDeck);
 
 	// Get existing decks, otherwise null
 	useEffect(() => {
-		setDecks(JSON.parse(localStorage.getItem("decks")));
+		//add LS update?
+		// localStorage.setItem("decks", JSON.stringify(decks));
+		// setDecks(JSON.parse(localStorage.getItem("decks")));
+
+		console.log("2 useEffect SD: ", selectedDeck);
+		if (decks) {
+			let updatedDecks = [...decks];
+			console.log("3 UPDATED DECKS: ", updatedDecks);
+			updatedDecks.forEach((deck, index) => {
+				if (deck.id === selectedDeck.id) {
+					deck.cards = selectedDeck.cards;
+				}
+			});
+			setDecks(updatedDecks);
+		}
+		// else setDecks(JSON.parse(localStorage.getItem("decks")));
+		console.log("4 decks: DID decks UPDATE? ", decks);
 	}, [selectedDeck]);
 
-	// Set selected deck
+	// Set decks and selectedDeck on page load from LS
 	useEffect(() => {
 		// If decks exist in Local Storage
 		if (JSON.parse(localStorage.getItem("decks"))) {
+			setDecks(JSON.parse(localStorage.getItem("decks")));
 			// Set selectedDeck to first deck
 			setSelectedDeck(JSON.parse(localStorage.getItem("decks"))[0]);
 		}
@@ -39,6 +56,11 @@ export default function Home() {
 		// 	: null;
 		// setSelectedDeck(deckOrNull);
 	}, []);
+
+	//Update decks in LS whenever decks state changes
+	useEffect(() => {
+		localStorage.setItem("decks", JSON.stringify(decks));
+	}, [decks]);
 
 	//1.
 	useEffect(() => {
@@ -91,6 +113,8 @@ export default function Home() {
 						setIsAddCardModalOpen={setIsAddCardModalOpen}
 						selectedDeck={selectedDeck}
 						setSelectedDeck={setSelectedDeck}
+						decks={decks}
+						setDecks={setDecks}
 					/>
 				) : (
 					<Study setMode={setMode} />
