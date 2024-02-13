@@ -1,11 +1,48 @@
+import debounce from "@/library/debounce";
+import dayjs from "dayjs";
 import React, { useState } from "react";
-import Hud_Header from "../Hud_Header";
+import { supermemo } from "supermemo";
 import Card from "./Card";
 
-function Study({ setMode }) {
+function Study({ setMode, selectedDeck }) {
 	const [isQuestionShowing, setIsQuestionShowing] = useState(true);
 	const [isNoteOpen, setIsNoteOpen] = useState(false);
 	const [isHintOpen, setIsHintOpen] = useState(false);
+	const [reviewCount, setReviewCount] = useState(selectedDeck.reviews_due);
+	const [selectedCard, setSelectedDark] = useState(pickCard());
+
+	function pickCard() {
+		// const cards = selectedDeck.cards;
+		const cardsLength = selectedDeck.cards.length;
+
+		const randomIndex = Math.floor(Math.random() * (cardsLength - 0) + 0);
+
+		const randomCard = selectedDeck.cards[randomIndex];
+
+		return randomCard;
+	}
+	console.log("Selected CARD: ", selectedCard);
+
+	function practice(selectedCard, grade) {
+		const { interval, repetition, efactor } = supermemo(selectedCard, grade);
+
+		const due_date = dayjs(Date.now()).add(interval, "day").toISOString();
+
+		return { ...selectedCard, interval, repetition, efactor, due_date };
+	}
+
+	// Updating cards[] and decks[]
+	// Do we update deck[] every time a card is practiced?
+	//
+	// Worrying about calculating remaining reviews vs. initial reviews
+	// 1. use math to calculate based upon how many were reviewed so far +
+	// 2. add another property to decks, reviews_due and remaining_reviews
+	// !3. add state to study based upon initial selectedDecks review_count, then update selectedDeck as each card is reviewed, and use study's state - 1 for remaining -- can add another state for initial vs. updated?
+
+	// Triggers for updating decks[] correctly after selectedDeck's cards[] is updated
+	// add a boolean to page.js and flip it every time practice occurs
+	// !modify existing if statement to check if deck.reviews_due !== selectDeck.reviews_due -- this will give extra ability for it to update correctly -- requires that the practice() function correctly decrements selectedDeck.reviews_due -1
+
 	return (
 		<section
 			className={`flex flex-col gap-4 flex-grow bg-slate-600 p-4 overflow-y-auto`}

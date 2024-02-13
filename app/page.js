@@ -4,8 +4,6 @@ import Deck_Selector from "@/components/hud/Deck_Selector/Deck_Selector";
 import Hud_Header from "@/components/hud/Hud_Header";
 import Overview from "@/components/hud/Overview/Overview";
 import Study from "@/components/hud/Study/Study";
-import debounce from "@/library/debounce";
-import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { SuperMemoGrade, SuperMemoItem, supermemo } from "supermemo";
 
@@ -125,7 +123,7 @@ export default function Home() {
 						setDecks={setDecks}
 					/>
 				) : (
-					<Study setMode={setMode} />
+					<Study setMode={setMode} selectedDeck={selectedDeck} />
 				)}
 			</div>
 		</main>
