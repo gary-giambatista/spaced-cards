@@ -29,8 +29,10 @@ export default function Home() {
 			decks.forEach((deck) => {
 				// Update deck's only if selectedDeck's card length is different
 				if (
-					deck.id === selectedDeck.id &&
-					deck.cards.length !== selectedDeck.cards.length
+					(deck.id === selectedDeck.id &&
+						deck.cards.length !== selectedDeck.cards.length) ||
+					(deck.id === selectedDeck.id &&
+						deck.reviews_due !== selectedDeck.reviews_due)
 				) {
 					// Copy decks to avoid mutating state directly
 					let updatedDecks = [...decks];
@@ -123,7 +125,11 @@ export default function Home() {
 						setDecks={setDecks}
 					/>
 				) : (
-					<Study setMode={setMode} selectedDeck={selectedDeck} />
+					<Study
+						setMode={setMode}
+						selectedDeck={selectedDeck}
+						setSelectedDeck={setSelectedDeck}
+					/>
 				)}
 			</div>
 		</main>

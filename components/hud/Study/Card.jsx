@@ -5,10 +5,15 @@ function Card({
 	setIsHintOpen,
 	isQuestionShowing,
 	setIsQuestionShowing,
+	selectedCard,
 }) {
 	return (
 		<div className="h-3/4 flex flex-col justify-evenly items-center  bg-slate-400">
-			{isQuestionShowing ? <div>Question</div> : <div>Answer</div>}
+			{isQuestionShowing ? (
+				<div>{selectedCard.question}</div>
+			) : (
+				<div>{selectedCard.answer}</div>
+			)}
 			<div className="flex flex-col gap-1 justify-center items-center">
 				<div
 					onClick={() => setIsHintOpen((prevState) => !prevState)}
@@ -32,7 +37,7 @@ function Card({
 						/>
 					</svg>
 				</div>
-				{isHintOpen ? <div>Hint here!</div> : null}
+				{isHintOpen ? <div>{selectedCard.hint}!</div> : null}
 			</div>
 			<button
 				onClick={() => setIsQuestionShowing((prevState) => !prevState)}

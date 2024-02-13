@@ -1,15 +1,14 @@
-import debounce from "@/library/debounce";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { supermemo } from "supermemo";
 import Card from "./Card";
 
-function Study({ setMode, selectedDeck }) {
+function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	const [isQuestionShowing, setIsQuestionShowing] = useState(true);
 	const [isNoteOpen, setIsNoteOpen] = useState(false);
 	const [isHintOpen, setIsHintOpen] = useState(false);
 	const [reviewCount, setReviewCount] = useState(selectedDeck.reviews_due);
-	const [selectedCard, setSelectedDark] = useState(pickCard());
+	const [selectedCard, setSelectedCard] = useState(pickCard());
 
 	function pickCard() {
 		// const cards = selectedDeck.cards;
@@ -23,13 +22,32 @@ function Study({ setMode, selectedDeck }) {
 	}
 	console.log("Selected CARD: ", selectedCard);
 
+	//Todo: Is setting state like this okay?
 	function practice(selectedCard, grade) {
 		const { interval, repetition, efactor } = supermemo(selectedCard, grade);
 
 		const due_date = dayjs(Date.now()).add(interval, "day").toISOString();
 
-		return { ...selectedCard, interval, repetition, efactor, due_date };
+		return setSelectedCard({
+			...selectedCard,
+			interval,
+			repetition,
+			efactor,
+			due_date,
+		});
 	}
+
+	useEffect(() => {
+		setSelectedDeck((prevSelectedDeck) => {
+			const decreasedReviewsDue = Math.max(0, prevSelectedDeck.reviews_due - 1);
+			return {
+				...prevSelectedDeck,
+				reviews_due: decreasedReviewsDue,
+			};
+		});
+	}, [selectedCard]);
+	//1. set selectedDeck's reviews_due -1
+	//2. check if (decks[i]=selectedDeck) deck.reviews_due !== selectDeck.reviews_due
 
 	// Updating cards[] and decks[]
 	// Do we update deck[] every time a card is practiced?
@@ -52,6 +70,7 @@ function Study({ setMode, selectedDeck }) {
 				setIsHintOpen={setIsHintOpen}
 				isQuestionShowing={isQuestionShowing}
 				setIsQuestionShowing={setIsQuestionShowing}
+				selectedCard={selectedCard}
 			/>
 			{/* Answers */}
 			<div className="flex justify-between items-center">
@@ -90,7 +109,7 @@ function Study({ setMode, selectedDeck }) {
 						className="w-full p-2 rounded-md text-black resize-none"
 						name="notes_input"
 						placeholder="Your notes here"
-						defaultValue=""
+						defaultValue={selectedCard.note}
 						rows={2}
 						cols={40}
 					/>
@@ -101,3 +120,5 @@ function Study({ setMode, selectedDeck }) {
 }
 
 export default Study;
+
+//Todo: create a function for updating notes
