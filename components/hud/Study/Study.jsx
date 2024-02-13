@@ -21,31 +21,42 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 		return randomCard;
 	}
 	console.log("Selected CARD: ", selectedCard);
+	console.log("Selected DECK: ", selectedDeck);
 
-	//Todo: Is setting state like this okay?
+	//Todo: Optimize updating selectedDeck
+	//1. avoid having state for selectedCard? use selectedDeck.cards[randomIndex]?
 	function practice(selectedCard, grade) {
 		const { interval, repetition, efactor } = supermemo(selectedCard, grade);
 
 		const due_date = dayjs(Date.now()).add(interval, "day").toISOString();
 
-		return setSelectedCard({
+		const updatedCard = {
 			...selectedCard,
 			interval,
 			repetition,
 			efactor,
 			due_date,
-		});
-	}
+		};
 
-	useEffect(() => {
-		setSelectedDeck((prevSelectedDeck) => {
-			const decreasedReviewsDue = Math.max(0, prevSelectedDeck.reviews_due - 1);
+		setSelectedCard(updatedCard);
+
+		return setSelectedDeck((prevSelectedDeck) => {
+			const decreasedReviewsDue = prevSelectedDeck.reviews_due - 1;
+			const updatedCards = prevSelectedDeck.cards.map((card) => {
+				if (card.id === selectedCard.id) {
+					// If the card id matches, update the card
+					return updatedCard;
+				}
+				return card; // Otherwise, return the card unchanged
+			});
 			return {
 				...prevSelectedDeck,
 				reviews_due: decreasedReviewsDue,
+				cards: updatedCards,
 			};
 		});
-	}, [selectedCard]);
+	}
+
 	//1. set selectedDeck's reviews_due -1
 	//2. check if (decks[i]=selectedDeck) deck.reviews_due !== selectDeck.reviews_due
 
@@ -74,9 +85,24 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 			/>
 			{/* Answers */}
 			<div className="flex justify-between items-center">
-				<button className="basis-1/3 bg-red-400">Hard</button>
-				<button className="basis-1/3 bg-yellow-400">Medium</button>
-				<button className="basis-1/3 bg-green-400">Easy</button>
+				<button
+					onClick={() => practice(selectedCard, 1)}
+					className="basis-1/3 bg-red-400"
+				>
+					Hard
+				</button>
+				<button
+					onClick={() => practice(selectedCard, 3)}
+					className="basis-1/3 bg-yellow-400"
+				>
+					Medium
+				</button>
+				<button
+					onClick={() => practice(selectedCard, 5)}
+					className="basis-1/3 bg-green-400"
+				>
+					Easy
+				</button>
 			</div>
 
 			{/* Notes */}
@@ -122,3 +148,4 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 export default Study;
 
 //Todo: create a function for updating notes
+//Todo: add function to switch selectedCard -> if this stays

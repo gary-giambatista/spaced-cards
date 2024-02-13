@@ -42,6 +42,7 @@ export default function Home() {
 					updatedDecks.forEach((deck) => {
 						if (deck.id === selectedDeck.id) {
 							deck.cards = selectedDeck.cards;
+							deck.reviews_due = selectedDeck.reviews_due;
 						}
 					});
 					setDecks(updatedDecks);

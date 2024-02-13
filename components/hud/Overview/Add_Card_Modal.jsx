@@ -8,6 +8,7 @@ function Add_Card_Modal({
 	decks,
 	setDecks,
 }) {
+	//Todo: Fix issue where this requies modal to be open to generate unique ID
 	const randomNumber = useMemo(() => {
 		return Math.floor(Math.random() * (100000 - 1) + 1);
 	}, [isAddCardModalOpen]);
