@@ -8,18 +8,6 @@ function Add_Card_Modal({
 	decks,
 	setDecks,
 }) {
-	//Todo: Fix issue where this requies modal to be open to generate unique ID
-	const randomNumber = useMemo(() => {
-		return Math.floor(Math.random() * (100000 - 1) + 1);
-	}, [isAddCardModalOpen]);
-
-	const lastModified = useMemo(() => {
-		return Date.now();
-	}, [isAddCardModalOpen]);
-
-	//2. Need to keep track of how many INITIAL reviews were due in Study vs. how many after being updated
-	//3. Connect Study to selectedDeck
-
 	function handleSubmit(e) {
 		e.preventDefault();
 		const form = e.target;
@@ -29,7 +17,7 @@ function Add_Card_Modal({
 		//Consider modifying the local decks object to avoid refetching after each card is added to the deck
 
 		const newCard = {
-			id: randomNumber,
+			id: Math.floor(Math.random() * (100000 - 1) + 1),
 			question: formJson.question_input,
 			answer: formJson.answer_input,
 			hint: formJson.hint_input,
