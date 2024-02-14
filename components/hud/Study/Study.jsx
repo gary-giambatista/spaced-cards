@@ -11,20 +11,19 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	const [selectedCard, setSelectedCard] = useState(pickCard());
 
 	function pickCard() {
-		// const cards = selectedDeck.cards;
 		const cardsLength = selectedDeck.cards.length;
 
+		// Max number returned is always 1 below cardsLength (0 indexed)
 		const randomIndex = Math.floor(Math.random() * (cardsLength - 0) + 0);
 
 		const randomCard = selectedDeck.cards[randomIndex];
 
 		return randomCard;
 	}
+
 	console.log("Selected CARD: ", selectedCard);
 	console.log("Selected DECK: ", selectedDeck);
 
-	//Todo: Optimize updating selectedDeck
-	//1. avoid having state for selectedCard? use selectedDeck.cards[randomIndex]?
 	function practice(selectedCard, grade) {
 		const { interval, repetition, efactor } = supermemo(selectedCard, grade);
 
@@ -39,6 +38,7 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 		};
 
 		setSelectedCard(updatedCard);
+		// setSelectedCard(pickCard());
 
 		return setSelectedDeck((prevSelectedDeck) => {
 			const decreasedReviewsDue = prevSelectedDeck.reviews_due - 1;
@@ -56,21 +56,6 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 			};
 		});
 	}
-
-	//1. set selectedDeck's reviews_due -1
-	//2. check if (decks[i]=selectedDeck) deck.reviews_due !== selectDeck.reviews_due
-
-	// Updating cards[] and decks[]
-	// Do we update deck[] every time a card is practiced?
-	//
-	// Worrying about calculating remaining reviews vs. initial reviews
-	// 1. use math to calculate based upon how many were reviewed so far +
-	// 2. add another property to decks, reviews_due and remaining_reviews
-	// !3. add state to study based upon initial selectedDecks review_count, then update selectedDeck as each card is reviewed, and use study's state - 1 for remaining -- can add another state for initial vs. updated?
-
-	// Triggers for updating decks[] correctly after selectedDeck's cards[] is updated
-	// add a boolean to page.js and flip it every time practice occurs
-	// !modify existing if statement to check if deck.reviews_due !== selectDeck.reviews_due -- this will give extra ability for it to update correctly -- requires that the practice() function correctly decrements selectedDeck.reviews_due -1
 
 	return (
 		<section
@@ -147,5 +132,6 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 
 export default Study;
 
+//Todo: style card component
 //Todo: create a function for updating notes
-//Todo: add function to switch selectedCard -> if this stays
+//Todo: add function to switch selectedCard => pickCard()

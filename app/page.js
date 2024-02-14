@@ -5,7 +5,6 @@ import Hud_Header from "@/components/hud/Hud_Header";
 import Overview from "@/components/hud/Overview/Overview";
 import Study from "@/components/hud/Study/Study";
 import { useEffect, useState } from "react";
-import { SuperMemoGrade, SuperMemoItem, supermemo } from "supermemo";
 
 export default function Home() {
 	const [mode, setMode] = useState("overview");
@@ -25,30 +24,36 @@ export default function Home() {
 	useEffect(() => {
 		console.log("2 useEffect SD: ", selectedDeck);
 
-		if (decks) {
-			decks.forEach((deck) => {
-				// Update deck's only if selectedDeck's card length is different
-				if (
-					(deck.id === selectedDeck.id &&
-						deck.cards.length !== selectedDeck.cards.length) ||
-					(deck.id === selectedDeck.id &&
-						deck.reviews_due !== selectedDeck.reviews_due)
-				) {
-					// Copy decks to avoid mutating state directly
-					let updatedDecks = [...decks];
-					console.log("3 UPDATED DECKS: ", updatedDecks);
-
-					// Update the correct deck
-					updatedDecks.forEach((deck) => {
-						if (deck.id === selectedDeck.id) {
-							deck.cards = selectedDeck.cards;
-							deck.reviews_due = selectedDeck.reviews_due;
-						}
-					});
-					setDecks(updatedDecks);
-				}
-			});
+		function updateDecks() {
+			if (decks) {
+				decks.forEach((deck) => {
+					// Update deck's only if selectedDeck's card length is different or if reviews_due is different
+					if (
+						(deck.id === selectedDeck.id &&
+							deck.cards.length !== selectedDeck.cards.length) ||
+						(deck.id === selectedDeck.id &&
+							deck.reviews_due !== selectedDeck.reviews_due)
+					) {
+						// Update the correct deck
+						const updatedDecks = decks.map((deck) => {
+							if (deck.id === selectedDeck.id) {
+								return {
+									...deck,
+									cards: selectedDeck.cards,
+									reviews_due: selectedDeck.reviews_due,
+								};
+							} else {
+								return deck;
+							}
+						});
+						console.log("3 UPDATED DECKS: ", updatedDecks);
+						// Return here, only 1 if statement can be trigger at a time
+						return setDecks(updatedDecks);
+					}
+				});
+			}
 		}
+		updateDecks();
 		console.log("4 decks: DID decks UPDATE? ", decks);
 	}, [selectedDeck]);
 
@@ -66,7 +71,7 @@ export default function Home() {
 		// setSelectedDeck(deckOrNull);
 	}, []);
 
-	//Update decks in LS whenever decks state changes
+	// Update decks in LS whenever decks state changes
 	useEffect(() => {
 		localStorage.setItem("decks", JSON.stringify(decks));
 	}, [decks]);
