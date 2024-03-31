@@ -10,15 +10,36 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	const [reviewCount, setReviewCount] = useState(selectedDeck.reviews_due);
 	const [selectedCard, setSelectedCard] = useState(pickCard());
 
+	//TODO: Move this function to page.js
+	// Update selectedDecks review_due based upon due_date
+	function updateReviews() {
+		for (let card of selectedDeck.cards) {
+			if (card.due_date < dayjs.Dayjs(Date.now())) {
+				card.review_due = true;
+			}
+		}
+	}
+	// Handle selectedDeck changing 
+	useEffect(() => {
+		updateReviews();
+	}, [selectedDeck])
+
 	function pickCard() {
+
 		const cardsLength = selectedDeck.cards.length;
 
 		// Max number returned is always 1 below cardsLength (0 indexed)
 		const randomIndex = Math.floor(Math.random() * (cardsLength - 0) + 0);
-
+		
 		const randomCard = selectedDeck.cards[randomIndex];
 
-		return randomCard;
+		//Todo: handle the logic of reviewing the correct cards
+		if (randomCard.due_date < dayjs(Date.now())) {
+			randomCard.review_due = true;
+			return randomCard;
+		} else {
+			randomCard = Math.floor(Math.random() * (cardsLength - 0) + 0);
+		}
 	}
 
 	console.log("Selected CARD: ", selectedCard);
@@ -55,6 +76,8 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 				cards: updatedCards,
 			};
 		});
+		//todo: update selected card, determine which card has just been reviewed and
+		//prevent it from being re-selected
 	}
 
 	return (
@@ -72,19 +95,19 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 			<div className="flex justify-between items-center">
 				<button
 					onClick={() => practice(selectedCard, 1)}
-					className="basis-1/3 bg-red-400"
+					className="basis-1/3 bg-red-400 p-2"
 				>
 					Hard
 				</button>
 				<button
 					onClick={() => practice(selectedCard, 3)}
-					className="basis-1/3 bg-yellow-400"
+					className="basis-1/3 bg-yellow-400 p-2"
 				>
 					Medium
 				</button>
 				<button
 					onClick={() => practice(selectedCard, 5)}
-					className="basis-1/3 bg-green-400"
+					className="basis-1/3 bg-green-400 p-2"
 				>
 					Easy
 				</button>

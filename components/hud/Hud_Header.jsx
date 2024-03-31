@@ -33,7 +33,7 @@ function Hud_Header({
 					Overview
 				</button>
 				<button
-					disabled={selectedDeck?.cards?.length === 0}
+					disabled={selectedDeck?.cards?.length === 0 || !selectedDeck}
 					onClick={() => setMode("study")}
 					className={`h-9 w-36 px-4 rounded-r-md bg-slate-800 hover:bg-slate-500 outline disabled:cursor-not-allowed ${
 						mode === "study" ? "outline-slate-400" : "outline-slate-200"
@@ -65,7 +65,7 @@ function Hud_Header({
 				</button>
 			) : (
 				<div className="absolute right-0">{`${checkRemainingReviews(
-					selectedDeck.cards
+					selectedDeck?.cards
 				)} / ${selectedDeck.reviews_due}`}</div>
 			)}
 		</section>

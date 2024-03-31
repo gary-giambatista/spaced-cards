@@ -8,7 +8,7 @@ function Card({
 	selectedCard,
 }) {
 	return (
-		<div className="h-3/4 flex flex-col justify-evenly items-center  bg-slate-400">
+		<div className="h-3/4 flex lg:w-1/2 lg:mx-auto flex-col justify-evenly items-center  bg-slate-400">
 			{isQuestionShowing ? (
 				<div>{selectedCard.question}</div>
 			) : (
