@@ -8,7 +8,7 @@ function Add_Card_Modal({
 	decks,
 	setDecks,
 }) {
-	function handleSubmit(e) {
+	function createCard(e) {
 		e.preventDefault();
 		const form = e.target;
 		const formData = new FormData(form);
@@ -25,7 +25,7 @@ function Add_Card_Modal({
 			interval: 0,
 			repetition: 0,
 			efactor: 2.5,
-			due_date: "ISO date",
+			due_date: Date.now(),
 			review_due: true,
 		};
 
@@ -67,7 +67,7 @@ function Add_Card_Modal({
 				<form
 					className="w-full h-full flex flex-col gap-4 p-4 @lg:p-6 pt-0 @lg:pt-0"
 					method="post"
-					onSubmit={handleSubmit}
+					onSubmit={createCard}
 				>
 					<label className="flex flex-col">
 						Question:{" "}

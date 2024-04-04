@@ -10,36 +10,45 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	const [reviewCount, setReviewCount] = useState(selectedDeck.reviews_due);
 	const [selectedCard, setSelectedCard] = useState(pickCard());
 
+	//TODO:
+	// 1. Check to make sure the time check is in the same format
+	// 2. Move this function to page.js?
+
 	//TODO: Move this function to page.js
 	// Update selectedDecks review_due based upon due_date
 	function updateReviews() {
 		for (let card of selectedDeck.cards) {
-			if (card.due_date < dayjs.Dayjs(Date.now())) {
+			if (card.due_date < Date.now()) {
 				card.review_due = true;
 			}
 		}
 	}
-	// Handle selectedDeck changing 
+	// Handle selectedDeck changing
 	useEffect(() => {
 		updateReviews();
-	}, [selectedDeck])
+	}, [selectedDeck]);
 
 	function pickCard() {
-
 		const cardsLength = selectedDeck.cards.length;
 
 		// Max number returned is always 1 below cardsLength (0 indexed)
 		const randomIndex = Math.floor(Math.random() * (cardsLength - 0) + 0);
-		
+
 		const randomCard = selectedDeck.cards[randomIndex];
 
-		//Todo: handle the logic of reviewing the correct cards
-		if (randomCard.due_date < dayjs(Date.now())) {
-			randomCard.review_due = true;
-			return randomCard;
-		} else {
-			randomCard = Math.floor(Math.random() * (cardsLength - 0) + 0);
-		}
+		return randomCard;
+
+		//Todo: handle the logic of reviewing the correct cards - Date.now?
+		// Not necessary as updateReviews handles this
+
+		// Pick a card only if the review is due
+		// if (randomCard.due_date < Date.now()) {
+		// 	randomCard.review_due = true;
+		// 	return randomCard;
+		// } else {
+		// 	// Pick again if review isn't due
+		// 	randomCard = Math.floor(Math.random() * (cardsLength - 0) + 0);
+		// }
 	}
 
 	console.log("Selected CARD: ", selectedCard);
