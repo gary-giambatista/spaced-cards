@@ -10,11 +10,16 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	const [reviewCount, setReviewCount] = useState(selectedDeck.reviews_due);
 	const [selectedCard, setSelectedCard] = useState(pickCard());
 
+	// Trace
+	//1. selectedDeck changes
+	//2. page.js useEffect()->updateDecks() -- updates selectedDeck
+	//3. Study.jsx useEffect()->updateReviews() -- updates card.review_due
+
 	//TODO:
 	// 1. Check to make sure the time check is in the same format
-	// 2. Move this function to page.js?
+	// 2. Move this function to page.js? -- necessary to generate the correct review count for each deck -- and this prevents needing to use an empty state for selectedCard on page load if there is jitter
 
-	//TODO: Move this function to page.js
+	//TODO: Move this function to page.js?
 	// Update selectedDecks review_due based upon due_date
 	function updateReviews() {
 		for (let card of selectedDeck.cards) {
@@ -85,8 +90,6 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 				cards: updatedCards,
 			};
 		});
-		//todo: update selected card, determine which card has just been reviewed and
-		//prevent it from being re-selected
 	}
 
 	return (

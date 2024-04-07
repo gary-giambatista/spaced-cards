@@ -17,9 +17,10 @@ export default function Home() {
 	const [decks, setDecks] = useState(null);
 	const [selectedDeck, setSelectedDeck] = useState(null);
 
+	console.group("page.js");
+
 	console.log("1 Decks Page DECK: ", decks);
 	// console.log("Selected Deck PAGE: ", selectedDeck);
-
 	// Handle updating decks when selectedDeck is modified
 	useEffect(() => {
 		console.log("2 useEffect SD: ", selectedDeck);
@@ -39,7 +40,9 @@ export default function Home() {
 							if (deck.id === selectedDeck.id) {
 								return {
 									...deck,
-									cards: selectedDeck.cards,
+									cards: selectedDeck.cards.forEach((card) =>
+										card.due_date < Date.now() ? (card.review_due = true) : null
+									),
 									reviews_due: selectedDeck.reviews_due,
 								};
 							} else {
@@ -56,6 +59,8 @@ export default function Home() {
 		updateDecks();
 		console.log("4 decks: DID decks UPDATE? ", decks);
 	}, [selectedDeck]);
+
+	console.groupEnd();
 
 	// Set decks and selectedDeck on page load from LS
 	useEffect(() => {
