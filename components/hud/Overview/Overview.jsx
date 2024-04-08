@@ -12,6 +12,7 @@ function Overview({
 	decks,
 	setDecks,
 }) {
+	// TODO: add logic to handle NO decks
 	return (
 		<section className={`@container flex-grow bg-slate-600 p-4`}>
 			{isAddCardModalOpen ? (

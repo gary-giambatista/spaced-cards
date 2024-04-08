@@ -26,7 +26,7 @@ function Add_Card_Modal({
 			repetition: 0,
 			efactor: 2.5,
 			due_date: Date.now(),
-			review_due: true,
+			review_due: false,
 		};
 
 		setSelectedDeck((prevState) => ({

@@ -33,7 +33,11 @@ function Hud_Header({
 					Overview
 				</button>
 				<button
-					disabled={selectedDeck?.cards?.length === 0 || !selectedDeck}
+					disabled={
+						selectedDeck?.cards?.length === 0 ||
+						!selectedDeck ||
+						selectedDeck.reviews_due === 0
+					}
 					onClick={() => setMode("study")}
 					className={`h-9 w-36 px-4 rounded-r-md bg-slate-800 hover:bg-slate-500 outline disabled:cursor-not-allowed ${
 						mode === "study" ? "outline-slate-400" : "outline-slate-200"

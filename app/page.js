@@ -40,9 +40,7 @@ export default function Home() {
 							if (deck.id === selectedDeck.id) {
 								return {
 									...deck,
-									cards: selectedDeck.cards.forEach((card) =>
-										card.due_date < Date.now() ? (card.review_due = true) : null
-									),
+									cards: selectedDeck.cards,
 									reviews_due: selectedDeck.reviews_due,
 								};
 							} else {
@@ -64,11 +62,36 @@ export default function Home() {
 
 	// Set decks and selectedDeck on page load from LS
 	useEffect(() => {
-		// If decks exist in Local Storage
-		if (JSON.parse(localStorage.getItem("decks"))) {
-			setDecks(JSON.parse(localStorage.getItem("decks")));
+		const localStorageDecks = JSON.parse(localStorage.getItem("decks"));
+
+		if (localStorageDecks) {
+			/**
+			 * Update deck.reviews_due & card.review_due on page load for ALL decks
+			 */
+			function updateReviewsDue() {
+				for (const deck of localStorageDecks) {
+					// Reset reviews to 0 to avoid over counting
+					deck.reviews_due = 0;
+
+					const cards = deck.cards;
+					if (!cards.length) {
+						break;
+					}
+					// Unix Epoch time - milliseconds
+					const nowInMilliseconds = Date.now();
+
+					for (const card of cards) {
+						if (card.due_date < nowInMilliseconds) {
+							card.review_due = true;
+							deck.reviews_due += 1;
+						}
+					}
+				}
+			}
+			updateReviewsDue();
+			setDecks(localStorageDecks);
 			// Set selectedDeck to first deck
-			setSelectedDeck(JSON.parse(localStorage.getItem("decks"))[0]);
+			setSelectedDeck(localStorageDecks[0]);
 		}
 		// const deckOrNull = JSON.parse(localStorage.getItem("decks"))
 		// 	? JSON.parse(localStorage.getItem("decks"))[0]
@@ -146,6 +169,11 @@ export default function Home() {
 		</main>
 	);
 }
+
+// Ditched code because of rendering times:
+// cards: selectedDeck.cards.forEach((card) =>
+// 										card.due_date < Date.now() ? (card.review_due = true) : null
+// 									)
 
 // Notes
 // JS logic to hide drawer not necessary, because using media query to set the drawer to absolute fixes display issues

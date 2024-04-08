@@ -12,26 +12,27 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 
 	// Trace
 	//1. selectedDeck changes
-	//2. page.js useEffect()->updateDecks() -- updates selectedDeck
-	//3. Study.jsx useEffect()->updateReviews() -- updates card.review_due
+	//2. page.js useEffect()->updateReviewsDue() -- updates reviews_due & card.review_due
+	//3. page.js useEffect()->updateDecks() -- updates selectedDeck
 
 	//TODO:
-	// 1. Check to make sure the time check is in the same format
-	// 2. Move this function to page.js? -- necessary to generate the correct review count for each deck -- and this prevents needing to use an empty state for selectedCard on page load if there is jitter
+	// 1. Check to make sure the time check is in the same format ✔
+	// 2. Move this function to page.js? -- necessary to generate the correct review count for each deck -- and this prevents needing to use an empty state for selectedCard on page load if there is jitter ✔
+	// 3. Handle picking a new card after practice() & ONLY picking a card that should be reviewed & handle situation where no more cards are left to review
 
 	//TODO: Move this function to page.js?
 	// Update selectedDecks review_due based upon due_date
-	function updateReviews() {
-		for (let card of selectedDeck.cards) {
-			if (card.due_date < Date.now()) {
-				card.review_due = true;
-			}
-		}
-	}
+	// function updateReviews() {
+	// 	for (let card of selectedDeck.cards) {
+	// 		if (card.due_date < Date.now()) {
+	// 			card.review_due = true;
+	// 		}
+	// 	}
+	// }
 	// Handle selectedDeck changing
-	useEffect(() => {
-		updateReviews();
-	}, [selectedDeck]);
+	// useEffect(() => {
+	// 	updateReviews();
+	// }, [selectedDeck]);
 
 	function pickCard() {
 		const cardsLength = selectedDeck.cards.length;
@@ -62,7 +63,7 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	function practice(selectedCard, grade) {
 		const { interval, repetition, efactor } = supermemo(selectedCard, grade);
 
-		const due_date = dayjs(Date.now()).add(interval, "day").toISOString();
+		const due_date = dayjs(Date.now()).add(interval, "day").valueOf();
 
 		const updatedCard = {
 			...selectedCard,
