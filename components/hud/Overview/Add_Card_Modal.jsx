@@ -32,6 +32,7 @@ function Add_Card_Modal({
 		setSelectedDeck((prevState) => ({
 			...prevState,
 			cards: [...prevState.cards, newCard],
+			// reviews_due: prevState.reviews_due + 1,
 		}));
 		console.log("Selected DECK MODAL: ", selectedDeck);
 		// Cannot update decks here because selectedDeck is not yet updated

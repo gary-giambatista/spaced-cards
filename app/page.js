@@ -40,7 +40,7 @@ export default function Home() {
 							if (deck.id === selectedDeck.id) {
 								return {
 									...deck,
-									cards: selectedDeck.cards,
+									cards: updateReviewsDue([], selectedDeck),
 									reviews_due: selectedDeck.reviews_due,
 								};
 							} else {
@@ -60,35 +60,60 @@ export default function Home() {
 
 	console.groupEnd();
 
+	/**
+	 * Update deck.reviews_due & card.review_due
+	 * @param {object[]} [decks] -  represents an array of decks
+	 * @param {object} [deck] - represents 1 deck
+	 */
+	function updateReviewsDue(decks = [], deck) {
+		// Unix Epoch time - milliseconds
+		const nowInMilliseconds = Date.now();
+
+		if (deck) {
+			// Reset reviews to 0 to avoid over counting
+			deck.reviews_due = 0;
+
+			const cards = deck.cards;
+
+			if (!cards.length) {
+				return cards;
+			}
+
+			for (const card of cards) {
+				if (card.due_date < nowInMilliseconds) {
+					card.review_due = true;
+					deck.reviews_due += 1;
+				}
+			}
+			return cards;
+		}
+
+		for (const deck of decks) {
+			// Reset reviews to 0 to avoid over counting
+			deck.reviews_due = 0;
+
+			const cards = deck.cards;
+
+			if (!cards.length) {
+				break;
+			}
+
+			for (const card of cards) {
+				if (card.due_date < nowInMilliseconds) {
+					card.review_due = true;
+					deck.reviews_due += 1;
+				}
+			}
+		}
+		return decks;
+	}
+
 	// Set decks and selectedDeck on page load from LS
 	useEffect(() => {
 		const localStorageDecks = JSON.parse(localStorage.getItem("decks"));
 
 		if (localStorageDecks) {
-			/**
-			 * Update deck.reviews_due & card.review_due on page load for ALL decks
-			 */
-			function updateReviewsDue() {
-				for (const deck of localStorageDecks) {
-					// Reset reviews to 0 to avoid over counting
-					deck.reviews_due = 0;
-
-					const cards = deck.cards;
-					if (!cards.length) {
-						break;
-					}
-					// Unix Epoch time - milliseconds
-					const nowInMilliseconds = Date.now();
-
-					for (const card of cards) {
-						if (card.due_date < nowInMilliseconds) {
-							card.review_due = true;
-							deck.reviews_due += 1;
-						}
-					}
-				}
-			}
-			updateReviewsDue();
+			updateReviewsDue(localStorageDecks);
 			setDecks(localStorageDecks);
 			// Set selectedDeck to first deck
 			setSelectedDeck(localStorageDecks[0]);
