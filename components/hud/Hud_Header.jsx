@@ -7,20 +7,6 @@ function Hud_Header({
 	setIsAddCardModalOpen,
 	selectedDeck,
 }) {
-	/**
-	 * @param {Array} cards - selectedDeck's card array
-	 */
-	function checkRemainingReviews(cards) {
-		let remainingReviews = 0;
-
-		cards.forEach((card) => {
-			if (card.review_due) {
-				remainingReviews += 1;
-			}
-		});
-
-		return remainingReviews;
-	}
 	return (
 		<section className="flex justify-between items-center h-9 md:h-12 w-full relative">
 			<div className="flex justify-center items-center md:mx-auto gap-2">
@@ -68,9 +54,7 @@ function Hud_Header({
 					<div className="hidden lg:block">Add Card</div>
 				</button>
 			) : (
-				<div className="absolute right-0">{`${checkRemainingReviews(
-					selectedDeck?.cards
-				)} / ${selectedDeck.reviews_due}`}</div>
+				<div className="absolute right-0">{selectedDeck.reviews_due}</div>
 			)}
 		</section>
 	);

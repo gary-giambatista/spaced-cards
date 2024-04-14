@@ -64,6 +64,7 @@ export default function Home() {
 	 * Update deck.reviews_due & card.review_due
 	 * @param {object[]} [decks] -  represents an array of decks
 	 * @param {object} [deck] - represents 1 deck
+	 * @returns {object[]} - if a deck is passed in, returns the updated deck's cards, otherwise returns the the full updated decks'
 	 */
 	function updateReviewsDue(decks = [], deck) {
 		// Unix Epoch time - milliseconds
@@ -82,6 +83,7 @@ export default function Home() {
 			for (const card of cards) {
 				if (card.due_date < nowInMilliseconds) {
 					card.review_due = true;
+					// need to accept deck, instead of deck.cards
 					deck.reviews_due += 1;
 				}
 			}
