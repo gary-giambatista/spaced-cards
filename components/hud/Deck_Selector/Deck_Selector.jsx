@@ -71,7 +71,7 @@ function Deck_Selector({
 				return (
 					<div
 						onClick={() => setSelectedDeck(deck)}
-						className={`flex justify-between overflow-hidden py-1 px-2 ${
+						className={`flex justify-between overflow-hidden py-1 px-2 hover:cursor-pointer hover:bg-slate-600 ${
 							drawerOpen ? "opacity-100" : "opacity-0"
 						} ${
 							deck?.id === selectedDeck?.id ? "bg-slate-500" : "bg-transparent"

@@ -2,6 +2,7 @@ import React from "react";
 import Add_Card_Modal from "./Add_Card_Modal";
 import Card_Rows from "./Card_Rows";
 import Empty_Deck from "./Empty_Deck";
+import No_Decks from "./No_Decks";
 
 function Overview({
 	setMode,
@@ -13,6 +14,9 @@ function Overview({
 	setDecks,
 }) {
 	// TODO: add logic to handle NO decks
+	if (!decks) {
+		return <No_Decks />;
+	}
 	return (
 		<section className={`@container flex-grow bg-slate-600 p-4`}>
 			{isAddCardModalOpen ? (
