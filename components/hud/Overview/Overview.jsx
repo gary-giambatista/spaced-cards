@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Add_Card_Modal from "./Add_Card_Modal";
 import Card_Rows from "./Card_Rows";
+import Edit_Card_Modal from "./Edit_Card_Modal";
 import Empty_Deck from "./Empty_Deck";
 import No_Decks from "./No_Decks";
 
@@ -13,7 +14,23 @@ function Overview({
 	decks,
 	setDecks,
 }) {
-	// TODO: add logic to handle NO decks
+	const [selectedCardId, setSelectedCardId] = useState(0);
+	const [selectedCard, setSelectedCard] = useState(null);
+
+	console.log("Overview -- SELECTED CARD ID: ", selectedCardId);
+	console.log("Overview -- SELECTED CARD: ", selectedCard);
+
+	useEffect(() => {
+		setSelectedCard(
+			selectedDeck.cards[
+				selectedDeck.cards.findIndex((card) => {
+					return card.id === selectedCardId;
+				})
+			]
+		);
+	}, [selectedCardId]);
+
+	// Handle user with no created decks
 	if (!decks) {
 		return <No_Decks />;
 	}
@@ -29,8 +46,18 @@ function Overview({
 					setDecks={setDecks}
 				/>
 			) : null}
+			{/* {selectedCard ? (
+				<Edit_Card_Modal
+					setSelectedDeck={setSelectedDeck}
+					selectedCard={selectedCard}
+					setSelectedCard={setSelectedCard}
+				/>
+			) : null} */}
 			{selectedDeck?.cards?.length > 0 ? (
-				<Card_Rows selectedDeck={selectedDeck} />
+				<Card_Rows
+					selectedDeck={selectedDeck}
+					setSelectedCardId={setSelectedCardId}
+				/>
 			) : (
 				<Empty_Deck
 					isAddCardModalOpen={isAddCardModalOpen}
