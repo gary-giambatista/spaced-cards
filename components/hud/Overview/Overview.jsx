@@ -20,6 +20,7 @@ function Overview({
 	console.log("Overview -- SELECTED CARD ID: ", selectedCardId);
 	console.log("Overview -- SELECTED CARD: ", selectedCard);
 
+	// setSelectedCard when edit is clicked
 	useEffect(() => {
 		setSelectedCard(
 			selectedDeck.cards[
@@ -46,13 +47,14 @@ function Overview({
 					setDecks={setDecks}
 				/>
 			) : null}
-			{/* {selectedCard ? (
+			{selectedCard ? (
 				<Edit_Card_Modal
+					selectedDeck={selectedDeck}
 					setSelectedDeck={setSelectedDeck}
 					selectedCard={selectedCard}
 					setSelectedCard={setSelectedCard}
 				/>
-			) : null} */}
+			) : null}
 			{selectedDeck?.cards?.length > 0 ? (
 				<Card_Rows
 					selectedDeck={selectedDeck}
