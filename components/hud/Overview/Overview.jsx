@@ -17,8 +17,9 @@ function Overview({
 	const [selectedCardId, setSelectedCardId] = useState(0);
 	const [selectedCard, setSelectedCard] = useState(null);
 
-	console.log("Overview -- SELECTED CARD ID: ", selectedCardId);
-	console.log("Overview -- SELECTED CARD: ", selectedCard);
+	// Re-render optimization Note -- these set states can be moved to children nodes to reduce the number of re-renders, but I don't believe this is necessary, and state flow is more manageable with his design
+	// console.log("Overview -- SELECTED CARD ID: ", selectedCardId);
+	// console.log("Overview -- SELECTED CARD: ", selectedCard);
 
 	// setSelectedCard when edit is clicked
 	useEffect(() => {
@@ -26,12 +27,15 @@ function Overview({
 		if (!selectedCardId) return;
 		setSelectedCard(
 			selectedDeck.cards[
-				selectedDeck.cards.findIndex((card) => {
-					return card.id === selectedCardId;
-				})
+				selectedDeck.cards.findIndex((card) => card.id === selectedCardId)
 			]
 		);
 	}, [selectedCardId]);
+
+	// Reset selectedCardId to 0 (undefined) when a card is clicked (this allows the same card's Edit_Card_Modal to be opened more than once in a row since otherwise, selectedCardId doesn't change in state)
+	useEffect(() => {
+		setSelectedCardId(0);
+	}, [selectedCard]);
 
 	// Handle user with no created decks
 	if (!decks) {
@@ -74,31 +78,4 @@ function Overview({
 
 export default Overview;
 
-const cards = [
-	{
-		question: "test deck 1",
-		answer: 15,
-		id: 1,
-	},
-	{
-		question: "test deck 2",
-		answer: 21,
-		id: 2,
-	},
-	{
-		question: "test deck 3",
-		answer: 31,
-		id: 3,
-	},
-	{
-		question: "test deck 4",
-		answer: 5,
-		id: 4,
-	},
-	{
-		question: "test deck 5",
-		answer: 1,
-		id: 5,
-	},
-];
 //old screen CSS grid grid-cols-1 md:grid-cols-3 2xl:grid-cols-5 gap-4

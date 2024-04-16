@@ -8,6 +8,7 @@ function Add_Card_Modal({
 	decks,
 	setDecks,
 }) {
+	// TODO: Create duplicate mirrored card functionality
 	function createCard(e) {
 		e.preventDefault();
 		const form = e.target;

@@ -6,8 +6,7 @@ function Edit_Card_Modal({
 	selectedCard,
 	setSelectedCard,
 }) {
-	//TODO: Debug why delete function isn't working
-	// TODO: find the cause of the unclickable (uneditable) cards after clicking create a card -- state isn't updating so no re-renders are occurring
+	// TODO: find the cause of the un-clickable (uneditable) cards after clicking create a card -- state isn't updating so no re-renders are occurring
 	function editCard(e) {
 		e.preventDefault();
 		const form = e.target;
@@ -55,10 +54,10 @@ function Edit_Card_Modal({
 				(card) => card.id === selectedCard.id
 			);
 
-			/**@type {object[]} Create a new array with the deleted card spliced out */
+			/**@type {object[]} Create a new array with the selected card spliced out */
 			const updatedCards = prevSelectedDeck.cards.toSpliced(indexToRemove, 1);
 
-			// Return the previous state, ONLY update cards
+			// Return the previous state and ONLY update cards
 			return {
 				...prevSelectedDeck,
 				cards: updatedCards,
