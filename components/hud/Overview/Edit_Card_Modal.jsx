@@ -13,7 +13,6 @@ function Edit_Card_Modal({
 		const form = e.target;
 		const formData = new FormData(form);
 		const formJson = Object.fromEntries(formData.entries());
-		console.log(formJson);
 
 		// Create a copy of the card and update it
 		const editedCard = selectedCard;
@@ -37,46 +36,34 @@ function Edit_Card_Modal({
 			};
 		});
 
-		console.log("EDITED selected DECK: ", selectedDeck);
 		// Clear selectedCard to close the editing modal
 		return setSelectedCard(null);
 	}
 
 	/**
 	 * Deletes the user's selected card and updates the selectedDeck
-	 * @param {Event} e - click event
-	 * @returns {object} a study deck object
+	 * @param {Event} e - event from clicking the "Delete" button
+	 * @returns {object & null} a study deck object & null
 	 */
 	function deleteCard(e) {
 		e.preventDefault();
 
 		// Update selectedDeck with the edited card
 		setSelectedDeck((prevSelectedDeck) => {
-			// Create a copy of the current selectedDeck's cards to mutate
-			const updatedCards = prevSelectedDeck.cards;
-
-			console.log("updatedCards1", updatedCards);
-
 			// Find the index of the selectedCard by using the card's Id
-			const indexToRemove = updatedCards.findIndex(
+			const indexToRemove = prevSelectedDeck.cards.findIndex(
 				(card) => card.id === selectedCard.id
 			);
 
-			console.log("INDEX TO REMOVE", indexToRemove);
+			/**@type {object[]} Create a new array with the deleted card spliced out */
+			const updatedCards = prevSelectedDeck.cards.toSpliced(indexToRemove, 1);
 
-			// Remove the selectedCard
-			updatedCards.splice(indexToRemove, 1);
-
-			console.log("updatedCards2", updatedCards);
-
-			// Return the previous state, with the
+			// Return the previous state, ONLY update cards
 			return {
 				...prevSelectedDeck,
 				cards: updatedCards,
 			};
 		});
-
-		console.log("EDITED selected DECK: ", selectedDeck);
 
 		// Clear selectedCard to close the editing modal
 		return setSelectedCard(null);
