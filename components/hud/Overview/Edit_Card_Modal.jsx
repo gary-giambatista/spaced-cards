@@ -6,8 +6,8 @@ function Edit_Card_Modal({
 	selectedCard,
 	setSelectedCard,
 }) {
-	//TODO: finish editCard function by updating only the selectedDeck's selectedCard
-	// TODO: find the cause of the unclickable (uneditable) cards after clicking create a card
+	//TODO: Debug why delete function isn't working
+	// TODO: find the cause of the unclickable (uneditable) cards after clicking create a card -- state isn't updating so no re-renders are occurring
 	function editCard(e) {
 		e.preventDefault();
 		const form = e.target;
@@ -15,26 +15,14 @@ function Edit_Card_Modal({
 		const formJson = Object.fromEntries(formData.entries());
 		console.log(formJson);
 
-		// const newCard = {
-		// 	id: Math.floor(Math.random() * (100000 - 1) + 1),
-		// 	question: formJson.question_input,
-		// 	answer: formJson.answer_input,
-		// 	hint: formJson.hint_input,
-		// 	note: formJson.notes_input,
-		// 	interval: 0,
-		// 	repetition: 0,
-		// 	efactor: 2.5,
-		// 	due_date: Date.now(),
-		// 	review_due: false,
-		// };
-
+		// Create a copy of the card and update it
 		const editedCard = selectedCard;
-		// Update the card
 		editedCard.question = formJson.question_input;
 		editedCard.answer = formJson.answer_input;
 		editedCard.hinter = formJson.hint_input;
 		editedCard.note = formJson.notes_input;
 
+		// Update selectedDeck with the edited card
 		setSelectedDeck((prevSelectedDeck) => {
 			const updatedCards = prevSelectedDeck.cards.map((card) => {
 				if (card.id === selectedCard.id) {
@@ -50,17 +38,48 @@ function Edit_Card_Modal({
 		});
 
 		console.log("EDITED selected DECK: ", selectedDeck);
+		// Clear selectedCard to close the editing modal
 		return setSelectedCard(null);
+	}
 
-		// setSelectedDeck((prevState) => ({
-		// 	...prevState,
-		// 	cards: [...prevState.cards, newCard],
-		// 	// reviews_due: prevState.reviews_due + 1,
-		// }));
-		// console.log("EDITED selected DECK: ", selectedDeck);
-		// // Cannot update decks here because selectedDeck is not yet updated
+	/**
+	 * Deletes the user's selected card and updates the selectedDeck
+	 * @param {Event} e - click event
+	 * @returns {object} a study deck object
+	 */
+	function deleteCard(e) {
+		e.preventDefault();
 
-		// setSelectedCard(null);
+		// Update selectedDeck with the edited card
+		setSelectedDeck((prevSelectedDeck) => {
+			// Create a copy of the current selectedDeck's cards to mutate
+			const updatedCards = prevSelectedDeck.cards;
+
+			console.log("updatedCards1", updatedCards);
+
+			// Find the index of the selectedCard by using the card's Id
+			const indexToRemove = updatedCards.findIndex(
+				(card) => card.id === selectedCard.id
+			);
+
+			console.log("INDEX TO REMOVE", indexToRemove);
+
+			// Remove the selectedCard
+			updatedCards.splice(indexToRemove, 1);
+
+			console.log("updatedCards2", updatedCards);
+
+			// Return the previous state, with the
+			return {
+				...prevSelectedDeck,
+				cards: updatedCards,
+			};
+		});
+
+		console.log("EDITED selected DECK: ", selectedDeck);
+
+		// Clear selectedCard to close the editing modal
+		return setSelectedCard(null);
 	}
 
 	return (
@@ -131,7 +150,10 @@ function Edit_Card_Modal({
 					</label>
 					<hr />
 					<div className="flex justify-evenly items-center">
-						<button className="bg-red-400 py-3 px-5 rounded-md" type="reset">
+						<button
+							className="bg-red-400 py-3 px-5 rounded-md"
+							onClick={(e) => deleteCard(e)}
+						>
 							Delete
 						</button>
 						<button className="bg-green-400 py-3 px-5 rounded-md" type="submit">
