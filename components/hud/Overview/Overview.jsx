@@ -22,6 +22,8 @@ function Overview({
 
 	// setSelectedCard when edit is clicked
 	useEffect(() => {
+		// 0 falsy -- short circuit if nothing to set
+		if (!selectedCardId) return;
 		setSelectedCard(
 			selectedDeck.cards[
 				selectedDeck.cards.findIndex((card) => {

@@ -35,15 +35,32 @@ function Edit_Card_Modal({
 		editedCard.hinter = formJson.hint_input;
 		editedCard.note = formJson.notes_input;
 
-		setSelectedDeck((prevState) => ({
-			...prevState,
-			cards: [...prevState.cards, newCard],
-			// reviews_due: prevState.reviews_due + 1,
-		}));
-		console.log("EDITED selected DECK: ", selectedDeck);
-		// Cannot update decks here because selectedDeck is not yet updated
+		setSelectedDeck((prevSelectedDeck) => {
+			const updatedCards = prevSelectedDeck.cards.map((card) => {
+				if (card.id === selectedCard.id) {
+					// If the card id matches, update the card
+					return editedCard;
+				}
+				return card; // Otherwise, return the card unchanged
+			});
+			return {
+				...prevSelectedDeck,
+				cards: updatedCards,
+			};
+		});
 
-		setSelectedCard(null);
+		console.log("EDITED selected DECK: ", selectedDeck);
+		return setSelectedCard(null);
+
+		// setSelectedDeck((prevState) => ({
+		// 	...prevState,
+		// 	cards: [...prevState.cards, newCard],
+		// 	// reviews_due: prevState.reviews_due + 1,
+		// }));
+		// console.log("EDITED selected DECK: ", selectedDeck);
+		// // Cannot update decks here because selectedDeck is not yet updated
+
+		// setSelectedCard(null);
 	}
 
 	return (

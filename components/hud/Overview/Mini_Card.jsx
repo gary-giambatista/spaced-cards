@@ -6,7 +6,6 @@ function Mini_Card({ card, setSelectedCardId }) {
 
 	return (
 		<div
-			key={card.id}
 			className="flex flex-col h-80 w-full bg-slate-400 "
 			onClick={() => setSelectedCardId(card.id)}
 		>
