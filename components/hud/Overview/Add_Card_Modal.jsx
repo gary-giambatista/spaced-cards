@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useRef } from "react";
 
 function Add_Card_Modal({
 	isAddCardModalOpen,
@@ -39,7 +39,14 @@ function Add_Card_Modal({
 		// Cannot update decks here because selectedDeck is not yet updated
 
 		form.reset();
+		questionInputRef.current.focus();
 	}
+
+	const questionInputRef = useRef(null);
+	// Set focus to question input on modal open (mount)
+	useEffect(() => {
+		questionInputRef.current.focus();
+	}, []);
 
 	return (
 		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center  @lg:items-center backdrop-blur-sm p-2">
@@ -78,6 +85,7 @@ function Add_Card_Modal({
 							name="question_input"
 							placeholder="Your question here"
 							defaultValue=""
+							ref={questionInputRef}
 						/>
 					</label>
 					<label className="flex flex-col">

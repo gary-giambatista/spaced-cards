@@ -6,7 +6,6 @@ function Edit_Card_Modal({
 	selectedCard,
 	setSelectedCard,
 }) {
-	// TODO: find the cause of the un-clickable (uneditable) cards after clicking create a card -- state isn't updating so no re-renders are occurring
 	function editCard(e) {
 		e.preventDefault();
 		const form = e.target;
