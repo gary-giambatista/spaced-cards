@@ -8,7 +8,6 @@ function Add_Card_Modal({
 	decks,
 	setDecks,
 }) {
-	// TODO: Create duplicate mirrored card functionality
 	function createCard(e) {
 		e.preventDefault();
 		const form = e.target;
@@ -30,14 +29,32 @@ function Add_Card_Modal({
 			review_due: false,
 		};
 
-		setSelectedDeck((prevState) => ({
-			...prevState,
-			cards: [...prevState.cards, newCard],
-			// reviews_due: prevState.reviews_due + 1,
-		}));
-		console.log("Selected DECK MODAL: ", selectedDeck);
-		// Cannot update decks here because selectedDeck is not yet updated
+		// Check if mirrored card creation is checked aka "on"
+		if (formJson.mirror_or_not === "on") {
+			console.log("formJson.mirror_or_not: ", formJson.mirror_or_not);
 
+			// Create a shallow copy of newCard and FLIP question/answer - set new id to prevent react key mapping error
+			const mirroredCard = {
+				...newCard,
+				id: Math.floor(Math.random() * (100000 - 1) + 1),
+				question: formJson.answer_input,
+				answer: formJson.question_input,
+			};
+
+			// Add both new cards to the selected deck
+			setSelectedDeck((prevState) => ({
+				...prevState,
+				cards: [...prevState.cards, newCard, mirroredCard],
+			}));
+		} else {
+			// Add only the newCard to the selected deck
+			setSelectedDeck((prevState) => ({
+				...prevState,
+				cards: [...prevState.cards, newCard],
+			}));
+		}
+
+		// Reset the form and set focus to the question input (1st input)
 		form.reset();
 		questionInputRef.current.focus();
 	}
