@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 
 function Edit_Card_Modal({
 	selectedDeck,
@@ -6,6 +6,8 @@ function Edit_Card_Modal({
 	selectedCard,
 	setSelectedCard,
 }) {
+	const [isDeleting, setIsDeleting] = useState(false);
+
 	function editCard(e) {
 		e.preventDefault();
 		const form = e.target;
@@ -63,6 +65,8 @@ function Edit_Card_Modal({
 			};
 		});
 
+		// Clear state to hide delete confirmation prompt
+		setIsDeleting(false);
 		// Clear selectedCard to close the editing modal
 		return setSelectedCard(null);
 	}
@@ -134,17 +138,41 @@ function Edit_Card_Modal({
 						/>
 					</label>
 					<hr />
-					<div className="flex justify-evenly items-center">
-						<button
-							className="bg-red-400 py-3 px-5 rounded-md"
-							onClick={(e) => deleteCard(e)}
-						>
-							Delete
-						</button>
-						<button className="bg-green-400 py-3 px-5 rounded-md" type="submit">
-							Save
-						</button>
-					</div>
+					{/* Show/Hide Delete Confirmation Prompt */}
+					{isDeleting ? (
+						<div className="flex flex-col items-center justify-center gap-2">
+							<h3 className="">Are you sure?</h3>
+							<div className="flex w-full justify-evenly items-center">
+								<button
+									onClick={(e) => deleteCard(e)}
+									className="bg-red-400 py-3 px-5 rounded-md"
+								>
+									Delete
+								</button>
+								<button
+									onClick={() => setIsDeleting(false)}
+									className="bg-green-400 py-3 px-5 rounded-md"
+								>
+									Cancel
+								</button>
+							</div>
+						</div>
+					) : (
+						<div className="flex justify-evenly items-center">
+							<button
+								className="bg-red-400 py-3 px-5 rounded-md"
+								onClick={() => setIsDeleting(true)}
+							>
+								Delete
+							</button>
+							<button
+								className="bg-green-400 py-3 px-5 rounded-md"
+								type="submit"
+							>
+								Save
+							</button>
+						</div>
+					)}
 				</form>
 			</div>
 		</div>
