@@ -13,6 +13,7 @@ export default function Home() {
 		typeof window === "undefined" ? false : window.innerWidth <= 820
 	);
 	const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
+	const [isEditDeckModalOpen, setIsEditDeckModalOpen] = useState(false);
 	let timeout = false;
 	const [decks, setDecks] = useState(null);
 	const [selectedDeck, setSelectedDeck] = useState(null);
@@ -174,6 +175,8 @@ export default function Home() {
 					isAddCardModalOpen={isAddCardModalOpen}
 					setIsAddCardModalOpen={setIsAddCardModalOpen}
 					selectedDeck={selectedDeck}
+					isEditDeckModalOpen={isEditDeckModalOpen}
+					setIsEditDeckModalOpen={setIsEditDeckModalOpen}
 				/>
 				{mode === "overview" ? (
 					<Overview
@@ -184,6 +187,8 @@ export default function Home() {
 						setSelectedDeck={setSelectedDeck}
 						decks={decks}
 						setDecks={setDecks}
+						isEditDeckModalOpen={isEditDeckModalOpen}
+						setIsEditDeckModalOpen={setIsEditDeckModalOpen}
 					/>
 				) : (
 					<Study

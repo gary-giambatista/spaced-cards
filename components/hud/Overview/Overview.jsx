@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Add_Card_Modal from "./Add_Card_Modal";
 import Card_Rows from "./Card_Rows";
 import Edit_Card_Modal from "./Edit_Card_Modal";
+import Edit_Deck_Modal from "./Edit_Deck_Modal";
 import Empty_Deck from "./Empty_Deck";
 import No_Decks from "./No_Decks";
 
@@ -13,6 +14,8 @@ function Overview({
 	setSelectedDeck,
 	decks,
 	setDecks,
+	isEditDeckModalOpen,
+	setIsEditDeckModalOpen,
 }) {
 	const [selectedCardId, setSelectedCardId] = useState(0);
 	const [selectedCard, setSelectedCard] = useState(null);
@@ -43,6 +46,9 @@ function Overview({
 	}
 	return (
 		<section className={`@container flex-grow bg-slate-600 p-4`}>
+			{isEditDeckModalOpen ? (
+				<Edit_Deck_Modal setIsEditDeckModalOpen={setIsEditDeckModalOpen} />
+			) : null}
 			{isAddCardModalOpen ? (
 				<Add_Card_Modal
 					isAddCardModalOpen={isAddCardModalOpen}

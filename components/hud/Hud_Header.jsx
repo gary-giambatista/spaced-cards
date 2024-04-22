@@ -6,6 +6,8 @@ function Hud_Header({
 	isCardModalOpen,
 	setIsAddCardModalOpen,
 	selectedDeck,
+	isEditDeckModalOpen,
+	setIsEditDeckModalOpen,
 }) {
 	return (
 		<section className="flex justify-between items-center h-9 md:h-12 w-full relative">
@@ -36,7 +38,7 @@ function Hud_Header({
 			{mode === "overview" ? (
 				<div className="flex justify-end items-center gap-2">
 					<button
-						onClick={() => setIsAddCardModalOpen((prevState) => !prevState)}
+						onClick={() => setIsEditDeckModalOpen((prevState) => !prevState)}
 						className="h-9 w-10 lg:w-36  flex justify-center items-center gap-1 bg-slate-800 rounded-md hover:bg-slate-500"
 					>
 						<svg
