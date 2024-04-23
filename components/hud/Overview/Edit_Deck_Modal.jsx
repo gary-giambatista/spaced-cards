@@ -1,6 +1,38 @@
 import React from "react";
 
-function Edit_Deck_Modal({ setIsEditDeckModalOpen }) {
+function Edit_Deck_Modal({
+	selectedDeck,
+	setSelectedDeck,
+	decks,
+	setDecks,
+	setIsEditDeckModalOpen,
+}) {
+	/**
+	 * Delete the currently selectedDeck
+	 */
+	function deleteDeck() {
+		setDecks((prevDecks) => {
+			// Match selectedDeck in decks and capture that index
+			const indexToRemove = prevDecks.findIndex(
+				(deck) => deck.id === selectedDeck.id
+			);
+
+			// Create a new decks object with the removed deck
+			const newDecks = prevDecks.toSpliced(indexToRemove, 1);
+
+			// If there will be no new deck to set as selectedDeck -> null
+			if (newDecks.length > 0) {
+				setSelectedDeck(newDecks[0]);
+			} else {
+				setSelectedDeck(null);
+			}
+			// Close the Edit_Deck_Modal
+			setIsEditDeckModalOpen(false);
+
+			return newDecks;
+		});
+	}
+
 	return (
 		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center  @lg:items-center backdrop-blur-sm p-2">
 			<div className="bg-green-700 relative rounded-md min-w-80 min-h-80">
@@ -29,7 +61,12 @@ function Edit_Deck_Modal({ setIsEditDeckModalOpen }) {
 				<hr />
 				<div className="flex justify-between items-center p-4 @lg:p-6">
 					<div className="">Delete your deck</div>
-					<button className="bg-red-400 py-3 px-5 rounded-md">Delete</button>
+					<button
+						onClick={deleteDeck}
+						className="bg-red-400 py-3 px-5 rounded-md"
+					>
+						Delete
+					</button>
 				</div>
 			</div>
 		</div>

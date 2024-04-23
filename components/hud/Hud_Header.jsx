@@ -38,8 +38,9 @@ function Hud_Header({
 			{mode === "overview" ? (
 				<div className="flex justify-end items-center gap-2">
 					<button
+						disabled={!selectedDeck}
 						onClick={() => setIsEditDeckModalOpen((prevState) => !prevState)}
-						className="h-9 w-10 lg:w-36  flex justify-center items-center gap-1 bg-slate-800 rounded-md hover:bg-slate-500"
+						className="h-9 w-10 lg:w-36  flex justify-center items-center gap-1 bg-slate-800 rounded-md hover:bg-slate-500 disabled:cursor-not-allowed"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

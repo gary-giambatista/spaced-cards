@@ -41,13 +41,19 @@ function Overview({
 	}, [selectedCard]);
 
 	// Handle user with no created decks
-	if (!decks) {
+	if (!decks || decks.length === 0) {
 		return <No_Decks />;
 	}
 	return (
 		<section className={`@container flex-grow bg-slate-600 p-4`}>
 			{isEditDeckModalOpen ? (
-				<Edit_Deck_Modal setIsEditDeckModalOpen={setIsEditDeckModalOpen} />
+				<Edit_Deck_Modal
+					selectedDeck={selectedDeck}
+					setSelectedDeck={setSelectedDeck}
+					decks={decks}
+					setDecks={setDecks}
+					setIsEditDeckModalOpen={setIsEditDeckModalOpen}
+				/>
 			) : null}
 			{isAddCardModalOpen ? (
 				<Add_Card_Modal
