@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { supermemo } from "supermemo";
 import Card from "./Card";
+import No_More_Reviews_Due from "./No_More_Reviews_Due";
 
 function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	const [isQuestionShowing, setIsQuestionShowing] = useState(true);
@@ -9,31 +10,21 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	const [isHintOpen, setIsHintOpen] = useState(false);
 	const [reviewCount, setReviewCount] = useState(selectedDeck.reviews_due);
 	const [selectedCard, setSelectedCard] = useState(pickCard());
+	const [noCardsToReview, setNoCardsToReview] = useState(false);
+
+	// Todo: selecting cards is not selecting ONLY cards with the review due
+	// Todo: after reviewing the last card, the card won't finish and nothing handles no cards
 
 	// Trace
 	//1. selectedDeck changes
 	//2. page.js useEffect()->updateReviewsDue() -- updates reviews_due & card.review_due
 	//3. page.js useEffect()->updateDecks() -- updates selectedDeck
 
-	//TODO:
-	// 1. Check to make sure the time check is in the same format ✔
-	// 2. Move this function to page.js? -- necessary to generate the correct review count for each deck -- and this prevents needing to use an empty state for selectedCard on page load if there is jitter ✔
-	// 3. Handle picking a new card after practice() & ONLY picking a card that should be reviewed & handle situation where no more cards are left to review
-
-	//TODO: Move this function to page.js?
-	// Update selectedDecks review_due based upon due_date
-	// function updateReviews() {
-	// 	for (let card of selectedDeck.cards) {
-	// 		if (card.due_date < Date.now()) {
-	// 			card.review_due = true;
-	// 		}
-	// 	}
-	// }
-	// Handle selectedDeck changing
-	// useEffect(() => {
-	// 	updateReviews();
-	// }, [selectedDeck]);
-
+	/**
+	 * Does NOT handle validating if the review is DUE
+	 * return statement below renders different component if so
+	 * @returns {object} a single card object
+	 */
 	function pickCard() {
 		const cardsLength = selectedDeck.cards.length;
 
@@ -43,19 +34,10 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 		const randomCard = selectedDeck.cards[randomIndex];
 
 		return randomCard;
-
-		//Todo: handle the logic of reviewing the correct cards - Date.now?
-		// Not necessary as updateReviews handles this
-
-		// Pick a card only if the review is due
-		// if (randomCard.due_date < Date.now()) {
-		// 	randomCard.review_due = true;
-		// 	return randomCard;
-		// } else {
-		// 	// Pick again if review isn't due
-		// 	randomCard = Math.floor(Math.random() * (cardsLength - 0) + 0);
-		// }
 	}
+	// useEffect(() => {
+	// 	setSelectedCard(pickCard());
+	// }, []);
 
 	console.log("Selected CARD: ", selectedCard);
 	console.log("Selected DECK: ", selectedDeck);
@@ -73,10 +55,14 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 			due_date,
 		};
 
-		setSelectedCard(updatedCard);
-		// setSelectedCard(pickCard());
+		// setSelectedCard(updatedCard);
 
-		return setSelectedDeck((prevSelectedDeck) => {
+		//FLOW
+		// 1. update selectedDeck -> page.js useEffect to update decks
+		// 2. IF reviews are different -> call updateReviewsDue()
+
+		setSelectedDeck((prevSelectedDeck) => {
+			// Moved this update to page.js to make updateReviews() more consistent
 			const decreasedReviewsDue = prevSelectedDeck.reviews_due - 1;
 			const updatedCards = prevSelectedDeck.cards.map((card) => {
 				if (card.id === selectedCard.id) {
@@ -87,10 +73,22 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 			});
 			return {
 				...prevSelectedDeck,
-				reviews_due: decreasedReviewsDue,
+				reviews_due: decreasedReviewsDue, //2.triggers page.js useEffect
 				cards: updatedCards,
 			};
 		});
+
+		return setSelectedCard(pickCard());
+	}
+
+	if (selectedDeck.reviews_due === 0) {
+		return (
+			<section
+				className={`flex flex-col gap-4 flex-grow bg-slate-600 p-4 overflow-y-auto`}
+			>
+				<No_More_Reviews_Due />
+			</section>
+		);
 	}
 
 	return (

@@ -61,6 +61,7 @@ export default function Home() {
 
 	console.groupEnd();
 
+	//TODO: Revisit this function -> inconsistency with updating review_due and handle DIRECTLY modifying deck("selectedDeck")'s state!
 	/**
 	 * Update deck.reviews_due & card.review_due
 	 * @param {object[]} [decks] -  represents an array of decks
@@ -85,7 +86,10 @@ export default function Home() {
 				if (card.due_date < nowInMilliseconds) {
 					card.review_due = true;
 					// need to accept deck, instead of deck.cards
-					deck.reviews_due += 1;
+					deck.reviews_due += 1; //todo
+				} else if (card.due_date > nowInMilliseconds) {
+					card.review_due = false;
+					// deck.reviews_due -= 1; //todo
 				}
 			}
 			return cards;
@@ -121,10 +125,6 @@ export default function Home() {
 			// Set selectedDeck to first deck
 			setSelectedDeck(localStorageDecks[0]);
 		}
-		// const deckOrNull = JSON.parse(localStorage.getItem("decks"))
-		// 	? JSON.parse(localStorage.getItem("decks"))[0]
-		// 	: null;
-		// setSelectedDeck(deckOrNull);
 	}, []);
 
 	// Update decks in LS whenever decks state changes
@@ -202,29 +202,9 @@ export default function Home() {
 	);
 }
 
-// Ditched code because of rendering times:
-// cards: selectedDeck.cards.forEach((card) =>
-// 										card.due_date < Date.now() ? (card.review_due = true) : null
-// 									)
-
 // Notes
 // JS logic to hide drawer not necessary, because using media query to set the drawer to absolute fixes display issues
-//Todo: Connect Hud_Header, Overview, and Card and their child components to selectedDeck
 //Todo: break out useEffects functions into a folder and render inside here?
-
-//Experiment state setter
-// decks.forEach((deck) => {
-// 	if (deck.id === selectedDeck.id) {
-// 		setDecks((prevState) => {
-// 			return {
-// 				...prevState,
-// 				deck: {
-// 					cards: selectedDeck.cards,
-// 				},
-// 			};
-// 		});
-// 	}
-// });
 
 const deckss = [
 	{
