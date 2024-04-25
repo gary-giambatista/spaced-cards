@@ -40,7 +40,7 @@ function Hud_Header({
 					<button
 						disabled={!selectedDeck}
 						onClick={() => setIsEditDeckModalOpen((prevState) => !prevState)}
-						className="h-9 w-10 lg:w-36  flex justify-center items-center gap-1 bg-slate-800 rounded-md hover:bg-slate-500 disabled:cursor-not-allowed"
+						className="h-9 w-10 lg:w-36 flex justify-center items-center gap-1 bg-slate-800 rounded-md hover:bg-slate-500 disabled:cursor-not-allowed"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +86,9 @@ function Hud_Header({
 					</button>
 				</div>
 			) : (
-				<div className="absolute right-0">{selectedDeck.reviews_due}</div>
+				<div className="h-9 bg-slate-500 aspect-square absolute right-0 flex items-center justify-center rounded-md p-2">
+					{selectedDeck.reviews_due}
+				</div>
 			)}
 		</section>
 	);
