@@ -11,7 +11,11 @@ function Hud_Header({
 }) {
 	return (
 		<section className="flex justify-between items-center h-9 md:h-12 w-full relative">
-			<div className="flex justify-center items-center md:mx-auto gap-2">
+			<div
+				className={`flex justify-center items-center  gap-2 ${
+					selectedDeck ? "md:mx-auto" : "mx-auto"
+				}`}
+			>
 				<button
 					onClick={() => setMode("overview")}
 					className={`h-9 w-28 sm:w-36 px-4 rounded-l-md bg-slate-800 hover:bg-slate-500 outline ${
@@ -36,7 +40,11 @@ function Hud_Header({
 			</div>
 			{/* Manage/Add Card Buttons OR Review count remaining */}
 			{mode === "overview" ? (
-				<div className="flex justify-end items-center gap-2">
+				<div
+					className={` justify-end items-center gap-2 ${
+						!selectedDeck ? "hidden" : "flex"
+					}`}
+				>
 					<button
 						disabled={!selectedDeck}
 						onClick={() => setIsEditDeckModalOpen((prevState) => !prevState)}
@@ -65,8 +73,9 @@ function Hud_Header({
 						<div className="hidden lg:block">Manage</div>
 					</button>
 					<button
+						disabled={!selectedDeck}
 						onClick={() => setIsAddCardModalOpen((prevState) => !prevState)}
-						className="h-9 w-10 lg:w-36  flex justify-center items-center gap-1 bg-green-800 rounded-md hover:bg-green-900"
+						className="h-9 w-10 lg:w-36  flex justify-center items-center gap-1 bg-green-800 rounded-md hover:bg-green-900 disabled:cursor-not-allowed"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -95,6 +104,3 @@ function Hud_Header({
 }
 
 export default Hud_Header;
-
-//Todo: make sure the remainingReviews logic works
-//Todo: Is this design with the + button okay? Or go with the column design? column design deleted

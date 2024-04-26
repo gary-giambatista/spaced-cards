@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 function Edit_Deck_Modal({
 	selectedDeck,
@@ -7,6 +7,7 @@ function Edit_Deck_Modal({
 	setDecks,
 	setIsEditDeckModalOpen,
 }) {
+	const [isDeleting, setIsDeleting] = useState(false);
 	/**
 	 * Delete the currently selectedDeck
 	 */
@@ -35,7 +36,7 @@ function Edit_Deck_Modal({
 
 	return (
 		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center  @lg:items-center backdrop-blur-sm p-2">
-			<div className="bg-green-700 relative rounded-md min-w-80 min-h-80">
+			<div className="bg-green-700 relative rounded-md min-w-80 min-h-80 md:min-w-96">
 				<div className="w-full flex justify-between p-4 @lg:p-6">
 					<h2 className="text-xl text-center">Manage Your Deck</h2>
 					<button
@@ -59,15 +60,33 @@ function Edit_Deck_Modal({
 					</button>
 				</div>
 				<hr />
-				<div className="flex justify-between items-center p-4 @lg:p-6">
-					<div className="">Delete your deck</div>
-					<button
-						onClick={deleteDeck}
-						className="bg-red-400 py-3 px-5 rounded-md"
-					>
-						Delete
-					</button>
-				</div>
+				{isDeleting ? (
+					<div className="flex justify-between items-center p-4 md:p-6">
+						<div className="">Are you sure?</div>
+						<button
+							onClick={deleteDeck}
+							className="bg-red-400 py-2 px-4 md:px-5 rounded-md"
+						>
+							Delete
+						</button>
+						<button
+							onClick={() => setIsDeleting(false)}
+							className="bg-slate-700 py-2 px-4 md:px-5 rounded-md"
+						>
+							Cancel
+						</button>
+					</div>
+				) : (
+					<div className="flex justify-between items-center p-4 md:p-6">
+						<div className="">Delete your deck</div>
+						<button
+							onClick={() => setIsDeleting(true)}
+							className="bg-red-400 py-2 px-4 rounded-md"
+						>
+							Delete
+						</button>
+					</div>
+				)}
 			</div>
 		</div>
 	);

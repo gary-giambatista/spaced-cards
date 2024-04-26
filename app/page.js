@@ -61,7 +61,7 @@ export default function Home() {
 
 	console.groupEnd();
 
-	//TODO: Revisit this function -> inconsistency with updating review_due and handle DIRECTLY modifying deck("selectedDeck")'s state!
+	//TODO: potential issue: DIRECTLY modifying deck("selectedDeck")'s state!
 	/**
 	 * Update deck.reviews_due & card.review_due
 	 * @param {object[]} [decks] -  represents an array of decks

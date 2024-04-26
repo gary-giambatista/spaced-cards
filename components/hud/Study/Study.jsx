@@ -22,7 +22,7 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 
 	/**
 	 * Does NOT handle validating if the review is DUE
-	 * return statement below renders different component if so
+	 * return statement below renders different component if no reviews_due
 	 * @returns {object} a single card object
 	 */
 	function pickCard() {
