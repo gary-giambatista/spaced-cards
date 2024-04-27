@@ -35,8 +35,14 @@ function Edit_Deck_Modal({
 	}
 
 	return (
-		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center  @lg:items-center backdrop-blur-sm p-2">
-			<div className="bg-green-700 relative rounded-md min-w-80 min-h-80 md:min-w-96">
+		<div
+			onClick={() => setIsEditDeckModalOpen((prevState) => !prevState)}
+			className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center  @lg:items-center backdrop-blur-sm p-2"
+		>
+			<div
+				onClick={(e) => e.stopPropagation()}
+				className="bg-green-700 relative rounded-md min-w-80 min-h-80 md:min-w-96"
+			>
 				<div className="w-full flex justify-between p-4 @lg:p-6">
 					<h2 className="text-xl text-center">Manage Your Deck</h2>
 					<button
