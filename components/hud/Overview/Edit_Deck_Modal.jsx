@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 function Edit_Deck_Modal({
 	selectedDeck,
@@ -8,6 +8,9 @@ function Edit_Deck_Modal({
 	setIsEditDeckModalOpen,
 }) {
 	const [isDeleting, setIsDeleting] = useState(false);
+	const [isEditingName, setIsEditingName] = useState(false);
+	const newDeckName = useRef("");
+
 	/**
 	 * Delete the currently selectedDeck
 	 */
@@ -33,6 +36,22 @@ function Edit_Deck_Modal({
 			return newDecks;
 		});
 	}
+	/**
+	 * Update the name of the selectedDeck
+	 */
+	function editDeckName() {
+		setDecks((prevDecks) => {
+			// Only update the name of the selectedDeck
+			const updatedDeck = prevDecks.map((deck) => {
+				if (deck.id === selectedDeck.id) {
+					deck.name = newDeckName.current.value;
+					return deck;
+				} else return deck;
+			});
+			return updatedDeck;
+		});
+		return setIsEditingName(false);
+	}
 
 	return (
 		<div
@@ -43,7 +62,7 @@ function Edit_Deck_Modal({
 				onClick={(e) => e.stopPropagation()}
 				className="bg-green-700 relative rounded-md min-w-80 min-h-80 md:min-w-96"
 			>
-				<div className="w-full flex justify-between p-4 @lg:p-6">
+				<div className="w-full flex justify-between p-4 @md:p-6">
 					<h2 className="text-xl text-center">Manage Your Deck</h2>
 					<button
 						className=""
@@ -66,8 +85,49 @@ function Edit_Deck_Modal({
 					</button>
 				</div>
 				<hr />
+
+				{isEditingName ? (
+					// Change name input section
+					<div className="flex flex-col gap-4 justify-between items-center p-4 @md:p-6">
+						<input
+							ref={newDeckName}
+							defaultValue={selectedDeck.name}
+							className="text-black w-full p-2 rounded-md"
+						/>
+						<div className="flex gap-4">
+							<button
+								onClick={() => setIsEditingName(false)}
+								className="bg-red-400 py-2 px-4 md:px-5 rounded-md"
+							>
+								Cancel
+							</button>
+							<button
+								onClick={() => editDeckName()}
+								className="bg-slate-700 py-2 px-4 @md:px-5 rounded-md"
+							>
+								Save
+							</button>
+						</div>
+					</div>
+				) : (
+					// Option to edit deck name section
+					<div className="flex justify-between items-center p-4 @md:p-6">
+						<div className="w-1/2">{selectedDeck.name}</div>
+						<button
+							onClick={() => {
+								setIsEditingName(true);
+								setTimeout(() => {
+									newDeckName.current.focus();
+								}, 0);
+							}}
+							className="bg-slate-700 py-2 px-4 @md:px-5 rounded-md w-1/2"
+						>
+							Change Name
+						</button>
+					</div>
+				)}
 				{isDeleting ? (
-					<div className="flex justify-between items-center p-4 md:p-6">
+					<div className="flex justify-between items-center p-4 @md:p-6">
 						<div className="">Are you sure?</div>
 						<button
 							onClick={deleteDeck}
@@ -77,13 +137,13 @@ function Edit_Deck_Modal({
 						</button>
 						<button
 							onClick={() => setIsDeleting(false)}
-							className="bg-slate-700 py-2 px-4 md:px-5 rounded-md"
+							className="bg-slate-700 py-2 px-4 @md:px-5 rounded-md"
 						>
 							Cancel
 						</button>
 					</div>
 				) : (
-					<div className="flex justify-between items-center p-4 md:p-6">
+					<div className="flex justify-between items-center p-4 @md:p-6">
 						<div className="">Delete your deck</div>
 						<button
 							onClick={() => setIsDeleting(true)}
