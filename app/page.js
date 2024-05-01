@@ -50,8 +50,10 @@ export default function Home() {
 						});
 						console.log("3 UPDATED DECKS: ", updatedDecks);
 						// Return here, only 1 if statement can be trigger at a time
+
+						sortDecksByReviewsDue(updatedDecks);
 						return setDecks(updatedDecks);
-					}
+					} //Could add structuredClone HERE if needed VERY suboptimal
 				});
 			}
 		}
@@ -60,6 +62,14 @@ export default function Home() {
 	}, [selectedDeck]);
 
 	console.groupEnd();
+
+	/**
+	 * Sorts all decks so the decks with the most reviews_due come first
+	 * @param {object[]} decks - decks object
+	 */
+	function sortDecksByReviewsDue(decks) {
+		decks.sort((a, b) => b.reviews_due - a.reviews_due);
+	}
 
 	//TODO: potential issue: DIRECTLY modifying deck("selectedDeck")'s state!
 	/**
@@ -86,10 +96,10 @@ export default function Home() {
 				if (card.due_date < nowInMilliseconds) {
 					card.review_due = true;
 					// need to accept deck, instead of deck.cards
-					deck.reviews_due += 1; //todo
+					deck.reviews_due += 1; //todo - is okay because of the ...deck?
 				} else if (card.due_date > nowInMilliseconds) {
 					card.review_due = false;
-					// deck.reviews_due -= 1; //todo
+					// deck.reviews_due -= 1; //todo ""
 				}
 			}
 			return cards;
@@ -112,7 +122,7 @@ export default function Home() {
 				}
 			}
 		}
-		return decks;
+		return sortDecksByReviewsDue(decks);
 	}
 
 	// Set decks and selectedDeck on page load from LS

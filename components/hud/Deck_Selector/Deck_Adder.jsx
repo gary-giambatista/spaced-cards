@@ -30,11 +30,16 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 
 		// Update decks
 		if (decks) {
-			const updatedDeck = [newDeck, ...decks];
+			// Set the new deck as the last index
+			const updatedDeck = [...decks, newDeck];
 
 			// Update state in page.js re-rendering everything
-			setDecks(updatedDeck);
-			setSelectedDeck(updatedDeck[0]);
+			// Sort updatedDecks so that the MOST reviews come first
+			setDecks(updatedDeck.sort((a, b) => b.reviews_due - a.reviews_due));
+
+			// Set selectedDeck to the last index (newest)
+			// Potential bug? with multiple decks at reviews_due: 0;
+			setSelectedDeck(updatedDeck[updatedDeck.length - 1]);
 		} else {
 			// Update state in page.js re-rendering everything
 			setDecks([newDeck]);

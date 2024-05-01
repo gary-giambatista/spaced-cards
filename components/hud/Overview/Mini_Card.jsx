@@ -6,7 +6,7 @@ function Mini_Card({ card, setSelectedCardId }) {
 
 	return (
 		<div
-			className="flex flex-col h-80 w-full bg-slate-400 "
+			className="flex flex-col h-80 w-full bg-slate-400 hover:opacity-50 hover:cursor-pointer"
 			onClick={() => setSelectedCardId(card.id)}
 		>
 			<div>{card.question}</div>
