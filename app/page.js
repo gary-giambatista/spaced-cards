@@ -53,7 +53,7 @@ export default function Home() {
 
 						sortDecksByReviewsDue(updatedDecks);
 						return setDecks(updatedDecks);
-					} //Could add structuredClone HERE if needed VERY suboptimal
+					}
 				});
 			}
 		}
@@ -177,6 +177,7 @@ export default function Home() {
 				setDecks={setDecks}
 				selectedDeck={selectedDeck}
 				setSelectedDeck={setSelectedDeck}
+				setMode={setMode}
 			/>
 			<div className="flex flex-col w-full p-4 gap-4 bg-slate-300 overflow-y-auto">
 				<Hud_Header

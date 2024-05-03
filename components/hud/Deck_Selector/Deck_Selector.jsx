@@ -36,6 +36,7 @@ function Deck_Selector({
 	setDecks,
 	selectedDeck,
 	setSelectedDeck,
+	setMode,
 }) {
 	return (
 		<section
@@ -70,7 +71,10 @@ function Deck_Selector({
 			{decks?.map((deck) => {
 				return (
 					<div
-						onClick={() => setSelectedDeck(deck)}
+						onClick={() => {
+							setSelectedDeck(deck);
+							setMode("overview");
+						}}
 						className={`flex justify-between overflow-hidden py-1 px-2 hover:cursor-pointer hover:bg-slate-600 ${
 							drawerOpen ? "opacity-100" : "opacity-0"
 						} ${
