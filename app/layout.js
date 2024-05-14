@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Theme_Provider from "@/providers/Theme_Provider";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -13,11 +14,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
 	return (
 		<html lang="en">
-			<body className={`${inter.className} flex flex-col h-dvh`}>
-				<Header />
-				{children}
-				<Footer />
-			</body>
+			<Theme_Provider>
+				<body className={`${inter.className} flex flex-col h-dvh`}>
+					<Header />
+					{children}
+					<Footer />
+				</body>
+			</Theme_Provider>
 		</html>
 	);
 }
