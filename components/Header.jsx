@@ -32,7 +32,7 @@ function Header() {
 				}
 				className="dark:text-blue-600"
 			>
-				Username
+				{theme === "dark" ? "Dark" : "Light"}
 			</div>
 		</header>
 	);
