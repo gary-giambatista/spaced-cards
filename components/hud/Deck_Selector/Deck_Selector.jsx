@@ -1,34 +1,6 @@
 import React, { useState } from "react";
 import Deck_Adder from "./Deck_Adder";
 
-const sampleDecks = [
-	{
-		title: "test deck 1",
-		reviews_due: 15,
-		id: 1,
-	},
-	{
-		title: "test deck 2",
-		reviews_due: 21,
-		id: 2,
-	},
-	{
-		title: "test deck 3",
-		reviews_due: 31,
-		id: 3,
-	},
-	{
-		title: "test deck 4",
-		reviews_due: 5,
-		id: 4,
-	},
-	{
-		title: "test deck 5",
-		reviews_due: 1,
-		id: 5,
-	},
-];
-
 function Deck_Selector({
 	drawerOpen,
 	setDrawerOpen,
