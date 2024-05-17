@@ -14,13 +14,13 @@ export const metadata = {
 export default function RootLayout({ children }) {
 	return (
 		<html lang="en">
-			<Theme_Provider>
-				<body className={`${nunito.className} flex flex-col h-dvh`}>
+			<body className={`${nunito.className} flex flex-col h-dvh`}>
+				<Theme_Provider>
 					<Header />
 					{children}
 					<Footer />
-				</body>
-			</Theme_Provider>
+				</Theme_Provider>
+			</body>
 		</html>
 	);
 }
