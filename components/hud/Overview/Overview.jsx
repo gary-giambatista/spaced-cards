@@ -45,7 +45,7 @@ function Overview({
 		return <No_Decks />;
 	}
 	return (
-		<section className={`@container flex-grow bg-slate-600 p-4`}>
+		<section className={`@container flex-grow bg-white dark:bg-black p-4`}>
 			{isEditDeckModalOpen ? (
 				<Edit_Deck_Modal
 					selectedDeck={selectedDeck}

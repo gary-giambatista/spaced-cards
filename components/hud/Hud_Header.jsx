@@ -12,14 +12,16 @@ function Hud_Header({
 	return (
 		<section className="flex justify-between items-center h-9 md:h-12 w-full relative">
 			<div
-				className={`flex justify-center items-center  gap-2 ${
+				className={`flex justify-center items-center ${
 					selectedDeck ? "md:mx-auto" : "mx-auto"
 				}`}
 			>
 				<button
 					onClick={() => setMode("overview")}
-					className={`h-9 w-28 sm:w-36 px-4 rounded-l-md bg-slate-800 hover:bg-slate-500 outline ${
-						mode === "overview" ? " outline-slate-400" : "outline-slate-200"
+					className={`h-9 w-28 sm:w-36 px-4 rounded-l-md  hover:bg-neutral-200 dark:hover:bg-neutral-900 outline outline-1 outline-black dark:outline-white ${
+						mode === "overview"
+							? "bg-neutral-100 dark:bg-neutral-800"
+							: "bg-white dark:bg-black"
 					}`}
 				>
 					Overview
@@ -31,8 +33,10 @@ function Hud_Header({
 						selectedDeck.reviews_due === 0
 					}
 					onClick={() => setMode("study")}
-					className={`h-9 w-28 sm:w-36 px-4 rounded-r-md bg-slate-800 hover:bg-slate-500 outline disabled:cursor-not-allowed ${
-						mode === "study" ? "outline-slate-400" : "outline-slate-200"
+					className={`h-9 w-28 sm:w-36 px-4 rounded-r-md hover:bg-neutral-200 dark:hover:bg-neutral-900 outline outline-1 outline-black dark:outline-white disabled:cursor-not-allowed ${
+						mode === "study"
+							? "bg-neutral-100 dark:bg-neutral-800"
+							: "bg-white dark:bg-black"
 					}`}
 				>
 					Study

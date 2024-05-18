@@ -1,3 +1,7 @@
+import ArrowBlack from "@/public/ArrowBlack.png";
+import ArrowWhite from "@/public/ArrowWhite.png";
+import { useTheme } from "next-themes";
+import Image from "next/image";
 import React, { useState } from "react";
 import Deck_Adder from "./Deck_Adder";
 
@@ -10,6 +14,7 @@ function Deck_Selector({
 	setSelectedDeck,
 	setMode,
 }) {
+	const { theme, setTheme } = useTheme();
 	return (
 		<section
 			className={`absolute h-full sm:relative flex-shrink bg-neutral-100 dark:bg-neutral-800 transition-all z-10 ${
@@ -19,25 +24,19 @@ function Deck_Selector({
 			{/* Chevron */}
 			<div
 				onClick={() => setDrawerOpen(!drawerOpen)}
-				className="absolute flex justify-center items-center bg-slate-800 h-14 w-8 -right-8 top-1/2 transform -translate-y-1/2 cursor-pointer"
+				className="absolute flex justify-center items-center bg-transparent h-14 w-8 -right-8 top-1/2 transform -translate-y-1/2 cursor-pointer"
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					strokeWidth="1.5"
-					stroke="currentColor"
-					className={`w-6 h-6 transition-transform ${
-						drawerOpen ? "rotate-180" : ""
+				<Image
+					src={theme === "light" ? ArrowBlack : ArrowWhite}
+					alt={"Toggle Drawer"}
+					height={18}
+					width={18}
+					className={`transition-transform hover:scale-110	 ${
+						drawerOpen ? "" : "rotate-180"
 					}`}
-				>
-					<path
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						d="m8.25 4.5 7.5 7.5-7.5 7.5"
-					/>
-				</svg>
+				/>
 			</div>
+
 			{/* Create new deck */}
 			<Deck_Adder
 				drawerOpen={drawerOpen}
