@@ -60,7 +60,7 @@ function Edit_Deck_Modal({
 		>
 			<div
 				onClick={(e) => e.stopPropagation()}
-				className="bg-green-700 relative rounded-md min-w-80 min-h-80 md:min-w-96"
+				className="bg-neutral-300 dark:bg-neutral-800 border border-white relative rounded-md min-w-80 min-h-80 md:min-w-96"
 			>
 				<div className="w-full flex justify-between p-4 @md:p-6">
 					<h2 className="text-xl text-center">Manage Your Deck</h2>
@@ -92,18 +92,18 @@ function Edit_Deck_Modal({
 						<input
 							ref={newDeckName}
 							defaultValue={selectedDeck.name}
-							className="text-black w-full p-2 rounded-md"
+							className="w-full p-2 rounded-md"
 						/>
 						<div className="flex gap-4">
 							<button
 								onClick={() => setIsEditingName(false)}
-								className="bg-red-400 py-2 px-4 md:px-5 rounded-md"
+								className="bg-white text-red-600 border border-red-600 dark:bg-red-600 dark:text-white py-2 px-4 md:px-5 rounded-md"
 							>
 								Cancel
 							</button>
 							<button
 								onClick={() => editDeckName()}
-								className="bg-slate-700 py-2 px-4 @md:px-5 rounded-md"
+								className="bg-green-800 hover:bg-green-900 text-white py-2 px-4 @md:px-5 rounded-md"
 							>
 								Save
 							</button>
@@ -120,7 +120,7 @@ function Edit_Deck_Modal({
 									newDeckName.current.focus();
 								}, 0);
 							}}
-							className="bg-slate-700 py-2 px-4 @md:px-5 rounded-md w-1/2"
+							className=" bg-white hover:bg-neutral-200 dark:bg-black dark:hover:bg-neutral-900 border border-black dark:border-white py-2 px-4 @md:px-5 rounded-md w-1/2"
 						>
 							Change Name
 						</button>
@@ -131,13 +131,13 @@ function Edit_Deck_Modal({
 						<div className="">Are you sure?</div>
 						<button
 							onClick={deleteDeck}
-							className="bg-red-400 py-2 px-4 md:px-5 rounded-md"
+							className="bg-red-600 py-2 px-4 md:px-5 rounded-md text-white"
 						>
 							Delete
 						</button>
 						<button
 							onClick={() => setIsDeleting(false)}
-							className="bg-slate-700 py-2 px-4 @md:px-5 rounded-md"
+							className="bg-white hover:bg-neutral-200 dark:bg-black dark:hover:bg-neutral-900 border border-black dark:border-white py-2 px-4 @md:px-5 rounded-md"
 						>
 							Cancel
 						</button>
@@ -147,7 +147,7 @@ function Edit_Deck_Modal({
 						<div className="">Delete your deck</div>
 						<button
 							onClick={() => setIsDeleting(true)}
-							className="bg-red-400 py-2 px-4 rounded-md"
+							className="bg-red-600 py-2 px-4 rounded-md text-white"
 						>
 							Delete
 						</button>
@@ -157,5 +157,5 @@ function Edit_Deck_Modal({
 		</div>
 	);
 }
-
+// bg-white text-red-600 border border-red-600 dark:bg-red-600 py-2 px-4 rounded-md dark:text-white
 export default Edit_Deck_Modal;

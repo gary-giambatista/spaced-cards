@@ -52,7 +52,7 @@ function Hud_Header({
 					<button
 						disabled={!selectedDeck}
 						onClick={() => setIsEditDeckModalOpen((prevState) => !prevState)}
-						className="h-9 w-10 lg:w-36 flex justify-center items-center gap-1 bg-slate-800 rounded-md hover:bg-slate-500 disabled:cursor-not-allowed"
+						className="h-9 w-10 lg:w-36 flex justify-center items-center gap-1 dark:bg-neutral-800 bg-white hover:bg-neutral-200 dark:hover:bg-neutral-900 rounded-md disabled:cursor-not-allowed"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -79,7 +79,7 @@ function Hud_Header({
 					<button
 						disabled={!selectedDeck}
 						onClick={() => setIsAddCardModalOpen((prevState) => !prevState)}
-						className="h-9 w-10 lg:w-36  flex justify-center items-center gap-1 bg-green-800 rounded-md hover:bg-green-900 disabled:cursor-not-allowed"
+						className="h-9 w-10 lg:w-36  flex justify-center items-center gap-1 bg-green-800 text-white dark:bg-green-800 rounded-md dark:hover:bg-green-900 disabled:cursor-not-allowed"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

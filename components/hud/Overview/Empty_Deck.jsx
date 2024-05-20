@@ -5,7 +5,7 @@ function Empty_Deck({ isAddCardModalOpen, setIsAddCardModalOpen }) {
 		<div className="flex flex-col gap-2 justify-center items-center h-full">
 			<button
 				onClick={() => setIsAddCardModalOpen((prevState) => !prevState)}
-				className="h-9 w-36 flex justify-center items-center gap-1 bg-green-800 rounded-md hover:bg-green-900"
+				className="h-9 w-36 flex justify-center items-center gap-1 bg-green-800 rounded-md hover:bg-green-900 text-white"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +23,7 @@ function Empty_Deck({ isAddCardModalOpen, setIsAddCardModalOpen }) {
 				</svg>
 				<div className="">Add Card</div>
 			</button>
-			<div>To get started select add a card</div>
+			<div>Add a card to get started</div>
 		</div>
 	);
 }
