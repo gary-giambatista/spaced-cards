@@ -28,3 +28,6 @@ body {
 /* .dark > *:not(input) {
 	color: white;
 } */
+button {
+	transition: background 150ms ease-in-out;
+}

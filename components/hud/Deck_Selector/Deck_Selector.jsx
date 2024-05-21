@@ -13,6 +13,7 @@ function Deck_Selector({
 	selectedDeck,
 	setSelectedDeck,
 	setMode,
+	setIsEditDeckModalOpen,
 }) {
 	const { theme, setTheme } = useTheme();
 	return (
@@ -24,14 +25,14 @@ function Deck_Selector({
 			{/* Chevron */}
 			<div
 				onClick={() => setDrawerOpen(!drawerOpen)}
-				className="absolute flex justify-center items-center bg-transparent h-14 w-8 -right-8 top-1/2 transform -translate-y-1/2 cursor-pointer"
+				className="absolute group flex justify-center items-center bg-transparent h-14 w-8 -right-8 top-1/2 transform -translate-y-1/2 cursor-pointer"
 			>
 				<Image
 					src={theme === "light" ? ArrowBlack : ArrowWhite}
 					alt={"Toggle Drawer"}
 					height={18}
 					width={18}
-					className={`transition-transform hover:scale-110	 ${
+					className={`transition-transform group-hover:scale-110	 ${
 						drawerOpen ? "" : "rotate-180"
 					}`}
 				/>
@@ -68,10 +69,15 @@ function Deck_Selector({
 						<div className="flex relative gap-2">
 							{/* Hover Dots Effect */}
 							<svg
+								onClick={() => {
+									setSelectedDeck(deck);
+									setMode("overview");
+									setIsEditDeckModalOpen(true);
+								}}
 								xmlns="http://www.w3.org/2000/svg"
 								viewBox="0 0 24 24"
 								strokeWidth={5.5}
-								className="w-6 h-6 scale-150 hidden group-hover:block dark:fill-white"
+								className="w-6 h-6 scale-150 hidden group-hover:block dark:fill-white rounded-full hover:scale-110 transition-all hover:bg-neutral-300 dark:hover:bg-neutral-800"
 							>
 								<path
 									strokeLinecap="round"

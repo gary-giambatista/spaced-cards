@@ -72,8 +72,8 @@ function Edit_Card_Modal({
 	}
 
 	return (
-		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center  @lg:items-center backdrop-blur-sm p-2">
-			<div className="bg-green-700 relative rounded-md">
+		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center @lg:items-center backdrop-blur-sm p-2">
+			<div className="bg-neutral-300 dark:bg-neutral-800 border border-white relative rounded-md">
 				<div className="w-full flex justify-between p-4 @lg:p-6">
 					<h2 className="text-xl text-center">Edit your card</h2>
 					<button className="" onClick={() => setSelectedCard(null)}>
@@ -101,7 +101,7 @@ function Edit_Card_Modal({
 					<label className="flex flex-col">
 						Question:{" "}
 						<input
-							className="w-full p-2 rounded-md text-black"
+							className="w-full p-2 rounded-md"
 							name="question_input"
 							placeholder="Your question here"
 							defaultValue={selectedCard.question}
@@ -110,7 +110,7 @@ function Edit_Card_Modal({
 					<label className="flex flex-col">
 						Answer:{" "}
 						<input
-							className="w-full p-2 rounded-md text-black"
+							className="w-full p-2 rounded-md"
 							name="answer_input"
 							placeholder="Your answer here"
 							defaultValue={selectedCard.answer}
@@ -119,7 +119,7 @@ function Edit_Card_Modal({
 					<label className="flex flex-col">
 						Hint:{" "}
 						<input
-							className="w-full p-2 rounded-md text-black"
+							className="w-full p-2 rounded-md"
 							name="hint_input"
 							placeholder="Your hint here"
 							defaultValue={selectedCard.hint}
@@ -129,7 +129,7 @@ function Edit_Card_Modal({
 						Notes:{" "}
 						<textarea
 							type="textarea"
-							className="w-full p-2 rounded-md text-black resize-none"
+							className="w-full p-2 rounded-md resize-none"
 							name="notes_input"
 							placeholder="Your notes here"
 							defaultValue={selectedCard.note}
@@ -144,29 +144,29 @@ function Edit_Card_Modal({
 							<h3 className="">Are you sure?</h3>
 							<div className="flex w-full justify-evenly items-center">
 								<button
-									onClick={(e) => deleteCard(e)}
-									className="bg-red-400 py-3 px-5 rounded-md"
-								>
-									Delete
-								</button>
-								<button
 									onClick={() => setIsDeleting(false)}
-									className="bg-green-400 py-3 px-5 rounded-md"
+									className="bg-green-800 hover:bg-green-900 text-white py-3 px-5 rounded-md"
 								>
 									Cancel
+								</button>
+								<button
+									onClick={(e) => deleteCard(e)}
+									className="bg-red-600 text-white py-3 px-5 rounded-md"
+								>
+									Delete
 								</button>
 							</div>
 						</div>
 					) : (
 						<div className="flex justify-evenly items-center">
 							<button
-								className="bg-red-400 py-3 px-5 rounded-md"
+								className="bg-red-600 text-white py-3 px-5 rounded-md"
 								onClick={() => setIsDeleting(true)}
 							>
 								Delete
 							</button>
 							<button
-								className="bg-green-400 py-3 px-5 rounded-md"
+								className="bg-green-800 hover:bg-green-900 text-white py-3 px-5 rounded-md"
 								type="submit"
 							>
 								Save
