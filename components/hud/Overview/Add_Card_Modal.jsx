@@ -66,10 +66,12 @@ function Add_Card_Modal({
 	}, []);
 
 	return (
-		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center @lg:items-center overflow-scroll backdrop-blur-sm p-2">
+		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center @lg:items-center overflow-scroll sm:overflow-hidden backdrop-blur-sm p-2">
 			<div className=" bg-neutral-300 dark:bg-neutral-800 border border-white relative rounded-md ">
 				<div className="w-full flex justify-between p-4 @lg:p-6">
-					<h2 className="text-xl text-center">Create a new card</h2>
+					<h2 className="text-xl text-center font-extrabold">
+						Create a new card
+					</h2>
 					<button
 						className=""
 						onClick={() => setIsAddCardModalOpen((prevState) => !prevState)}
@@ -95,39 +97,39 @@ function Add_Card_Modal({
 					method="post"
 					onSubmit={createCard}
 				>
-					<label className="flex flex-col">
+					<label className="flex flex-col font-extrabold">
 						Question:{" "}
 						<input
-							className="w-full p-2 rounded-md"
+							className="w-full p-2 rounded-md font-normal"
 							name="question_input"
 							placeholder="Your question here"
 							defaultValue=""
 							ref={questionInputRef}
 						/>
 					</label>
-					<label className="flex flex-col">
+					<label className="flex flex-col font-extrabold">
 						Answer:{" "}
 						<input
-							className="w-full p-2 rounded-md"
+							className="w-full p-2 rounded-md font-normal"
 							name="answer_input"
 							placeholder="Your answer here"
 							defaultValue=""
 						/>
 					</label>
-					<label className="flex flex-col">
+					<label className="flex flex-col font-extrabold">
 						Hint:{" "}
 						<input
-							className="w-full p-2 rounded-md"
+							className="w-full p-2 rounded-md font-normal"
 							name="hint_input"
 							placeholder="Your hint here"
 							defaultValue=""
 						/>
 					</label>
-					<label className="flex flex-col">
+					<label className="flex flex-col font-extrabold">
 						Notes:{" "}
 						<textarea
 							type="textarea"
-							className="w-full p-2 rounded-md resize-none"
+							className="w-full p-2 rounded-md resize-none font-normal"
 							name="notes_input"
 							placeholder="Your notes here"
 							defaultValue=""
@@ -136,10 +138,10 @@ function Add_Card_Modal({
 						/>
 					</label>
 					<hr />
-					<label className="flex items-center gap-4">
+					<label className="flex items-center gap-4 font-extrabold">
 						Create mirrored duplicate card:{" "}
 						<input
-							className="accent-green-800 cursor-pointer  rounded-sm border-2 w-4 h-4 "
+							className="accent-green-800 cursor-pointer  rounded-sm border-2 w-4 h-4"
 							type="checkbox"
 							name="mirror_or_not"
 							defaultChecked={true}
@@ -152,7 +154,7 @@ function Add_Card_Modal({
 							Reset
 						</button> */}
 						<button
-							className="bg-green-800 hover:bg-green-900 text-white py-3 px-5 rounded-md"
+							className="bg-green-800 hover:bg-green-900 text-white py-3 px-5 rounded-md font-extrabold"
 							type="submit"
 						>
 							Create Card

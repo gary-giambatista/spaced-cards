@@ -63,7 +63,9 @@ function Edit_Deck_Modal({
 				className="bg-neutral-300 dark:bg-neutral-800 border border-white relative rounded-md min-w-80 min-h-80 md:min-w-96"
 			>
 				<div className="w-full flex justify-between p-4 @md:p-6">
-					<h2 className="text-xl text-center">Manage Your Deck</h2>
+					<h2 className="text-xl text-center font-extrabold">
+						Manage Your Deck
+					</h2>
 					<button
 						className=""
 						onClick={() => setIsEditDeckModalOpen((prevState) => !prevState)}
@@ -88,7 +90,7 @@ function Edit_Deck_Modal({
 
 				{isEditingName ? (
 					// Change name input section
-					<div className="flex flex-col gap-4 justify-between items-center p-4 @md:p-6">
+					<div className="flex flex-col gap-4 justify-between items-center p-4 @md:p-6 font-extrabold">
 						<input
 							ref={newDeckName}
 							defaultValue={selectedDeck.name}
@@ -111,7 +113,7 @@ function Edit_Deck_Modal({
 					</div>
 				) : (
 					// Option to edit deck name section
-					<div className="flex justify-between items-center p-4 @md:p-6">
+					<div className="flex justify-between items-center p-4 @md:p-6 font-extrabold">
 						<div className="w-1/2">{selectedDeck.name}</div>
 						<button
 							onClick={() => {
@@ -127,7 +129,7 @@ function Edit_Deck_Modal({
 					</div>
 				)}
 				{isDeleting ? (
-					<div className="flex justify-between items-center p-4 @md:p-6">
+					<div className="flex justify-between items-center p-4 @md:p-6 font-extrabold">
 						<div className="">Are you sure?</div>
 						<button
 							onClick={deleteDeck}
@@ -143,7 +145,7 @@ function Edit_Deck_Modal({
 						</button>
 					</div>
 				) : (
-					<div className="flex justify-between items-center p-4 @md:p-6">
+					<div className="flex justify-between items-center p-4 @md:p-6 font-extrabold">
 						<div className="">Delete your deck</div>
 						<button
 							onClick={() => setIsDeleting(true)}
