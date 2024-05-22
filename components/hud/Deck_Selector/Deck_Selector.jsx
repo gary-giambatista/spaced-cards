@@ -59,8 +59,8 @@ function Deck_Selector({
 							drawerOpen ? "opacity-100" : "opacity-0"
 						} ${
 							deck?.id === selectedDeck?.id
-								? "bg-white dark:bg-black"
-								: "bg-transparent"
+								? "bg-white dark:bg-black font-extrabold"
+								: "bg-transparent font-medium"
 						}`}
 						key={deck?.id}
 					>

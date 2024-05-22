@@ -20,8 +20,8 @@ function Hud_Header({
 					onClick={() => setMode("overview")}
 					className={`h-9 w-28 sm:w-36 px-4 rounded-l-md  hover:bg-neutral-200 dark:hover:bg-neutral-900 outline outline-1 outline-black dark:outline-white ${
 						mode === "overview"
-							? "bg-neutral-100 dark:bg-neutral-800"
-							: "bg-white dark:bg-black"
+							? "bg-neutral-100 dark:bg-neutral-800 font-extrabold"
+							: "bg-white dark:bg-black font-medium"
 					}`}
 				>
 					Overview
@@ -35,8 +35,8 @@ function Hud_Header({
 					onClick={() => setMode("study")}
 					className={`h-9 w-28 sm:w-36 px-4 rounded-r-md hover:bg-neutral-200 dark:hover:bg-neutral-900 outline outline-1 outline-black dark:outline-white disabled:cursor-not-allowed ${
 						mode === "study"
-							? "bg-neutral-100 dark:bg-neutral-800"
-							: "bg-white dark:bg-black"
+							? "bg-neutral-100 dark:bg-neutral-800 font-extrabold"
+							: "bg-white dark:bg-black font-medium"
 					}`}
 				>
 					Study
