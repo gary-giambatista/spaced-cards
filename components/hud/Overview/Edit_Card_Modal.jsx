@@ -72,7 +72,7 @@ function Edit_Card_Modal({
 	}
 
 	return (
-		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center @lg:items-center backdrop-blur-sm p-2">
+		<div className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center @lg:items-center backdrop-blur-sm p-2 z-10">
 			<div className="bg-neutral-300 dark:bg-neutral-800 border border-white relative rounded-md">
 				<div className="w-full flex justify-between p-4 @lg:p-6">
 					<h2 className="text-xl text-center font-extrabold">Edit your card</h2>

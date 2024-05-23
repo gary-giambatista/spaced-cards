@@ -56,7 +56,7 @@ function Edit_Deck_Modal({
 	return (
 		<div
 			onClick={() => setIsEditDeckModalOpen((prevState) => !prevState)}
-			className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center  @lg:items-center backdrop-blur-sm p-2"
+			className="@container absolute h-full w-full left-0 top-0 bg-black bg-opacity-10 flex items-start justify-center  @lg:items-center backdrop-blur-sm p-2 z-10"
 		>
 			<div
 				onClick={(e) => e.stopPropagation()}
