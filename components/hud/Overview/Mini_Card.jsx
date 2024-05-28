@@ -34,7 +34,7 @@ function Mini_Card({ card, setSelectedCardId, color }) {
 				>
 					{card.answer}
 				</div>
-				{/* Flip SVG */}
+				{/* SVGs */}
 				<div
 					className={`absolute flex justify-between inset-0 transition-transform duration-500 [transform:rotateY(180deg)] ${
 						isFlipped
@@ -42,6 +42,7 @@ function Mini_Card({ card, setSelectedCardId, color }) {
 							: "[transform:revert!important] "
 					}`}
 				>
+					{/* Flip SVG */}
 					<svg
 						onClick={handleFlip}
 						xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +50,7 @@ function Mini_Card({ card, setSelectedCardId, color }) {
 						viewBox="0 0 24 24"
 						strokeWidth={1.5}
 						stroke="currentColor"
-						className="size-6 hover:scale-105 peer"
+						className="opacity-100 lg:opacity-0 pointer-events-none transition-opacity duration-500 group-hover:opacity-100 group-hover:pointer-events-auto size-6 hover:scale-105 peer"
 					>
 						<path
 							strokeLinecap="round"
@@ -57,13 +58,14 @@ function Mini_Card({ card, setSelectedCardId, color }) {
 							d="m15 15 6-6m0 0-6-6m6 6H9a6 6 0 0 0 0 12h3"
 						/>
 					</svg>
+					{/* Edit SVG */}
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						fill="none"
 						viewBox="0 0 24 24"
 						strokeWidth={1.5}
 						stroke="currentColor"
-						className="size-6 opacity-100 lg:opacity-0 transition-opacity duration-500 group-hover:opacity-100 peer-hover:opacity-0"
+						className="size-6 opacity-100 lg:opacity-0 transition-opacity duration-500 group-hover:opacity-100 peer-hover:opacity-0 hover:scale-105"
 					>
 						<path
 							strokeLinecap="round"

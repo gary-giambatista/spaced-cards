@@ -93,7 +93,7 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 
 	return (
 		<section
-			className={`flex flex-col gap-4 flex-grow bg-slate-600 p-4 overflow-y-auto`}
+			className={`flex flex-col gap-4 flex-grow bg-white dark:bg-black p-4 overflow-y-auto @container`}
 		>
 			<Card
 				isHintOpen={isHintOpen}
@@ -151,7 +151,7 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 				{isNoteOpen ? (
 					<textarea
 						type="textarea"
-						className="w-full p-2 rounded-md text-black resize-none"
+						className="w-full p-2 rounded-md resize-none"
 						name="notes_input"
 						placeholder="Your notes here"
 						defaultValue={selectedCard.note}

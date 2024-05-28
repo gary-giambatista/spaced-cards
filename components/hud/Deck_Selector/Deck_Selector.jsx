@@ -18,7 +18,7 @@ function Deck_Selector({
 	const { theme, setTheme } = useTheme();
 	return (
 		<section
-			className={`absolute h-full sm:relative flex-shrink bg-neutral-100 dark:bg-neutral-800 transition-all z-10 ${
+			className={`absolute h-full lg:relative flex-shrink bg-neutral-100 dark:bg-neutral-800 transition-all z-10 ${
 				drawerOpen ? "w-80 min-w-80" : "w-0 min-w-0"
 			} `}
 		>
