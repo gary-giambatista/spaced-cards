@@ -53,6 +53,7 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 			repetition,
 			efactor,
 			due_date,
+			last_answer: grade,
 		};
 
 		// setSelectedCard(updatedCard);
@@ -93,7 +94,7 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 
 	return (
 		<section
-			className={`flex flex-col gap-4 flex-grow bg-white dark:bg-black p-4 overflow-y-auto @container`}
+			className={`flex flex-col gap-4 flex-grow bg-white dark:bg-black p-4 overflow-y-auto @container sm:w-3/4 sm:mx-auto lg:max-w-screen-sm`}
 		>
 			<Card
 				isHintOpen={isHintOpen}
@@ -101,31 +102,32 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 				isQuestionShowing={isQuestionShowing}
 				setIsQuestionShowing={setIsQuestionShowing}
 				selectedCard={selectedCard}
+				selectedDeck={selectedDeck}
 			/>
 			{/* Answers */}
-			<div className="flex justify-between items-center">
+			<div className="flex justify-between items-center gap-2">
 				<button
 					onClick={() => practice(selectedCard, 1)}
-					className="basis-1/3 bg-red-400 p-2"
+					className="basis-1/3 bg-[#D74848] p-2 rounded-xl"
 				>
 					Hard
 				</button>
 				<button
 					onClick={() => practice(selectedCard, 3)}
-					className="basis-1/3 bg-yellow-400 p-2"
+					className="basis-1/3 bg-[#CBD748] p-2 rounded-xl"
 				>
 					Medium
 				</button>
 				<button
 					onClick={() => practice(selectedCard, 5)}
-					className="basis-1/3 bg-green-400 p-2"
+					className="basis-1/3 bg-[#5FB55D] p-2 rounded-xl"
 				>
 					Easy
 				</button>
 			</div>
 
 			{/* Notes */}
-			<div className="flex flex-col gap-1 justify-center items-center bg-slate-500">
+			<div className="flex flex-col gap-1 justify-center items-center">
 				<div
 					onClick={() => setIsNoteOpen((prevState) => !prevState)}
 					className="flex w-full gap-1 justify-center items-center"

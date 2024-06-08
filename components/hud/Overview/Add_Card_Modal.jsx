@@ -27,6 +27,7 @@ function Add_Card_Modal({
 			efactor: 2.5,
 			due_date: Date.now(),
 			review_due: false,
+			last_answer: null,
 		};
 
 		// Check if mirrored card creation is checked aka "on"

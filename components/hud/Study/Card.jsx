@@ -6,9 +6,13 @@ function Card({
 	isQuestionShowing,
 	setIsQuestionShowing,
 	selectedCard,
+	selectedDeck,
 }) {
 	return (
-		<div className="h-3/4 flex @lg:w-3/4 @lg:mx-auto @5xl:max-w-screen-sm flex-col justify-evenly items-center bg-neutral-200 dark:bg-neutral-800 rounded-2xl">
+		<div className="h-full sm:h-3/4 flex flex-col justify-evenly items-center bg-neutral-200 dark:bg-neutral-800 rounded-2xl overflow-y-auto relative">
+			{/* <div className="absolute top-3 right-0 py-1 px-3 rounded-full bg-neutral-200 dark:bg-neutral-900">
+				{selectedDeck.reviews_due}
+			</div> */}
 			{isQuestionShowing ? (
 				<div>{selectedCard.question}</div>
 			) : (
@@ -48,5 +52,5 @@ function Card({
 		</div>
 	);
 }
-
+// @lg:w-3/4 @lg:mx-auto @5xl:max-w-screen-sm
 export default Card;
