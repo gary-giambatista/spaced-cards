@@ -1,7 +1,14 @@
 import React from "react";
+import Edit_Card_Modal from "./Edit_Card_Modal";
 import Mini_Card from "./Mini_Card";
 
-function Card_Rows({ selectedDeck, setSelectedCardId }) {
+function Card_Rows({
+	selectedDeck,
+	setSelectedDeck,
+	selectedCard,
+	setSelectedCard,
+	setSelectedCardId,
+}) {
 	// const colors = ["bg-red-500", "bg-green-500", "bg-blue-500"];
 	const colors = ["bg-[#5FB55D]", "bg-[#CBD748]", "bg-[#D74848]"];
 
@@ -17,7 +24,17 @@ function Card_Rows({ selectedDeck, setSelectedCardId }) {
 			{selectedDeck.cards.map((card, index) => {
 				const colorClass = colors[index % colors.length];
 				return (
-					<React.Fragment key={card.id}>
+					<div className="relative" key={card.id}>
+						{/* Edit Card Modal for Mobile */}
+						{selectedCard?.id === card?.id && window.innerWidth < 449 ? (
+							<Edit_Card_Modal
+								selectedDeck={selectedDeck}
+								setSelectedDeck={setSelectedDeck}
+								selectedCard={selectedCard}
+								setSelectedCard={setSelectedCard}
+								lastIndex={selectedDeck.cards.length - 1 === index}
+							/>
+						) : null}
 						<Mini_Card
 							card={card}
 							setSelectedCardId={setSelectedCardId}
@@ -26,8 +43,12 @@ function Card_Rows({ selectedDeck, setSelectedCardId }) {
 									? reviewedColors[card?.last_answer]
 									: colorClass
 							}
+							selectedDeck={selectedDeck}
+							setSelectedDeck={setSelectedDeck}
+							selectedCard={selectedCard}
+							setSelectedCard={setSelectedCard}
 						/>
-					</React.Fragment>
+					</div>
 				);
 			})}
 		</div>

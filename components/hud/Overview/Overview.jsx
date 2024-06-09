@@ -65,7 +65,8 @@ function Overview({
 					setDecks={setDecks}
 				/>
 			) : null}
-			{selectedCard ? (
+			{/* Edit Card Modal for Desktop */}
+			{selectedCard && window.innerWidth > 449 ? (
 				<Edit_Card_Modal
 					selectedDeck={selectedDeck}
 					setSelectedDeck={setSelectedDeck}
@@ -76,6 +77,10 @@ function Overview({
 			{selectedDeck?.cards?.length > 0 ? (
 				<Card_Rows
 					selectedDeck={selectedDeck}
+					setSelectedDeck={setSelectedDeck}
+					selectedCard={selectedCard}
+					setSelectedCard={setSelectedCard}
+					selectedCardId={selectedCardId}
 					setSelectedCardId={setSelectedCardId}
 				/>
 			) : (
