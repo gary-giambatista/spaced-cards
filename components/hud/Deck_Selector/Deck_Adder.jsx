@@ -16,6 +16,8 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 		name: newDeckName,
 		id: randomNumber,
 		last_modified: lastModified,
+		// is_shared: false,
+		// author: userName ? userName : "anonymous",
 		reviews_due: 0,
 		cards: [],
 	};
