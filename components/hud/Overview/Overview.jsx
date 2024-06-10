@@ -82,6 +82,8 @@ function Overview({
 					setSelectedCard={setSelectedCard}
 					selectedCardId={selectedCardId}
 					setSelectedCardId={setSelectedCardId}
+					setIsEditDeckModalOpen={setIsEditDeckModalOpen}
+					setIsAddCardModalOpen={setIsAddCardModalOpen}
 				/>
 			) : (
 				<Empty_Deck

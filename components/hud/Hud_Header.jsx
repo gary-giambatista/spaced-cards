@@ -10,7 +10,7 @@ function Hud_Header({
 	setIsEditDeckModalOpen,
 }) {
 	return (
-		<section className="flex justify-between items-center h-9 md:h-12 w-full relative">
+		<section className="flex justify-center items-center mb-1 w-full relative">
 			<div
 				className={`flex justify-center items-center ${
 					selectedDeck ? "md:mx-auto" : "mx-auto"
@@ -43,7 +43,7 @@ function Hud_Header({
 				</button>
 			</div>
 			{/* Manage/Add Card Buttons OR Review count remaining */}
-			{mode === "overview" ? (
+			{/* {mode === "overview" ? (
 				<div
 					className={` justify-end items-center gap-2 ${
 						!selectedDeck ? "hidden" : "flex"
@@ -102,7 +102,7 @@ function Hud_Header({
 				<div className="h-9 bg-slate-500 aspect-square absolute right-0 flex items-center justify-center rounded-md p-2">
 					{selectedDeck.reviews_due}
 				</div>
-			)}
+			)} */}
 		</section>
 	);
 }

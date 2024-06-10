@@ -180,7 +180,7 @@ export default function Home() {
 				setMode={setMode}
 				setIsEditDeckModalOpen={setIsEditDeckModalOpen}
 			/>
-			<div className="flex flex-col w-full p-4 gap-4 bg-white dark:bg-black overflow-y-auto">
+			<div className="flex flex-col w-full p-4 bg-white dark:bg-black overflow-y-auto">
 				<Hud_Header
 					setMode={setMode}
 					mode={mode}
