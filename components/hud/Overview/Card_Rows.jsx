@@ -28,7 +28,7 @@ function Card_Rows({
 		} else {
 			setCards(filteredCards);
 		}
-	}, [filterText]);
+	}, [filterText, selectedDeck.cards]);
 
 	// Colors array for repeating background colors on just created cards
 	const colors = ["bg-[#5FB55D]", "bg-[#CBD748]", "bg-[#D74848]"];

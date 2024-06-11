@@ -1,7 +1,11 @@
+import dayjs from "dayjs";
 import React, { useState } from "react";
+var relativeTime = require("dayjs/plugin/relativeTime");
+dayjs.extend(relativeTime);
 
 function Mini_Card({ card, setSelectedCardId, color }) {
 	const [isFlipped, setIsFlipped] = useState(false);
+	const isDue = card.due_date < Date.now();
 
 	const handleFlip = (e) => {
 		e.stopPropagation();
@@ -16,9 +20,19 @@ function Mini_Card({ card, setSelectedCardId, color }) {
 			}`}
 		>
 			<div
-				className={`relative h-full w-full flex flex-col justify-center items-center  `}
+				className={`relative h-full w-full flex flex-col justify-center items-center`}
 				onClick={() => setSelectedCardId(card.id)}
 			>
+				<div
+					className={`absolute m-auto top-0 w-fit h-fit transition-transform duration-500 font-extrabold px-2 rounded-md bg-white dark:bg-black ${
+						isFlipped
+							? "[transform:rotateY(180deg)]"
+							: "[transform:revert!important]"
+					} ${isDue ? "text-red-400" : ""}`}
+				>
+					{/* ${isDue ? "bg-red-800" : "bg-white dark:bg-black"} */}
+					{isDue ? "Due" : dayjs().to(dayjs(card.due_date), true)}
+				</div>
 				<div
 					className={`absolute inset-0 m-auto w-fit h-fit transition-opacity duration-500 font-extrabold ${
 						isFlipped ? "opacity-0" : "opacity-100"
