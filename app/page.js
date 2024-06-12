@@ -223,6 +223,8 @@ const deckss = [
 		name: "Test Deck",
 		id: 1,
 		reviews_due: 1,
+		is_public: false,
+		author: "anonymous",
 		cards: [
 			{
 				id: 1,
@@ -235,6 +237,7 @@ const deckss = [
 				efactor: 2.5,
 				due_date: "ISO date",
 				review_due: true,
+				last_answer: null,
 			},
 		],
 	},
@@ -242,6 +245,8 @@ const deckss = [
 		name: "Test Deck2",
 		id: 2,
 		reviews_due: 2,
+		is_public: false,
+		author: "anonymous",
 		cards: [
 			{
 				id: 1,
@@ -254,6 +259,7 @@ const deckss = [
 				efactor: 2.5,
 				due_date: "ISO date",
 				review_due: true,
+				last_answer: null,
 			},
 		],
 	},
@@ -261,6 +267,8 @@ const deckss = [
 		name: "Test Deck3",
 		id: 3,
 		reviews_due: 3,
+		is_public: false,
+		author: "anonymous",
 		cards: [
 			{
 				id: 1,
@@ -273,6 +281,7 @@ const deckss = [
 				efactor: 2.5,
 				due_date: "ISO date",
 				review_due: true,
+				last_answer: null,
 			},
 		],
 	},
@@ -280,6 +289,8 @@ const deckss = [
 		name: "Test Deck4",
 		id: 4,
 		reviews_due: 4,
+		is_public: false,
+		author: "anonymous",
 		cards: [
 			{
 				id: 1,
@@ -292,6 +303,7 @@ const deckss = [
 				efactor: 2.5,
 				due_date: "ISO date",
 				review_due: true,
+				last_answer: null,
 			},
 		],
 	},

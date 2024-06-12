@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Edit_Card_Modal from "./Edit_Card_Modal";
 import Mini_Card from "./Mini_Card";
 
@@ -13,7 +13,10 @@ function Card_Rows({
 }) {
 	const [cards, setCards] = useState(selectedDeck.cards);
 	const [filterText, setFilterText] = useState("");
+	const [sortOption, setSortOption] = useState("");
+	const [isInputFocused, setIsInputFocused] = useState(false);
 
+	// Handles setting state for Filtering by input text
 	const handleFilterChange = (e) => {
 		setFilterText(e.target.value);
 	};
@@ -22,13 +25,66 @@ function Card_Rows({
 		card.question.toLowerCase().includes(filterText.toLowerCase())
 	);
 
-	useEffect(() => {
-		if (filterText.length < 1) {
-			setCards(selectedDeck.cards);
+	// Handles setting state for Sorting by select option
+	const handleSortChange = (e) => {
+		setSortOption(e.target.value);
+	};
+
+	// Determines what to filter by, if no text is entered into the filter input, just rely on the copy of selectDeck.cards aka. cards
+	let selectORSelectAndInput = filterText ? filteredCards : selectedDeck.cards;
+	// console.log("filterText: ", filterText);
+	// console.log("selectORSelectAndInput: ", selectORSelectAndInput.length);
+
+	const sortedAndFilteredCards = [...selectORSelectAndInput].sort((a, b) => {
+		if (sortOption === "by-easiest") {
+			return b.last_answer - a.last_answer;
+		} else if (sortOption === "by-hardest") {
+			return a.last_answer - b.last_answer;
 		} else {
-			setCards(filteredCards);
+			return 0;
 		}
-	}, [filterText, selectedDeck.cards]);
+	});
+
+	/**
+	 * Remove cards without last_answer property
+	 * @param {object[]} cards
+	 * @returns {object[]}
+	 */
+	function removeDueCards(cards) {
+		return cards.filter((card) => card.last_answer !== null);
+	}
+	/**
+	 * Returns ONLY cards that are due for review
+	 * @param {object[]} cards - selectedDeck.cards
+	 * @returns {object[]}
+	 */
+	function showOnlyDueCards(cards) {
+		if (filterText) cards = filteredCards;
+		return cards.filter((card) => card.review_due === true);
+	}
+
+	useEffect(() => {
+		// No filter input text or sort by select options: no sorting
+		if (!filterText && !sortOption) {
+			console.log("NO filters applied to cards");
+			return setCards(selectedDeck.cards);
+		}
+
+		// Sort and filtering happens here
+		if (sortOption === "is-due") {
+			return setCards(() => showOnlyDueCards(selectedDeck.cards));
+		}
+		if (sortOption && !filterText) {
+			console.log("Filtering by SELECT");
+			setCards(removeDueCards(sortedAndFilteredCards));
+		} else if (sortOption && filterText) {
+			console.log("Filtering by INPUT and SELECT");
+			setCards(removeDueCards(sortedAndFilteredCards));
+		} else if (filterText && !sortOption) {
+			console.log("Filtering by INPUT");
+			setCards(sortedAndFilteredCards);
+		}
+	}, [filterText, sortOption, selectedDeck.cards]);
 
 	// Colors array for repeating background colors on just created cards
 	const colors = ["bg-[#5FB55D]", "bg-[#CBD748]", "bg-[#D74848]"];
@@ -44,7 +100,7 @@ function Card_Rows({
 	return (
 		<div className="w-full">
 			{/* Search Filter(s) */}
-			<section className="w-full sm:w-1/2 flex relative justify-center items-center gap-2 pb-4 mx-auto">
+			<section className="w-full sm:w-3/4 xl:w-1/2 flex relative justify-center items-center gap-2 pb-4 mx-auto">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					fill="none"
@@ -60,11 +116,29 @@ function Card_Rows({
 					/>
 				</svg>
 				<input
+					onFocus={() => setIsInputFocused(true)}
+					onBlur={() => setIsInputFocused(false)}
 					onChange={handleFilterChange}
 					value={filterText}
 					className="w-full bg-neutral-100 dark:bg-neutral-900 rounded-md p-2 pl-8"
 					placeholder="Find card..."
 				/>
+				{/* Add filter/sort dropdown select here */}
+				{/* Dropdown for sorting */}
+				<select
+					onChange={handleSortChange}
+					value={sortOption}
+					className={`bg-neutral-100 dark:bg-neutral-900 rounded-md  transition-all ${
+						isInputFocused && window.innerWidth < 480
+							? "w-0 opacity-0 p-0"
+							: "w-fit opacity-100 p-2 pl-2"
+					}`}
+				>
+					<option value="">Sort by</option>
+					<option value="by-easiest">By Easiest</option>
+					<option value="by-hardest">By Hardest</option>
+					<option value="is-due">Is Due</option>
+				</select>
 				{/* Manage/Add Card Buttons */}
 				<div
 					className={` justify-end items-center gap-2 ${
