@@ -21,6 +21,7 @@ function Card_Rows({
 		setFilterText(e.target.value);
 	};
 
+	// State used for cards when there is input text to be used as a filter
 	const filteredCards = selectedDeck.cards.filter((card) =>
 		card.question.toLowerCase().includes(filterText.toLowerCase())
 	);
@@ -30,29 +31,41 @@ function Card_Rows({
 		setSortOption(e.target.value);
 	};
 
-	// Determines what to filter by, if no text is entered into the filter input, just rely on the copy of selectDeck.cards aka. cards
-	let selectORSelectAndInput = filterText ? filteredCards : selectedDeck.cards;
-	// console.log("filterText: ", filterText);
-	// console.log("selectORSelectAndInput: ", selectORSelectAndInput.length);
+	/**
+	 * Handle sorting cards via the option select, and/or filtering via the text input
+	 * @param {object[]} cards
+	 * @param {boolean} removeDueCards - to remove due cards or not
+	 * @returns sorted cards, or sorted + filtered cards if there is filterText
+	 */
+	function sortAndFilterCards(cards, filterDueCards) {
+		// Filter cards ONLY if there is input text in the filter input
+		if (filterText) cards = filteredCards;
 
-	const sortedAndFilteredCards = [...selectORSelectAndInput].sort((a, b) => {
-		if (sortOption === "by-easiest") {
-			return b.last_answer - a.last_answer;
-		} else if (sortOption === "by-hardest") {
-			return a.last_answer - b.last_answer;
-		} else {
-			return 0;
-		}
-	});
+		// Remove due cards if desired
+		if (filterDueCards) cards = removeDueCards(cards);
+
+		const sortedAndFilteredCards = [...cards].sort((a, b) => {
+			if (sortOption === "by-easiest") {
+				return b.last_answer - a.last_answer;
+			} else if (sortOption === "by-hardest") {
+				return a.last_answer - b.last_answer;
+			} else {
+				return 0;
+			}
+		});
+
+		return sortedAndFilteredCards;
+	}
 
 	/**
 	 * Remove cards without last_answer property
 	 * @param {object[]} cards
-	 * @returns {object[]}
+	 * @returns {object[]} cards without any due cards
 	 */
 	function removeDueCards(cards) {
 		return cards.filter((card) => card.last_answer !== null);
 	}
+
 	/**
 	 * Returns ONLY cards that are due for review
 	 * @param {object[]} cards - selectedDeck.cards
@@ -63,10 +76,11 @@ function Card_Rows({
 		return cards.filter((card) => card.review_due === true);
 	}
 
+	// Handles setting cards, when is used to render the Mini_Card's into rows
 	useEffect(() => {
-		// No filter input text or sort by select options: no sorting
+		// No filter input text or sort by select options: no sorting/filtering
 		if (!filterText && !sortOption) {
-			console.log("NO filters applied to cards");
+			console.log("NO sorting/filters applied to cards");
 			return setCards(selectedDeck.cards);
 		}
 
@@ -76,13 +90,13 @@ function Card_Rows({
 		}
 		if (sortOption && !filterText) {
 			console.log("Filtering by SELECT");
-			setCards(removeDueCards(sortedAndFilteredCards));
+			return setCards(() => sortAndFilterCards(selectedDeck.cards, true));
 		} else if (sortOption && filterText) {
 			console.log("Filtering by INPUT and SELECT");
-			setCards(removeDueCards(sortedAndFilteredCards));
+			return setCards(() => sortAndFilterCards(selectedDeck.cards, true));
 		} else if (filterText && !sortOption) {
 			console.log("Filtering by INPUT");
-			setCards(sortedAndFilteredCards);
+			return setCards(() => sortAndFilterCards(selectedDeck.cards, false));
 		}
 	}, [filterText, sortOption, selectedDeck.cards]);
 
