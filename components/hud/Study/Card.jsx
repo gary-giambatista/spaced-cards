@@ -9,10 +9,10 @@ function Card({
 	selectedDeck,
 }) {
 	return (
-		<div className="h-full sm:h-3/4 flex flex-col justify-evenly items-center bg-neutral-200 dark:bg-neutral-800 rounded-2xl overflow-y-auto relative">
-			{/* <div className="absolute top-3 right-0 py-1 px-3 rounded-full bg-neutral-200 dark:bg-neutral-900">
+		<div className="h-full sm:h-3/4 flex flex-col justify-evenly items-center bg-neutral-200 dark:bg-neutral-800 rounded-2xl overflow-y-auto relative p-10">
+			<div className="absolute top-3 right-3 py-1 px-3 rounded-full bg-neutral-200 dark:bg-neutral-900">
 				{selectedDeck.reviews_due}
-			</div> */}
+			</div>
 			{isQuestionShowing ? (
 				<div>{selectedCard.question}</div>
 			) : (

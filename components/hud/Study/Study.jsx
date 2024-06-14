@@ -4,16 +4,20 @@ import { supermemo } from "supermemo";
 import Card from "./Card";
 import No_More_Reviews_Due from "./No_More_Reviews_Due";
 
+/**
+ * @typedef {import('@/typedefs.js').card} card
+ */
+
 function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	const [isQuestionShowing, setIsQuestionShowing] = useState(true);
 	const [isNoteOpen, setIsNoteOpen] = useState(false);
 	const [isHintOpen, setIsHintOpen] = useState(false);
-	const [reviewCount, setReviewCount] = useState(selectedDeck.reviews_due);
+	/**
+	 * @type {[card, React.Dispatch<React.SetStateAction<card>>]}
+	 */
 	const [selectedCard, setSelectedCard] = useState(pickCard());
-	const [noCardsToReview, setNoCardsToReview] = useState(false);
 
-	// Todo: selecting cards is not selecting ONLY cards with the review due
-	// Todo: after reviewing the last card, the card won't finish and nothing handles no cards
+	// Todo: <Card /> ONLY selectedCard is not being updated correctly, calling it before pickCard() filters the updated selectedDeck.cards
 
 	// Trace
 	//1. selectedDeck changes
@@ -26,17 +30,30 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	 * @returns {object} a single card object
 	 */
 	function pickCard() {
-		const cardsLength = selectedDeck.cards.length;
+		const dueCards = selectedDeck.cards.filter(
+			(card) => card.review_due === true
+		);
+
+		const dueCardsLength = dueCards.length;
 
 		// Max number returned is always 1 below cardsLength (0 indexed)
-		const randomIndex = Math.floor(Math.random() * (cardsLength - 0) + 0);
+		const randomIndex = Math.floor(Math.random() * (dueCardsLength - 0) + 0);
+		// const randomCard = dueCards[randomIndex];
+		// return randomCard;
 
-		const randomCard = selectedDeck.cards[randomIndex];
+		//1. Pick a card based upon the date, where smallest = first
+		//2. Pick a card based upon efactor, where higher = harder
+		//3.
+		dueCards.sort((a, b) => {
+			return b.due_date - a.due_date;
+		});
+		console.log("Sorted due cards: ", dueCards);
 
-		return randomCard;
+		//First card is the newest, last is oldest
+		return dueCards[dueCards.length - 1];
 	}
 	// useEffect(() => {
-	// 	setSelectedCard(pickCard());
+	// 	setSelectedCard(() => pickCard());
 	// }, []);
 
 	console.log("Selected CARD: ", selectedCard);
@@ -79,10 +96,16 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 			};
 		});
 
-		return setSelectedCard(pickCard());
+		// return setSelectedCard(pickCard());
 	}
 
-	if (selectedDeck.reviews_due === 0) {
+	//FIX
+	useEffect(() => {
+		return setSelectedCard(pickCard());
+	}, [selectedDeck]);
+
+	//TODO: Figured out a better way to deal with no selectedCard to avoid FLASH
+	if (selectedDeck.reviews_due === 0 || !selectedCard) {
 		return (
 			<section
 				className={`flex flex-col gap-4 flex-grow bg-slate-600 p-4 overflow-y-auto`}

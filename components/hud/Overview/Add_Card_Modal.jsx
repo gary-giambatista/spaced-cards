@@ -1,5 +1,9 @@
 import React, { useEffect, useRef } from "react";
 
+/**
+ * @typedef {import('@/typedefs.js').card} card
+ */
+
 function Add_Card_Modal({
 	isAddCardModalOpen,
 	setIsAddCardModalOpen,
@@ -16,6 +20,7 @@ function Add_Card_Modal({
 		console.log(formJson);
 		//Consider modifying the local decks object to avoid refetching after each card is added to the deck
 
+		/**@type {card} */
 		const newCard = {
 			id: Math.floor(Math.random() * (100000 - 1) + 1),
 			question: formJson.question_input,

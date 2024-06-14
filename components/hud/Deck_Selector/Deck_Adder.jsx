@@ -1,5 +1,9 @@
 import React, { useMemo, useRef, useState } from "react";
 
+/**
+ * @typedef {import('@/typedefs.js').deck} deck
+ */
+
 function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 	const [isAddingDeck, setIsAddingDeck] = useState(false);
 	const [newDeckName, setNewDeckName] = useState("");
