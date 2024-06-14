@@ -18,9 +18,9 @@ function Add_Card_Modal({
 		const formData = new FormData(form);
 		const formJson = Object.fromEntries(formData.entries());
 		console.log(formJson);
+		const now = Date.now();
 		//Consider modifying the local decks object to avoid refetching after each card is added to the deck
 
-		/**@type {card} */
 		const newCard = {
 			id: Math.floor(Math.random() * (100000 - 1) + 1),
 			question: formJson.question_input,
@@ -30,9 +30,10 @@ function Add_Card_Modal({
 			interval: 0,
 			repetition: 0,
 			efactor: 2.5,
-			due_date: Date.now(),
+			due_date: now,
 			review_due: false,
 			last_answer: null,
+			last_practiced: null,
 		};
 
 		// Check if mirrored card creation is checked aka "on"
@@ -50,12 +51,14 @@ function Add_Card_Modal({
 			// Add both new cards to the selected deck
 			setSelectedDeck((prevState) => ({
 				...prevState,
+				last_modified: now,
 				cards: [...prevState.cards, newCard, mirroredCard],
 			}));
 		} else {
 			// Add only the newCard to the selected deck
 			setSelectedDeck((prevState) => ({
 				...prevState,
+				last_modified: now,
 				cards: [...prevState.cards, newCard],
 			}));
 		}

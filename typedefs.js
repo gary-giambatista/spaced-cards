@@ -15,6 +15,7 @@
  * @property {number} due_date
  * @property {boolean} review_due
  * @property {number | null} last_answer
+ * @property {number | null} last_practiced
  * @memberof typedefs
  */
 
@@ -23,8 +24,10 @@
  * @property {string} name
  * @property {number} id
  * @property {number} last_modified
+ * @property {number | null} last_reviewed
  * @property {number} reviews_due
  * @property {card[]} cards
+ * @memberof typedefs
  */
 // Add Below properties:
 // is_shared: false,

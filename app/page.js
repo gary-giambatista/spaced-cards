@@ -30,11 +30,16 @@ export default function Home() {
 			if (decks) {
 				decks.forEach((deck) => {
 					// Update deck's only if selectedDeck's card length is different or if reviews_due is different
+					//TODO: optimize and make this logic concise: break into smaller functions for optimization and reduce if checks
 					if (
 						(deck.id === selectedDeck.id &&
 							deck.cards.length !== selectedDeck.cards.length) ||
 						(deck.id === selectedDeck.id &&
-							deck.reviews_due !== selectedDeck.reviews_due)
+							deck.reviews_due !== selectedDeck.reviews_due) ||
+						(deck.id === selectedDeck.id &&
+							deck.last_modified !== selectedDeck.last_modified) ||
+						(deck.id === selectedDeck.id &&
+							deck.last_reviewed !== selectedDeck.last_reviewed)
 					) {
 						// Update the correct deck
 						const updatedDecks = decks.map((deck) => {
@@ -43,6 +48,8 @@ export default function Home() {
 									...deck,
 									cards: updateReviewsDue([], selectedDeck),
 									reviews_due: selectedDeck.reviews_due,
+									last_modified: selectedDeck.last_modified,
+									last_reviewed: selectedDeck.last_reviewed,
 								};
 							} else {
 								return deck;
@@ -218,13 +225,15 @@ export default function Home() {
 // JS logic to hide drawer not necessary, because using media query to set the drawer to absolute fixes display issues
 //Todo: break out useEffects functions into a folder and render inside here?
 
-const deckss = [
+const decksType = [
 	{
 		name: "Test Deck",
 		id: 1,
 		reviews_due: 1,
-		is_public: false,
+		is_shared: false,
 		author: "anonymous",
+		last_reviewed: 123213123,
+		last_modified: 123123213,
 		cards: [
 			{
 				id: 1,
@@ -238,6 +247,7 @@ const deckss = [
 				due_date: "ISO date",
 				review_due: true,
 				last_answer: null,
+				last_practiced: 1235123213,
 			},
 		],
 	},
@@ -245,8 +255,10 @@ const deckss = [
 		name: "Test Deck2",
 		id: 2,
 		reviews_due: 2,
-		is_public: false,
+		is_shared: false,
 		author: "anonymous",
+		last_reviewed: 123213123,
+		last_modified: 123123213,
 		cards: [
 			{
 				id: 1,
@@ -260,6 +272,7 @@ const deckss = [
 				due_date: "ISO date",
 				review_due: true,
 				last_answer: null,
+				last_practiced: 1235123213,
 			},
 		],
 	},
@@ -267,8 +280,10 @@ const deckss = [
 		name: "Test Deck3",
 		id: 3,
 		reviews_due: 3,
-		is_public: false,
+		is_shared: false,
 		author: "anonymous",
+		last_reviewed: 123213123,
+		last_modified: 123123213,
 		cards: [
 			{
 				id: 1,
@@ -282,6 +297,7 @@ const deckss = [
 				due_date: "ISO date",
 				review_due: true,
 				last_answer: null,
+				last_practiced: 1235123213,
 			},
 		],
 	},
@@ -289,8 +305,10 @@ const deckss = [
 		name: "Test Deck4",
 		id: 4,
 		reviews_due: 4,
-		is_public: false,
+		is_shared: false,
 		author: "anonymous",
+		last_reviewed: 123213123,
+		last_modified: 123123213,
 		cards: [
 			{
 				id: 1,
@@ -304,6 +322,7 @@ const deckss = [
 				due_date: "ISO date",
 				review_due: true,
 				last_answer: null,
+				last_practiced: 1235123213,
 			},
 		],
 	},

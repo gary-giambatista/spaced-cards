@@ -17,8 +17,6 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	 */
 	const [selectedCard, setSelectedCard] = useState(pickCard());
 
-	// Todo: <Card /> ONLY selectedCard is not being updated correctly, calling it before pickCard() filters the updated selectedDeck.cards
-
 	// Trace
 	//1. selectedDeck changes
 	//2. page.js useEffect()->updateReviewsDue() -- updates reviews_due & card.review_due
@@ -42,8 +40,8 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 		// return randomCard;
 
 		//1. Pick a card based upon the date, where smallest = first
-		//2. Pick a card based upon efactor, where higher = harder
-		//3.
+		//or
+		//2. Pick a card based upon efactor, where higher = easier
 		dueCards.sort((a, b) => {
 			return b.due_date - a.due_date;
 		});
@@ -52,17 +50,15 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 		//First card is the newest, last is oldest
 		return dueCards[dueCards.length - 1];
 	}
-	// useEffect(() => {
-	// 	setSelectedCard(() => pickCard());
-	// }, []);
 
-	console.log("Selected CARD: ", selectedCard);
-	console.log("Selected DECK: ", selectedDeck);
+	// console.log("Selected CARD (Study.jsx): ", selectedCard);
+	// console.log("Selected DECK (Study.jsx): ", selectedDeck);
 
 	function practice(selectedCard, grade) {
 		const { interval, repetition, efactor } = supermemo(selectedCard, grade);
+		const now = Date.now();
 
-		const due_date = dayjs(Date.now()).add(interval, "day").valueOf();
+		const due_date = dayjs(now).add(interval, "day").valueOf();
 
 		const updatedCard = {
 			...selectedCard,
@@ -71,6 +67,7 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 			efactor,
 			due_date,
 			last_answer: grade,
+			last_practiced: now,
 		};
 
 		// setSelectedCard(updatedCard);
@@ -89,8 +86,10 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 				}
 				return card; // Otherwise, return the card unchanged
 			});
+
 			return {
 				...prevSelectedDeck,
+				last_reviewed: now,
 				reviews_due: decreasedReviewsDue, //2.triggers page.js useEffect
 				cards: updatedCards,
 			};
@@ -99,7 +98,7 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 		// return setSelectedCard(pickCard());
 	}
 
-	//FIX
+	//FIXED State issue, consider alternative solutions for less re-renders?
 	useEffect(() => {
 		return setSelectedCard(pickCard());
 	}, [selectedDeck]);
@@ -108,7 +107,7 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	if (selectedDeck.reviews_due === 0 || !selectedCard) {
 		return (
 			<section
-				className={`flex flex-col gap-4 flex-grow bg-slate-600 p-4 overflow-y-auto`}
+				className={`flex flex-col gap-4 flex-grow bg-white dark:bg-black p-4 overflow-y-auto`}
 			>
 				<No_More_Reviews_Due />
 			</section>

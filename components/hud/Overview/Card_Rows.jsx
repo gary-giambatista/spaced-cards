@@ -44,11 +44,21 @@ function Card_Rows({
 		// Remove due cards if desired
 		if (filterDueCards) cards = removeDueCards(cards);
 
+		// by-easiest/hardest sorts by last_answer (1, 3, 5) 5 being easy, 1 hard >> change this to efactor (higher being easier)
+		// by-shortest/longest sorts by last_practiced (date: 09090823)
 		const sortedAndFilteredCards = [...cards].sort((a, b) => {
 			if (sortOption === "by-easiest") {
+				// Bigger first: last_answer
 				return b.last_answer - a.last_answer;
 			} else if (sortOption === "by-hardest") {
+				// Smaller first: last_answer
 				return a.last_answer - b.last_answer;
+			} else if (sortOption === "by-shortest") {
+				// Bigger first: last_practiced
+				return b.last_practiced - a.last_practiced;
+			} else if (sortOption === "by-longest") {
+				// Smaller first: last_practiced
+				return a.last_practiced - b.last_practiced;
 			} else {
 				return 0;
 			}
@@ -149,9 +159,11 @@ function Card_Rows({
 					}`}
 				>
 					<option value="">Sort by</option>
+					<option value="is-due">Is Due</option>
 					<option value="by-easiest">By Easiest</option>
 					<option value="by-hardest">By Hardest</option>
-					<option value="is-due">Is Due</option>
+					<option value="by-longest">By Longest</option>
+					<option value="by-shortest">By Shortest</option>
 				</select>
 				{/* Manage/Add Card Buttons */}
 				<div

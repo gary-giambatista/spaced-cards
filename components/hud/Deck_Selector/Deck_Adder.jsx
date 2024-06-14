@@ -19,6 +19,7 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 	const newDeck = {
 		name: newDeckName,
 		id: randomNumber,
+		last_reviewed: null,
 		last_modified: lastModified,
 		// is_shared: false,
 		// author: userName ? userName : "anonymous",
@@ -144,13 +145,3 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 }
 
 export default Deck_Adder;
-
-const testObject = {
-	id: 1,
-	obj2: {
-		id: 2,
-		obj3: {
-			id: 3,
-		},
-	},
-};
