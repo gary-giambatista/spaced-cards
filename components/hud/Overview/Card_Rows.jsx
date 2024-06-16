@@ -34,24 +34,24 @@ function Card_Rows({
 	/**
 	 * Handle sorting cards via the option select, and/or filtering via the text input
 	 * @param {object[]} cards
-	 * @param {boolean} removeDueCards - to remove due cards or not
+	 * @param {boolean} filterNewCards - to remove due cards or not
 	 * @returns sorted cards, or sorted + filtered cards if there is filterText
 	 */
-	function sortAndFilterCards(cards, filterDueCards) {
+	function sortAndFilterCards(cards, filterNewCards) {
 		// Filter cards ONLY if there is input text in the filter input
 		if (filterText) cards = filteredCards;
 
 		// Remove due cards if desired
-		if (filterDueCards) cards = removeDueCards(cards);
+		if (filterNewCards) cards = removeNewCards(cards);
 
 		// by-easiest/hardest sorts by last_answer (1, 3, 5) 5 being easy, 1 hard >> change this to efactor (higher being easier)
 		// by-shortest/longest sorts by last_practiced (date: 09090823)
 		const sortedAndFilteredCards = [...cards].sort((a, b) => {
 			if (sortOption === "by-easiest") {
-				// Bigger first: last_answer
+				// Bigger first: last_answer -- update to efactor?
 				return b.last_answer - a.last_answer;
 			} else if (sortOption === "by-hardest") {
-				// Smaller first: last_answer
+				// Smaller first: last_answer -- update to efactor?
 				return a.last_answer - b.last_answer;
 			} else if (sortOption === "by-shortest") {
 				// Bigger first: last_practiced
@@ -68,11 +68,11 @@ function Card_Rows({
 	}
 
 	/**
-	 * Remove cards without last_answer property
+	 * Remove cards with null last_answer property (only newly created cards)
 	 * @param {object[]} cards
 	 * @returns {object[]} cards without any due cards
 	 */
-	function removeDueCards(cards) {
+	function removeNewCards(cards) {
 		return cards.filter((card) => card.last_answer !== null);
 	}
 
