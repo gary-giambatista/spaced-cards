@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { supermemo } from "supermemo";
 import Card from "./Card";
 import No_More_Reviews_Due from "./No_More_Reviews_Due";
@@ -15,7 +15,8 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	/**
 	 * @type {[card, React.Dispatch<React.SetStateAction<card>>]}
 	 */
-	const [selectedCard, setSelectedCard] = useState(pickCard());
+	const [selectedCard, setSelectedCard] = useState(null);
+	const [updatedNote, setUpdatedNote] = useState(null);
 
 	// Trace
 	//1. selectedDeck changes
@@ -23,21 +24,14 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	//3. page.js useEffect()->updateDecks() -- updates selectedDeck
 
 	/**
-	 * Does NOT handle validating if the review is DUE
+	 * Validates if a card is due and ONLY shows those by date (oldest first)
 	 * return statement below renders different component if no reviews_due
 	 * @returns {object} a single card object
 	 */
-	function pickCard() {
+	const pickCard = useCallback(() => {
 		const dueCards = selectedDeck.cards.filter(
 			(card) => card.review_due === true
 		);
-
-		const dueCardsLength = dueCards.length;
-
-		// Max number returned is always 1 below cardsLength (0 indexed)
-		const randomIndex = Math.floor(Math.random() * (dueCardsLength - 0) + 0);
-		// const randomCard = dueCards[randomIndex];
-		// return randomCard;
 
 		//1. Pick a card based upon the date, where smallest = first
 		//or
@@ -49,10 +43,7 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 
 		//First card is the newest, last is oldest
 		return dueCards[dueCards.length - 1];
-	}
-
-	// console.log("Selected CARD (Study.jsx): ", selectedCard);
-	// console.log("Selected DECK (Study.jsx): ", selectedDeck);
+	}, [selectedDeck]);
 
 	function practice(selectedCard, grade) {
 		const { interval, repetition, efactor } = supermemo(selectedCard, grade);
@@ -99,9 +90,39 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 	}
 
 	//FIXED State issue, consider alternative solutions for less re-renders?
+	// Picks a card for selectedDeck state on page load / after practice()
 	useEffect(() => {
 		return setSelectedCard(pickCard());
 	}, [selectedDeck]);
+	// Sets state of updatedNote when a selectedCard is picked above
+	useEffect(() => {
+		return setUpdatedNote(selectedCard?.note);
+	}, [selectedCard]);
+
+	console.log("Updated note: ", updatedNote);
+
+	function updateNote() {
+		const updatedCard = {
+			...selectedCard,
+			note: updatedNote,
+		};
+
+		setSelectedDeck((prevSelectedDeck) => {
+			const updatedCards = prevSelectedDeck.cards.map((card) => {
+				if (card.id === selectedCard.id) {
+					// If the card id matches, update the card
+					return updatedCard;
+				}
+				return card; // Otherwise, return the card unchanged
+			});
+
+			return {
+				...prevSelectedDeck,
+				last_modified: Date.now(), //2.triggers page.js useEffect?
+				cards: updatedCards,
+			};
+		});
+	}
 
 	//TODO: Figured out a better way to deal with no selectedCard to avoid FLASH
 	if (selectedDeck.reviews_due === 0 || !selectedCard) {
@@ -173,15 +194,27 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 					</svg>
 				</div>
 				{isNoteOpen ? (
-					<textarea
-						type="textarea"
-						className="w-full p-2 rounded-md resize-none"
-						name="notes_input"
-						placeholder="Your notes here"
-						defaultValue={selectedCard.note}
-						rows={2}
-						cols={40}
-					/>
+					<div className="w-full flex gap-2">
+						<textarea
+							type="textarea"
+							className="w-full p-2 rounded-md resize-none"
+							name="notes_input"
+							placeholder="Your notes here"
+							// defaultValue={selectedCard.note}
+							rows={2}
+							cols={40}
+							value={updatedNote}
+							onChange={(e) => setUpdatedNote(e.target.value)}
+						/>
+						{selectedCard.note !== updatedNote ? (
+							<button
+								onClick={() => updateNote()}
+								className="bg-green-800 hover:bg-green-900 text-white py-3 px-5 rounded-md font-extrabold"
+							>
+								Update
+							</button>
+						) : null}
+					</div>
 				) : null}
 			</div>
 		</section>
@@ -191,5 +224,67 @@ function Study({ setMode, selectedDeck, setSelectedDeck }) {
 export default Study;
 
 //Todo: style card component
-//Todo: create a function for updating notes
-//Todo: add function to switch selectedCard => pickCard()
+
+//Form approach: GPT solution to useRef checking to know when to show the update button: https://chatgpt.com/share/83ed200c-7f45-46f3-a803-ae7fd31c2ede
+
+// const noteRef = useRef(null);
+// console.log("Note ref: ", noteRef?.current?.value);
+// console.log("Selected Card note: ", selectedCard?.note);
+
+// function updateNote(e) {
+// 	e.preventDefault();
+
+// 	const form = e.target;
+// 	const formData = new FormData(form);
+// 	const formJson = Object.fromEntries(formData.entries());
+// 	console.log("Note Form:", formJson);
+
+// 	const updatedCard = {
+// 		...selectedCard,
+// 		note: formJson.notes_input,
+// 	};
+
+// 	setSelectedDeck((prevSelectedDeck) => {
+// 		const updatedCards = prevSelectedDeck.cards.map((card) => {
+// 			if (card.id === selectedCard.id) {
+// 				// If the card id matches, update the card
+// 				return updatedCard;
+// 			}
+// 			return card; // Otherwise, return the card unchanged
+// 		});
+
+// 		return {
+// 			...prevSelectedDeck,
+// 			last_modified: Date.now(), //2.triggers page.js useEffect?
+// 			cards: updatedCards,
+// 		};
+// 	});
+// }
+
+{
+	/* <form method="post" onSubmit={updateNote}>
+<label>
+	Update Notes:
+	<textarea
+		ref={noteRef}
+		type="textarea"
+		className="w-full p-2 rounded-md resize-none"
+		name="notes_input"
+		placeholder="Your notes here"
+		defaultValue={selectedCard.note}
+		rows={2}
+		cols={40}
+		// value={updatedNote}
+		// onChange={(e) => setUpdatedNote(e.target.value)}
+	/>
+</label>
+{noteRef ? null : (
+	<button
+		className="bg-green-800 hover:bg-green-900 text-white py-3 px-5 rounded-md font-extrabold"
+		type="submit"
+	>
+		Update
+	</button>
+)}
+</form> */
+}
