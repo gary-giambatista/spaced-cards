@@ -123,7 +123,7 @@ function Card_Rows({
 
 	return (
 		<div className="w-full">
-			{/* Search Filter(s) */}
+			{/* Search Filters */}
 			<section className="w-full sm:w-3/4 xl:w-1/2 flex relative justify-center items-center gap-2 pb-4 mx-auto">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -147,12 +147,12 @@ function Card_Rows({
 					className="w-full bg-neutral-100 dark:bg-neutral-900 rounded-md p-2 pl-8"
 					placeholder="Find card..."
 				/>
-				{/* Add filter/sort dropdown select here */}
+
 				{/* Dropdown for sorting */}
 				<select
 					onChange={handleSortChange}
 					value={sortOption}
-					className={`bg-neutral-100 dark:bg-neutral-900 rounded-md  transition-all ${
+					className={`bg-neutral-100 dark:bg-neutral-900 rounded-md  transition-all border-r-8 border-transparent ${
 						isInputFocused && window.innerWidth < 480
 							? "w-0 opacity-0 p-0"
 							: "w-fit opacity-100 p-2 pl-2"
@@ -165,16 +165,17 @@ function Card_Rows({
 					<option value="by-longest">By Longest</option>
 					<option value="by-shortest">By Shortest</option>
 				</select>
+
 				{/* Manage/Add Card Buttons */}
 				<div
-					className={` justify-end items-center gap-2 ${
+					className={`h-full justify-end items-center gap-2 ${
 						!selectedDeck ? "hidden" : "flex"
 					}`}
 				>
 					<button
 						disabled={!selectedDeck}
 						onClick={() => setIsEditDeckModalOpen((prevState) => !prevState)}
-						className="h-9 w-10 lg:w-36 flex justify-center items-center gap-1 dark:bg-neutral-800 bg-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-900 rounded-md disabled:cursor-not-allowed"
+						className="h-full p-2 w-10 lg:w-36 flex justify-center items-center gap-1 dark:bg-neutral-800 bg-neutral-200 hover:bg-neutral-300 dark:hover:bg-neutral-900 rounded-md disabled:cursor-not-allowed"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -201,7 +202,7 @@ function Card_Rows({
 					<button
 						disabled={!selectedDeck}
 						onClick={() => setIsAddCardModalOpen((prevState) => !prevState)}
-						className="h-9 w-10 lg:w-36  flex justify-center items-center gap-1 bg-green-800 text-white dark:bg-green-800 rounded-md dark:hover:bg-green-900 disabled:cursor-not-allowed"
+						className="h-full p-2 w-10 lg:w-36 flex justify-center items-center gap-1 bg-green-800 text-white dark:bg-green-800 rounded-md dark:hover:bg-green-900 disabled:cursor-not-allowed"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -222,6 +223,7 @@ function Card_Rows({
 				</div>
 			</section>
 
+			{/* Map out Mini_Cards */}
 			<section className="grid grid-cols-1 @md:grid-cols-2 @2xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5 @7xl:grid-cols-6 @[1921px]:grid-cols-8 gap-4">
 				{cards.map((card, index) => {
 					const colorClass = colors[index % colors.length];

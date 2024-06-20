@@ -50,7 +50,7 @@ function Mini_Card({ card, setSelectedCardId, color }) {
 				</div>
 				{/* SVGs */}
 				<div
-					className={`absolute flex justify-between inset-0 transition-transform duration-500 [transform:rotateY(180deg)] ${
+					className={`absolute flex justify-between inset-0 transition-transform duration-500 ${
 						isFlipped
 							? "[transform:rotateY(180deg)] "
 							: "[transform:revert!important] "

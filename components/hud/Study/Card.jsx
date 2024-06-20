@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 function Card({
 	isHintOpen,
@@ -9,16 +9,49 @@ function Card({
 	selectedDeck,
 }) {
 	return (
-		<div className="h-full sm:h-3/4 flex flex-col justify-evenly items-center bg-neutral-200 dark:bg-neutral-800 rounded-2xl overflow-y-auto relative p-10">
-			<div className="absolute top-3 right-3 py-1 px-3 rounded-full bg-neutral-200 dark:bg-neutral-900">
+		<div
+			className={`h-full sm:h-3/4 flex flex-col justify-evenly items-center bg-neutral-200 dark:bg-neutral-800 rounded-2xl overflow-y-auto relative p-10 [perspective:1000px] transition-all duration-500 [transform-style:preserve-3d] ${
+				!isQuestionShowing ? `[transform:rotateY(180deg)]` : ``
+			}`}
+		>
+			{/* <div
+				className={`absolute flex justify-end top-3 right-3 transition-transform duration-500 ${
+					!isQuestionShowing
+						? "[transform:rotateY(180deg)] "
+						: "[transform:revert!important] "
+				}`}
+			> */}
+			{/* Reviews Remaining */}
+			<div
+				className={`absolute top-3 right-3 py-1 px-3 rounded-full bg-neutral-200 dark:bg-neutral-900 transition-transform duration-500 ${
+					!isQuestionShowing
+						? "[transform:rotateY(180deg)] "
+						: "[transform:revert!important] "
+				}`}
+			>
 				{selectedDeck.reviews_due}
 			</div>
-			{isQuestionShowing ? (
-				<div>{selectedCard.question}</div>
-			) : (
-				<div>{selectedCard.answer}</div>
-			)}
-			<div className="flex flex-col gap-1 justify-center items-center">
+			{/* </div> */}
+
+			{/* Question/Answer Section */}
+			<div
+				className={`transition-transform duration-500 ${
+					!isQuestionShowing
+						? "[transform:rotateY(180deg)] "
+						: "[transform:revert!important] "
+				}`}
+			>
+				{isQuestionShowing ? selectedCard.question : selectedCard.answer}
+			</div>
+
+			{/* Hint Section */}
+			<div
+				className={`flex flex-col gap-1 justify-center items-center transition-transform duration-500 ${
+					!isQuestionShowing
+						? "[transform:rotateY(180deg)] "
+						: "[transform:revert!important] "
+				}`}
+			>
 				<div
 					onClick={() => setIsHintOpen((prevState) => !prevState)}
 					className="flex w-full gap-1 justify-center items-center"
@@ -43,9 +76,15 @@ function Card({
 				</div>
 				{isHintOpen ? <div>{selectedCard.hint}!</div> : null}
 			</div>
+
+			{/* Flip Button */}
 			<button
 				onClick={() => setIsQuestionShowing((prevState) => !prevState)}
-				className="bg-blue-500 py-1 px-6 rounded-md"
+				className={`bg-neutral-100 dark:bg-neutral-900 py-1 px-6 rounded-md transition-transform duration-500 ${
+					!isQuestionShowing
+						? "[transform:rotateY(180deg)] "
+						: "[transform:revert!important] "
+				}`}
 			>
 				Flip
 			</button>
