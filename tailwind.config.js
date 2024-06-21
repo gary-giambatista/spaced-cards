@@ -14,6 +14,9 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [require("@tailwindcss/container-queries")],
+	plugins: [
+		require("@tailwindcss/container-queries"),
+		require("tailwind-scrollbar"),
+	],
 	darkMode: "selector",
 };
