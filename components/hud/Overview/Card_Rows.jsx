@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Edit_Card_Modal from "./Edit_Card_Modal";
 import Mini_Card from "./Mini_Card";
+import No_Filter_Or_Search_Results from "./No_Filter_Or_Search_Results";
 
 function Card_Rows({
 	selectedDeck,
@@ -152,7 +153,7 @@ function Card_Rows({
 				<select
 					onChange={handleSortChange}
 					value={sortOption}
-					className={`bg-neutral-100 dark:bg-neutral-900 rounded-md  transition-all border-r-8 border-transparent ${
+					className={`bg-neutral-100 dark:bg-neutral-900 rounded-md  transition-all border-r-8 border-transparent max-w-[15ch] ${
 						isInputFocused && window.innerWidth < 480
 							? "w-0 opacity-0 p-0"
 							: "w-fit opacity-100 p-2 pl-2"
@@ -162,8 +163,8 @@ function Card_Rows({
 					<option value="is-due">Is Due</option>
 					<option value="by-easiest">By Easiest</option>
 					<option value="by-hardest">By Hardest</option>
-					<option value="by-longest">By Longest</option>
-					<option value="by-shortest">By Shortest</option>
+					<option value="by-longest">Longest since reviewed</option>
+					<option value="by-shortest">Shortest since reviewed</option>
 				</select>
 
 				{/* Manage/Add Card Buttons */}
@@ -225,36 +226,43 @@ function Card_Rows({
 
 			{/* Map out Mini_Cards */}
 			<section className="grid grid-cols-1 @md:grid-cols-2 @2xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5 @7xl:grid-cols-6 @[1921px]:grid-cols-8 gap-4">
-				{cards.map((card, index) => {
-					const colorClass = colors[index % colors.length];
-					return (
-						<div className="relative" key={card.id}>
-							{/* Edit Card Modal for Mobile */}
-							{selectedCard?.id === card?.id && window.innerWidth < 449 ? (
-								<Edit_Card_Modal
+				{/* Check if all cards are filtered */}
+				{cards.length > 0 ? (
+					// If cards.length > 0, render the cards
+					cards.map((card, index) => {
+						const colorClass = colors[index % colors.length];
+						return (
+							<div className="relative" key={card.id}>
+								{/* Edit Card Modal for Mobile */}
+								{selectedCard?.id === card?.id && window.innerWidth < 449 ? (
+									<Edit_Card_Modal
+										selectedDeck={selectedDeck}
+										setSelectedDeck={setSelectedDeck}
+										selectedCard={selectedCard}
+										setSelectedCard={setSelectedCard}
+										lastIndex={selectedDeck.cards.length - 1 === index}
+									/>
+								) : null}
+								<Mini_Card
+									card={card}
+									setSelectedCardId={setSelectedCardId}
+									color={
+										reviewedColors[card?.last_answer]
+											? reviewedColors[card?.last_answer]
+											: colorClass
+									}
 									selectedDeck={selectedDeck}
 									setSelectedDeck={setSelectedDeck}
 									selectedCard={selectedCard}
 									setSelectedCard={setSelectedCard}
-									lastIndex={selectedDeck.cards.length - 1 === index}
 								/>
-							) : null}
-							<Mini_Card
-								card={card}
-								setSelectedCardId={setSelectedCardId}
-								color={
-									reviewedColors[card?.last_answer]
-										? reviewedColors[card?.last_answer]
-										: colorClass
-								}
-								selectedDeck={selectedDeck}
-								setSelectedDeck={setSelectedDeck}
-								selectedCard={selectedCard}
-								setSelectedCard={setSelectedCard}
-							/>
-						</div>
-					);
-				})}
+							</div>
+						);
+					})
+				) : (
+					// If cards.length < 0, render no results component
+					<No_Filter_Or_Search_Results />
+				)}
 			</section>
 		</div>
 	);
