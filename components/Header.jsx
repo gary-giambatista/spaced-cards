@@ -68,7 +68,7 @@ function Header() {
 				</div>
 				{/* Clerk User Management */}
 				<SignedOut>
-					<SignInButton />
+					<SignInButton mode="modal" />
 				</SignedOut>
 				<SignedIn>
 					<UserButton />
