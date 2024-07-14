@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Query_Provider from "@/providers/Query_Provider";
 import Theme_Provider from "@/providers/Theme_Provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Nunito } from "next/font/google";
@@ -19,7 +20,7 @@ export default function RootLayout({ children }) {
 				<body className={`${nunito.className} flex flex-col h-dvh`}>
 					<Theme_Provider>
 						<Header />
-						{children}
+						<Query_Provider>{children}</Query_Provider>
 						<Footer />
 					</Theme_Provider>
 				</body>

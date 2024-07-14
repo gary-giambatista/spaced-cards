@@ -4,10 +4,17 @@ import Deck_Selector from "@/components/hud/Deck_Selector/Deck_Selector";
 import Hud_Header from "@/components/hud/Hud_Header";
 import Overview from "@/components/hud/Overview/Overview";
 import Study from "@/components/hud/Study/Study";
-import { fetchDecks, setDecksInDB } from "@/library/database_functions";
+import { db } from "@/firebase";
 import { useAuth } from "@clerk/nextjs";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import {
+	addDoc,
+	collection,
+	doc,
+	getDoc,
+	getDocs,
+	setDoc,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 export default function Home() {
 	const [mode, setMode] = useState("overview");
@@ -17,20 +24,15 @@ export default function Home() {
 	);
 	const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
 	const [isEditDeckModalOpen, setIsEditDeckModalOpen] = useState(false);
-	const [decks, setDecks] = useState(() => {
-		return JSON.parse(localStorage.getItem("decks"));
-	});
-	const [selectedDeck, setSelectedDeck] = useState(null);
 	let timeout = false;
+	const [decks, setDecks] = useState(null);
+	const [selectedDeck, setSelectedDeck] = useState(null);
 
 	// Clerk user data
 	const { isLoaded, userId, sessionId, emailAddresses, getToken } = useAuth();
 	// Auth user State
 	const [userRef, setUserRef] = useState(null);
 	const [deckRef, setDeckRef] = useState(null);
-	const [dbDecksOrLsDecks, setDbDecksOrLsDecks] = useState(null);
-
-	//Todo: make sure create user flow works
 
 	console.group("page.js");
 
@@ -46,10 +48,14 @@ export default function Home() {
 					// Update deck's only if selectedDeck's card length is different or if reviews_due is different
 					//TODO: optimize and make this logic concise: break into smaller functions for optimization and reduce if checks
 					if (
-						(deck.id === selectedDeck?.id &&
-							deck.last_modified !== selectedDeck?.last_modified) ||
-						(deck.id === selectedDeck?.id &&
-							deck.last_reviewed !== selectedDeck?.last_reviewed)
+						(deck.id === selectedDeck.id &&
+							deck.cards.length !== selectedDeck.cards.length) ||
+						(deck.id === selectedDeck.id &&
+							deck.reviews_due !== selectedDeck.reviews_due) ||
+						(deck.id === selectedDeck.id &&
+							deck.last_modified !== selectedDeck.last_modified) ||
+						(deck.id === selectedDeck.id &&
+							deck.last_reviewed !== selectedDeck.last_reviewed)
 					) {
 						// Update the correct deck
 						const updatedDecks = decks.map((deck) => {
@@ -78,6 +84,8 @@ export default function Home() {
 		updateDecks();
 		console.log("4 decks: DID decks UPDATE? ", decks);
 	}, [selectedDeck]);
+
+	console.groupEnd();
 
 	/**
 	 * Sorts all decks so the decks with the most reviews_due come first
@@ -156,64 +164,116 @@ export default function Home() {
 		}
 	}, []);
 
-	// useEffect(() => {
-	// 	// DB section
-	// 	console.log("User ID: ", userId);
+	//TODO: deleting a deck in DB
+	//TODO: updating the setDecksInDB to do more than first index
+	//TODO: figure out how to stop the double fetchDecks on page load
 
-	// 	if (userId && !userRef && !deckRef && !selectedDeck && !decks) {
-	// 		//0. if userId, let's check the DB for this users decks
-	// 		console.log("FETCH DECKS CALLED 📯");
-	// 		fetchDecks(userId, setDeckRef, decks, setUserRef);
-	// 	} else if (userId && decks) {
-	// 		//TODO: not checking for userRef
-	// 		console.log("UPDATING DECKS IN DB 💾");
-	// 		setDecksInDB(userId, decks, setDeckRef);
-	// 	}
-	// }, [decks]);
-
-	// Attempt #1
-	// const handleDBUpdate = useCallback(() => {
-	// 	debounce(setDecksInDB(userId, decks, setDeckRef), 1000);
-	// }, []);
-
-	// Attempt #2
-	// const mutation = useMutation({
-	// 	mutationFn: () => {
-	// 		return setDecksInDB(userId, decks, setDeckRef);
-	// 	},
-	// });
-	// Fetch decks from DB
-	const { isFetching } = useQuery({
-		queryKey: ["decks"],
-		queryFn: () => fetchDecks(userId, decks, setDeckRef, setUserRef),
-		enabled: !!userId,
-		staleTime: Infinity,
-		refetchOnWindowFocus: false,
-	});
-
-	// Update decks in LS+DB whenever decks state changes
 	useEffect(() => {
-		console.log("Decks being saved in LS and DB via useEffect 🖨");
+		// DB section
+		console.log("User ID: ", userId);
+
+		//1. fetch user's decks, if decks, return decksRef and STOP here
+		//   Check if decks exists in DB, if so make a ref for it using React
+		//   state and stop any further logic
+		const fetchDecks = async () => {
+			console.log("FETCHING DECKS ⚡");
+			try {
+				const querySnapshot = await getDocs(
+					collection(db, "users", userId, "decks")
+				);
+				// array of objects each a document with decks: "string"
+				const decksList = querySnapshot.docs.map((doc) => ({
+					id: doc.id,
+					...doc.data(),
+				}));
+				if (decksList.length > 0) {
+					console.log("Deck ref here: ", decksList);
+					setDeckRef(JSON.parse(decksList[0].decks));
+				} else {
+					//2. -> if no deckRef, fetchUser()
+					fetchUser();
+				}
+			} catch (error) {
+				console.error("Error fetching users:", error);
+			}
+		};
+		const fetchUser = async () => {
+			console.log("FETCHING USER ⚡");
+			try {
+				const userDocRef = doc(db, "users", userId);
+				const userDoc = await getDoc(userDocRef);
+				if (userDoc.exists()) {
+					setUserRef(userDoc.data());
+					if (decks && decks.length > 0) {
+						setDecksInDB();
+					}
+				} else {
+					//3. --> if no userRef, createUser() using userId (Clerk State) as the document Id in the users collection
+					createUser();
+				}
+			} catch (error) {
+				console.error("Error fetching user:", error);
+			}
+		};
+		const createUser = async () => {
+			console.log("CREATING USER ⚡");
+			try {
+				const userDocRef = doc(db, "users", userId);
+				await setDoc(userDocRef, { created: new Date() });
+				setUserRef({ created: new Date() });
+				if (decks?.length > 0) {
+					//4. ---> if decks (local React State) -> create decks in DB for this new user
+					setDecksInDB();
+				}
+			} catch (error) {
+				console.error("Error creating user:", error);
+			}
+		};
+		// const setDecksInDB = async () => {
+		// 	try {
+		// 		console.log("Setting Doc for decks in DB ⚡");
+		// 		await setDoc(doc(db, "users", userId, "decks", "deck1"), {
+		// 			decks: JSON.stringify(decks[0]),
+		// 		});
+		// 		setDeckRef(decks[0]);
+		// 		// fetchDecks(); --> ❌ everything is in React State
+		// 	} catch (error) {
+		// 		console.error("Error setting decks:", error);
+		// 	}
+		// };
+		const setDecksInDB = async () => {
+			console.log("Setting Doc for decks in DB ⚡");
+			try {
+				const userDocRef = doc(db, "users", userId);
+				const decksCollectionRef = collection(userDocRef, "decks");
+				const newDeckDocRef = doc(decksCollectionRef, "deck1"); // or use a different ID if you prefer
+				const stringifiedDecks = JSON.stringify(decks);
+				await setDoc(newDeckDocRef, { decks: stringifiedDecks });
+				console.log("Decks set in DB! 💽");
+				// fetchDecks(); --> ❌ everything is in React State
+				setDeckRef(decks);
+			} catch (error) {
+				console.error("Error creating decks:", error);
+			}
+		};
+
+		if (userId && !userRef && !deckRef && !selectedDeck && !decks) {
+			//0. if userId, let's check the DB for this users decks
+			console.log("FETCH DECKS CALLED 📯");
+			fetchDecks();
+		} else if (userId && decks) {
+			//TODO: not checking for userRef
+			console.log("UPDATING DECKS IN DB 💾");
+			setDecksInDB();
+		}
+	}, [decks]);
+
+	// Update decks in LS whenever decks state changes
+	useEffect(() => {
 		localStorage.setItem("decks", JSON.stringify(decks));
 
 		// Whenever decks changes, set() the DB for this users decks sub-collection
-		// no deckRef prevents this from writing to DB on login
-		if (userId && decks && deckRef) {
-			setDecksInDB(userId, decks, setDeckRef, setUserRef);
-		}
 	}, [decks]);
-	console.groupEnd();
-
-	// set decks to deckRef if it exists
-	useEffect(() => {
-		if (deckRef) {
-			console.log("Decks set from DB ⭐");
-			setDbDecksOrLsDecks(deckRef);
-		} else {
-			console.log("Decks set from LS 📰");
-			setDbDecksOrLsDecks(decks);
-		}
-	}, [decks, deckRef]);
 
 	//1.
 	useEffect(() => {
@@ -246,13 +306,12 @@ export default function Home() {
 			<Deck_Selector
 				drawerOpen={drawerOpen}
 				setDrawerOpen={setDrawerOpen}
-				decks={dbDecksOrLsDecks}
+				decks={decks}
 				setDecks={setDecks}
 				selectedDeck={selectedDeck}
 				setSelectedDeck={setSelectedDeck}
 				setMode={setMode}
 				setIsEditDeckModalOpen={setIsEditDeckModalOpen}
-				isFetching={isFetching}
 			/>
 			<div className="flex flex-col w-full p-4 bg-white dark:bg-black overflow-y-auto">
 				<Hud_Header
@@ -271,11 +330,10 @@ export default function Home() {
 						setIsAddCardModalOpen={setIsAddCardModalOpen}
 						selectedDeck={selectedDeck}
 						setSelectedDeck={setSelectedDeck}
-						decks={dbDecksOrLsDecks}
+						decks={decks}
 						setDecks={setDecks}
 						isEditDeckModalOpen={isEditDeckModalOpen}
 						setIsEditDeckModalOpen={setIsEditDeckModalOpen}
-						isFetching={isFetching}
 					/>
 				) : (
 					<Study

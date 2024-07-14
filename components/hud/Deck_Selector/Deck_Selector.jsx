@@ -14,8 +14,14 @@ function Deck_Selector({
 	setSelectedDeck,
 	setMode,
 	setIsEditDeckModalOpen,
+	isFetching = { isFetching },
 }) {
 	const { theme, setTheme } = useTheme();
+
+	if (isFetching) {
+		return null;
+	}
+
 	return (
 		<section
 			className={`absolute h-full lg:relative flex-shrink bg-neutral-100 dark:bg-neutral-800 transition-all z-10 ${

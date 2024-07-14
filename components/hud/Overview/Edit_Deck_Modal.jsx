@@ -45,6 +45,7 @@ function Edit_Deck_Modal({
 			const updatedDeck = prevDecks.map((deck) => {
 				if (deck.id === selectedDeck.id) {
 					deck.name = newDeckName.current.value;
+					deck.last_modified = Date.now();
 					return deck;
 				} else return deck;
 			});

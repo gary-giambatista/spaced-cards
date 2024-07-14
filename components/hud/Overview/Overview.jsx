@@ -1,4 +1,6 @@
+import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
+import { HashLoader } from "react-spinners";
 import Add_Card_Modal from "./Add_Card_Modal";
 import Card_Rows from "./Card_Rows";
 import Edit_Card_Modal from "./Edit_Card_Modal";
@@ -16,9 +18,13 @@ function Overview({
 	setDecks,
 	isEditDeckModalOpen,
 	setIsEditDeckModalOpen,
+	isFetching,
 }) {
 	const [selectedCardId, setSelectedCardId] = useState(0);
 	const [selectedCard, setSelectedCard] = useState(null);
+	const { theme } = useTheme();
+
+	const color = theme === "light" ? "#000" : "#ffffff";
 
 	// Re-render optimization Note -- these set states can be moved to children nodes to reduce the number of re-renders, but I don't believe this is necessary, and state flow is more manageable with his design
 	// console.log("Overview -- SELECTED CARD ID: ", selectedCardId);
@@ -40,10 +46,20 @@ function Overview({
 		setSelectedCardId(0);
 	}, [selectedCard]);
 
+	// Handle fetching decks in DB
+	if (isFetching) {
+		return (
+			<div className="h-full w-full flex justify-center items-center">
+				<HashLoader color={color} />
+			</div>
+		);
+	}
+
 	// Handle user with no created decks
 	if (!decks || decks.length === 0) {
 		return <No_Decks />;
 	}
+
 	return (
 		<section className={`@container flex-grow bg-white dark:bg-black p-4`}>
 			{isEditDeckModalOpen ? (

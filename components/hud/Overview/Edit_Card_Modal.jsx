@@ -33,6 +33,7 @@ function Edit_Card_Modal({
 			});
 			return {
 				...prevSelectedDeck,
+				last_modified: Date.now(),
 				cards: updatedCards,
 			};
 		});
