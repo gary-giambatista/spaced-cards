@@ -8,28 +8,36 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 	const [isAddingDeck, setIsAddingDeck] = useState(false);
 	const [newDeckName, setNewDeckName] = useState("");
 
-	const randomNumber = useMemo(() => {
-		return Math.floor(Math.random() * (100000 - 1) + 1);
-	}, [isAddingDeck]);
+	// const randomNumber = useMemo(() => {
+	// 	return Math.floor(Math.random() * (100000 - 1) + 1);
+	// }, [isAddingDeck]);
 
-	const lastModified = useMemo(() => {
-		return Date.now();
-	}, [isAddingDeck]);
+	// const lastModified = useMemo(() => {
+	// 	return Date.now();
+	// }, [isAddingDeck]);
 
-	const newDeck = {
-		name: newDeckName,
-		id: randomNumber,
-		last_reviewed: null,
-		last_modified: lastModified,
-		// is_shared: false,
-		// author: userName ? userName : "anonymous",
-		reviews_due: 0,
-		cards: [],
-	};
+	// const newDeck = {
+	// 	name: newDeckName,
+	// 	id: randomNumber,
+	// 	last_reviewed: null,
+	// 	last_modified: lastModified,
+	// 	// is_shared: false,
+	// 	// author: userName ? userName : "anonymous",
+	// 	reviews_due: 0,
+	// 	cards: [],
+	// };
 
-	//Todo: Optimize newDeck with Map?
 	function createDeck() {
-		console.log("deck created!");
+		const newDeck = {
+			name: newDeckName,
+			id: Math.floor(Math.random() * (100000 - 1) + 1),
+			last_reviewed: null,
+			last_modified: Date.now(),
+			// is_shared: false,
+			// author: userName ? userName : "anonymous",
+			reviews_due: 0,
+			cards: [],
+		};
 
 		// Reset component state
 		setIsAddingDeck(false);
@@ -40,23 +48,29 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 			// Set the new deck as the last index
 			const updatedDeck = [...decks, newDeck];
 
-			// Update state in page.js re-rendering everything
 			// Sort updatedDecks so that the MOST reviews come first
-			setDecks(updatedDeck.sort((a, b) => b.reviews_due - a.reviews_due));
+			const sortedDecks = updatedDeck.sort(
+				(a, b) => b.reviews_due - a.reviews_due
+			);
+
+			// Update decks state in page.js re-rendering everything
+			setDecks(sortedDecks);
+			// Todo: if want to capture deck creation, add setDecksInDB here
 
 			// Set selectedDeck to the last index (newest)
-			// Potential bug? with multiple decks at reviews_due: 0;
+			// Potential bug? with multiple decks at reviews_due: 0; 👍
 			setSelectedDeck(updatedDeck[updatedDeck.length - 1]);
 		} else {
 			// Update state in page.js re-rendering everything
 			setDecks([newDeck]);
 			setSelectedDeck(newDeck);
+			// Todo: if want to capture deck creation, add setDecksInDB here
 		}
 	}
 
 	const inputRef = useRef(null);
 
-	const handleKeyPress = (event) => {
+	const createDeckOnEnterPress = (event) => {
 		if (event.key === "Enter") {
 			// Trigger button click
 			inputRef.current.nextElementSibling.click();
@@ -69,13 +83,13 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 				drawerOpen ? "opacity-100" : "opacity-0"
 			}`}
 		>
-			{/* Show Text with Create button or Input */}
+			{/* Create Deck text + Create button or Input to name a new deck */}
 			{isAddingDeck ? (
 				<>
 					<input
 						className="w-full p-2 rounded-md ml-1"
 						ref={inputRef}
-						onKeyUp={handleKeyPress}
+						onKeyUp={createDeckOnEnterPress}
 						name="deck_name"
 						placeholder="Your deck name"
 						value={newDeckName}
@@ -118,7 +132,7 @@ function Deck_Adder({ drawerOpen, setSelectedDeck, decks, setDecks }) {
 				// Show When not adding a deck
 				<>
 					<div
-						aria-description="Click to create a new deck"
+						aria-description="Select to create a new deck"
 						onClick={() => {
 							setIsAddingDeck((prevState) => !prevState);
 							setTimeout(() => {

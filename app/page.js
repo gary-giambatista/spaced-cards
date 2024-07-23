@@ -6,8 +6,8 @@ import Overview from "@/components/hud/Overview/Overview";
 import Study from "@/components/hud/Study/Study";
 import { fetchDecks, setDecksInDB } from "@/library/database_functions";
 import { useAuth } from "@clerk/nextjs";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 export default function Home() {
 	const [mode, setMode] = useState("overview");
@@ -25,55 +25,81 @@ export default function Home() {
 
 	// Clerk user data
 	const { isLoaded, userId, sessionId, emailAddresses, getToken } = useAuth();
-	// Auth user State
-	const [userRef, setUserRef] = useState(null);
-	const [deckRef, setDeckRef] = useState(null);
-	const [dbDecksOrLsDecks, setDbDecksOrLsDecks] = useState(null);
 
-	//Todo: make sure create user flow works
+	//Todo: make sure create user flow works -> should be 👍
+	//Todo: clean up code - > functions
+	//Todo: basic form validation for decks/cards
+	//Todo: turn on createUser() ?
+	//Todo: Bug -> dark mode state
+	//Todo: deck mutations, change name / delete don't update DB
 
 	console.group("page.js");
 
-	console.log("1 Decks Page DECK: ", decks);
-	// console.log("Selected Deck PAGE: ", selectedDeck);
+	// console.log("1 Decks Page DECK: ", decks);
+
 	// Handle updating decks when selectedDeck is modified
 	useEffect(() => {
-		console.log("2 useEffect SD: ", selectedDeck);
+		// console.log("2 useEffect -> updateDecks -> selectedDeck: ", selectedDeck);
 
 		function updateDecks() {
-			if (decks) {
-				decks.forEach((deck) => {
-					// Update deck's only if selectedDeck's card length is different or if reviews_due is different
-					//TODO: optimize and make this logic concise: break into smaller functions for optimization and reduce if checks
-					if (
-						(deck.id === selectedDeck?.id &&
-							deck.last_modified !== selectedDeck?.last_modified) ||
-						(deck.id === selectedDeck?.id &&
-							deck.last_reviewed !== selectedDeck?.last_reviewed)
-					) {
-						// Update the correct deck
-						const updatedDecks = decks.map((deck) => {
-							if (deck.id === selectedDeck.id) {
-								return {
-									...deck,
-									cards: updateReviewsDue([], selectedDeck),
-									reviews_due: selectedDeck.reviews_due,
-									last_modified: selectedDeck.last_modified,
-									last_reviewed: selectedDeck.last_reviewed,
-								};
-							} else {
-								return deck;
-							}
-						});
-						console.log("3 UPDATED DECKS: ", updatedDecks);
-						// Return here, only 1 if statement can be trigger at a time
-
-						sortDecksByReviewsDue(updatedDecks);
-						console.log("CONFIRMED DECKS UPDATED VIA UE");
-						return setDecks(updatedDecks);
-					}
-				});
+			// Updating decks requires both variables, return if undefined
+			if (!decks || !selectedDeck) {
+				return;
 			}
+
+			// Todo: remove this check? Only preventing when deck_selector is changed?
+			// Check if changes are needed -> all update functions update 1 of
+			// these 2 properties on selectedDeck
+			for (const deck of decks) {
+				const isSelectedDeck = deck.id === selectedDeck.id;
+				const noChangesToLastModified =
+					deck.last_modified === selectedDeck.last_modified;
+				const noChangesToLastReviewed =
+					deck.last_reviewed === selectedDeck.last_reviewed;
+				if (
+					isSelectedDeck &&
+					noChangesToLastModified &&
+					noChangesToLastReviewed
+				) {
+					return;
+				}
+			}
+
+			// Updates are required -> update the correct deck
+			const updatedDecks = decks.map((deck) => {
+				if (deck.id === selectedDeck.id) {
+					return {
+						...deck,
+						cards: updateReviewsDue([], selectedDeck),
+						reviews_due: selectedDeck.reviews_due,
+						last_modified: selectedDeck.last_modified,
+						last_reviewed: selectedDeck.last_reviewed,
+					};
+				} else {
+					return deck;
+				}
+			});
+			// console.log("3 UPDATED DECKS: ", updatedDecks);
+
+			sortDecksByReviewsDue(updatedDecks);
+			// console.log("CONFIRMED DECKS UPDATED VIA UE");
+			// TODO: create an update decks function here for LS/DB and get rid of end useEffect for when decks changes << 0
+
+			//1. Set LS
+			console.log("Decks being saved in LS and DB via selectedDeck useEffect");
+			localStorage.setItem("decks", JSON.stringify(updatedDecks));
+
+			//2. Update DB if user
+			if (userId) {
+				console.log("UPDATING DECKS IN DB 💾, via selectedDeck useEffect");
+				setDecksInDB(userId, updatedDecks);
+			}
+			//TODO: 🔑 possibly need to pass in setDecks to setDecksInDB in case of user logging in for the firs time. I'm betting LS will keep accurate state and just set in DB for parody
+			//3. setDecks
+			console.log("Setting updatedDecks in React State");
+			return setDecks(updatedDecks);
+
+			//4. setSelectedDeck in fetchDecks()
 		}
 		updateDecks();
 		console.log("4 decks: DID decks UPDATE? ", decks);
@@ -82,9 +108,24 @@ export default function Home() {
 	/**
 	 * Sorts all decks so the decks with the most reviews_due come first
 	 * @param {object[]} decks - decks object
+	 * @returns {object[]} - sorted decks object
 	 */
 	function sortDecksByReviewsDue(decks) {
-		decks.sort((a, b) => b.reviews_due - a.reviews_due);
+		// decks.sort((a, b) => b.reviews_due - a.reviews_due);
+		if (!Array.isArray(decks)) {
+			console.error("Invalid input: decks must be an array");
+			return [];
+		}
+		return [...decks].sort((a, b) => {
+			if (
+				typeof a.reviews_due !== "number" ||
+				typeof b.reviews_due !== "number"
+			) {
+				console.error("Invalid reviews_due value: must be a number");
+				return 0;
+			}
+			return b.reviews_due - a.reviews_due;
+		});
 	}
 
 	//TODO: potential issue: DIRECTLY modifying deck("selectedDeck")'s state!
@@ -95,9 +136,11 @@ export default function Home() {
 	 * @returns {object[]} - if a deck is passed in, returns the updated deck's cards, otherwise returns the the full updated decks'
 	 */
 	function updateReviewsDue(decks = [], deck) {
+		console.log("UPDATE DECKS CALLED, DECKS: ", decks);
 		// Unix Epoch time - milliseconds
 		const nowInMilliseconds = Date.now();
 
+		// Handle updating ONLY a deck -> if deck is passed in
 		if (deck) {
 			// Reset reviews to 0 to avoid over counting
 			deck.reviews_due = 0;
@@ -114,6 +157,7 @@ export default function Home() {
 					// need to accept deck, instead of deck.cards
 					deck.reviews_due += 1; //todo - is okay because of the ...deck?
 				} else if (card.due_date > nowInMilliseconds) {
+					// Needed for after practicing a card
 					card.review_due = false;
 					// deck.reviews_due -= 1; //todo ""
 				}
@@ -121,6 +165,7 @@ export default function Home() {
 			return cards;
 		}
 
+		// Handle Updating every deck of decks
 		for (const deck of decks) {
 			// Reset reviews to 0 to avoid over counting
 			deck.reviews_due = 0;
@@ -138,17 +183,17 @@ export default function Home() {
 				}
 			}
 		}
+		console.log("How are the decks?", sortDecksByReviewsDue(decks));
 		return sortDecksByReviewsDue(decks);
 	}
-
-	console.log("userRef: ", userRef);
-	console.log("deckRef(parsed): ", deckRef);
 
 	// Set decks and selectedDeck on page load from LS
 	useEffect(() => {
 		const localStorageDecks = JSON.parse(localStorage.getItem("decks"));
 
-		if (localStorageDecks) {
+		// Only Set decks from LS if no user -> DB state takes priority
+		if (localStorageDecks && !userId) {
+			console.log("Decks set from LS 📰");
 			updateReviewsDue(localStorageDecks);
 			setDecks(localStorageDecks);
 			// Set selectedDeck to first deck
@@ -156,64 +201,18 @@ export default function Home() {
 		}
 	}, []);
 
-	// useEffect(() => {
-	// 	// DB section
-	// 	console.log("User ID: ", userId);
-
-	// 	if (userId && !userRef && !deckRef && !selectedDeck && !decks) {
-	// 		//0. if userId, let's check the DB for this users decks
-	// 		console.log("FETCH DECKS CALLED 📯");
-	// 		fetchDecks(userId, setDeckRef, decks, setUserRef);
-	// 	} else if (userId && decks) {
-	// 		//TODO: not checking for userRef
-	// 		console.log("UPDATING DECKS IN DB 💾");
-	// 		setDecksInDB(userId, decks, setDeckRef);
-	// 	}
-	// }, [decks]);
-
-	// Attempt #1
-	// const handleDBUpdate = useCallback(() => {
-	// 	debounce(setDecksInDB(userId, decks, setDeckRef), 1000);
-	// }, []);
-
-	// Attempt #2
-	// const mutation = useMutation({
-	// 	mutationFn: () => {
-	// 		return setDecksInDB(userId, decks, setDeckRef);
-	// 	},
-	// });
-	// Fetch decks from DB
+	// Todo: validate updateReviewsDue/setSelectedDeck doesn't need to be called via the DB flow -> delete LS and login (add new card signed out > delete LS > sign in) -> represents logging into a new device for the first time or having no LS, solution: could move to fetchDecks db function -> should be 👍
+	// Fetch decks from DB, ONLY if there is a userId
+	// Only happens 1 TIME on page mount, thereafter, State is local via React/LS
 	const { isFetching } = useQuery({
 		queryKey: ["decks"],
-		queryFn: () => fetchDecks(userId, decks, setDeckRef, setUserRef),
+		queryFn: () =>
+			fetchDecks(userId, decks, setDecks, setSelectedDeck, updateReviewsDue),
 		enabled: !!userId,
 		staleTime: Infinity,
 		refetchOnWindowFocus: false,
 	});
-
-	// Update decks in LS+DB whenever decks state changes
-	useEffect(() => {
-		console.log("Decks being saved in LS and DB via useEffect 🖨");
-		localStorage.setItem("decks", JSON.stringify(decks));
-
-		// Whenever decks changes, set() the DB for this users decks sub-collection
-		// no deckRef prevents this from writing to DB on login
-		if (userId && decks && deckRef) {
-			setDecksInDB(userId, decks, setDeckRef, setUserRef);
-		}
-	}, [decks]);
 	console.groupEnd();
-
-	// set decks to deckRef if it exists
-	useEffect(() => {
-		if (deckRef) {
-			console.log("Decks set from DB ⭐");
-			setDbDecksOrLsDecks(deckRef);
-		} else {
-			console.log("Decks set from LS 📰");
-			setDbDecksOrLsDecks(decks);
-		}
-	}, [decks, deckRef]);
 
 	//1.
 	useEffect(() => {
@@ -246,7 +245,7 @@ export default function Home() {
 			<Deck_Selector
 				drawerOpen={drawerOpen}
 				setDrawerOpen={setDrawerOpen}
-				decks={dbDecksOrLsDecks}
+				decks={decks}
 				setDecks={setDecks}
 				selectedDeck={selectedDeck}
 				setSelectedDeck={setSelectedDeck}
@@ -271,7 +270,7 @@ export default function Home() {
 						setIsAddCardModalOpen={setIsAddCardModalOpen}
 						selectedDeck={selectedDeck}
 						setSelectedDeck={setSelectedDeck}
-						decks={dbDecksOrLsDecks}
+						decks={decks}
 						setDecks={setDecks}
 						isEditDeckModalOpen={isEditDeckModalOpen}
 						setIsEditDeckModalOpen={setIsEditDeckModalOpen}

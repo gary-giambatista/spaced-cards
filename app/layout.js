@@ -15,7 +15,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
 	return (
-		<ClerkProvider>
+		<ClerkProvider afterSignOutUrl="/loggedout">
 			<html lang="en">
 				<body className={`${nunito.className} flex flex-col h-dvh`}>
 					<Theme_Provider>

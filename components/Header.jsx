@@ -4,6 +4,7 @@ import Logo from "@/public/Logo.png";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 
 function Header() {
@@ -22,10 +23,11 @@ function Header() {
 
 	return (
 		<header className="min-h-16 bg-white dark:bg-black flex justify-between items-center px-4 ">
-			<div className="flex justify-center items-center gap-x-2 ">
-				<Image height={60} width={60} src={Logo} alt="Logo Image" />
+			<Link className="flex justify-center items-center gap-x-2" href={"/"}>
+				<Image height={60} width={60} src={Logo} priority alt="Logo Image" />
 				<h2>Space Cards</h2>
-			</div>
+			</Link>
+
 			<div className="flex gap-4">
 				{/* Theme Toggler */}
 				<div
