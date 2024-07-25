@@ -1,3 +1,5 @@
+import { setDecksInDB } from "@/library/database_functions";
+import { useAuth } from "@clerk/nextjs";
 import React, { useRef, useState } from "react";
 
 function Edit_Deck_Modal({
@@ -11,10 +13,15 @@ function Edit_Deck_Modal({
 	const [isEditingName, setIsEditingName] = useState(false);
 	const newDeckName = useRef("");
 
+	const { userId } = useAuth();
+
+	// Todo: how to handle triggering DB update for deleteDeck
+	//1. Call setDecksInDB directly here: userId + decks
 	/**
 	 * Delete the currently selectedDeck
 	 */
 	function deleteDeck() {
+		let newDecks = null;
 		setDecks((prevDecks) => {
 			// Match selectedDeck in decks and capture that index
 			const indexToRemove = prevDecks.findIndex(
@@ -22,12 +29,13 @@ function Edit_Deck_Modal({
 			);
 
 			// Create a new decks object with the removed deck
-			const newDecks = prevDecks.toSpliced(indexToRemove, 1);
+			newDecks = prevDecks.toSpliced(indexToRemove, 1);
 
-			// If there will be no new deck to set as selectedDeck -> null
 			if (newDecks.length > 0) {
+				// Select a new deck to focus on
 				setSelectedDeck(newDecks[0]);
 			} else {
+				// If there will be no new deck to set as selectedDeck -> null
 				setSelectedDeck(null);
 			}
 			// Close the Edit_Deck_Modal
@@ -35,21 +43,28 @@ function Edit_Deck_Modal({
 
 			return newDecks;
 		});
+
+		console.log("newDecks: ", newDecks);
+
+		// Update LS
+		localStorage.setItem("decks", JSON.stringify(newDecks));
+
+		// Update DB -> empty array (not null), so function still works
+		// Note -> if there if ONLY 1 deck, there will be a temporary deck1 document with an empty decks [] left as a result of setting a doc in FB -> this seems to be harmless, as it is fetched without issues and will reset as a user makes a new deck and then new card
+		setDecksInDB(userId, newDecks);
+		console.log("DB Update called after Deleting a deck ⚡");
 	}
+
 	/**
 	 * Update the name of the selectedDeck
 	 */
 	function editDeckName() {
-		setDecks((prevDecks) => {
-			// Only update the name of the selectedDeck
-			const updatedDeck = prevDecks.map((deck) => {
-				if (deck.id === selectedDeck.id) {
-					deck.name = newDeckName.current.value;
-					deck.last_modified = Date.now();
-					return deck;
-				} else return deck;
-			});
-			return updatedDeck;
+		setSelectedDeck((prevSelectedDeck) => {
+			return {
+				...prevSelectedDeck,
+				name: newDeckName.current.value,
+				last_modified: Date.now(),
+			};
 		});
 		return setIsEditingName(false);
 	}

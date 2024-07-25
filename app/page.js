@@ -32,6 +32,7 @@ export default function Home() {
 	//Todo: turn on createUser() ?
 	//Todo: Bug -> dark mode state
 	//Todo: deck mutations, change name / delete don't update DB
+	//Todo: 7.24 -> create deck doesn't add to DB unless card is made. DEV made decision
 
 	console.group("page.js");
 
@@ -65,7 +66,9 @@ export default function Home() {
 				}
 			}
 
-			// Updates are required -> update the correct deck
+			// Updates are required -> update the correct deck and fields
+			// * updateReviewsDue updates selectedDeck, so it's important
+			// to call it before replacing the necessary properties
 			const updatedDecks = decks.map((deck) => {
 				if (deck.id === selectedDeck.id) {
 					return {
@@ -74,6 +77,7 @@ export default function Home() {
 						reviews_due: selectedDeck.reviews_due,
 						last_modified: selectedDeck.last_modified,
 						last_reviewed: selectedDeck.last_reviewed,
+						name: selectedDeck.name,
 					};
 				} else {
 					return deck;

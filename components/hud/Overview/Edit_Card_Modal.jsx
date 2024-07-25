@@ -42,6 +42,7 @@ function Edit_Card_Modal({
 		return setSelectedCard(null);
 	}
 
+	// Todo: add last_modified here
 	/**
 	 * Deletes the user's selected card and updates the selectedDeck
 	 * @param {Event} e - event from clicking the "Delete" button
