@@ -64,6 +64,7 @@ function Edit_Card_Modal({
 			// Return the previous state and ONLY update cards
 			return {
 				...prevSelectedDeck,
+				last_modified: Date.now(),
 				cards: updatedCards,
 			};
 		});
