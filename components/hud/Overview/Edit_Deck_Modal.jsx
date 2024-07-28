@@ -11,6 +11,7 @@ function Edit_Deck_Modal({
 }) {
 	const [isDeleting, setIsDeleting] = useState(false);
 	const [isEditingName, setIsEditingName] = useState(false);
+	const [isDeckNameLengthZero, setIsDeckNameLengthZero] = useState(false);
 	const newDeckName = useRef("");
 
 	const { userId } = useAuth();
@@ -107,8 +108,16 @@ function Edit_Deck_Modal({
 				{isEditingName ? (
 					// Change name input section
 					<div className="flex flex-col gap-4 justify-between items-center p-4 @md:p-6 font-extrabold">
+						{isDeckNameLengthZero ? (
+							<div className="text-red-600">Please enter a deck name</div>
+						) : null}
 						<input
 							ref={newDeckName}
+							onChange={() =>
+								newDeckName.current.value.length < 1
+									? setIsDeckNameLengthZero(true)
+									: setIsDeckNameLengthZero(false)
+							}
 							defaultValue={selectedDeck.name}
 							className="w-full p-2 rounded-md"
 						/>

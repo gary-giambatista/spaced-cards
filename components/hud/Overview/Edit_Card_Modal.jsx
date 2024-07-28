@@ -42,7 +42,6 @@ function Edit_Card_Modal({
 		return setSelectedCard(null);
 	}
 
-	// Todo: add last_modified here
 	/**
 	 * Deletes the user's selected card and updates the selectedDeck
 	 * @param {Event} e - event from clicking the "Delete" button
@@ -77,7 +76,7 @@ function Edit_Card_Modal({
 
 	return (
 		<div
-			className={`@container absolute h-full w-full left-0  bg-black bg-opacity-10 flex items-start justify-center @lg:items-center backdrop-blur-sm p-2 z-10 ${
+			className={`@container absolute h-full w-full left-0 bg-black bg-opacity-10 flex items-start justify-center @lg:items-center backdrop-blur-sm p-2 z-10 ${
 				lastIndex ? "top-[-330px]" : "top-0"
 			}`}
 		>
