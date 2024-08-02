@@ -26,6 +26,7 @@ export default function Home() {
 	// Clerk user data
 	const { isLoaded, userId, sessionId, emailAddresses, getToken } = useAuth();
 
+	//Todo: push to production!
 	//Todo: make sure create user flow works -> should be 👍
 	//Todo: clean up code - > functions
 	//Todo: turn on createUser() ?
