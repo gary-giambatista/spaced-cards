@@ -54,7 +54,7 @@ function Card({
 			>
 				<div
 					onClick={() => setIsHintOpen((prevState) => !prevState)}
-					className="flex w-full gap-1 justify-center items-center"
+					className="flex w-full gap-1 justify-center items-center cursor-pointer"
 				>
 					<div>Hint</div>
 					<svg
@@ -74,7 +74,9 @@ function Card({
 						/>
 					</svg>
 				</div>
-				{isHintOpen ? <div>{selectedCard.hint}!</div> : null}
+				{isHintOpen ? (
+					<div>{selectedCard.hint ? selectedCard.hint : "No Hint"}!</div>
+				) : null}
 			</div>
 
 			{/* Flip Button */}

@@ -30,7 +30,7 @@ export default function Home() {
 	//Todo: clean up code - > functions
 	//Todo: turn on createUser() ?
 	//Todo: basic form validation for decks/cards -> just make sure there is a question and answer
-	//Todo: Bug -> dark mode state
+	//Todo: Bug -> dark mode state -> seems good 👍
 	//Todo: 7.24 -> create deck doesn't add to DB unless card is made. DEV made decision
 
 	console.group("page.js");
