@@ -153,7 +153,7 @@ function Add_Card_Modal({
 							className="accent-green-800 cursor-pointer  rounded-sm border-2 w-4 h-4"
 							type="checkbox"
 							name="mirror_or_not"
-							defaultChecked={true}
+							defaultChecked={false}
 						/>
 					</label>
 
