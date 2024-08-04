@@ -1,6 +1,7 @@
 "use client";
 
 import Logo from "@/public/Logo.png";
+import Logo2 from "@/public/Logo2.png";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import Image from "next/image";
@@ -9,7 +10,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 function Header() {
 	const [mounted, setMounted] = useState(false);
-	const { theme, setTheme } = useTheme();
+	const { resolvedTheme, setTheme } = useTheme();
 
 	// Prevent Hydration Mismatch Error
 	useEffect(() => {
@@ -23,8 +24,11 @@ function Header() {
 
 	return (
 		<header className="min-h-16 bg-white dark:bg-black flex justify-between items-center px-4 ">
-			<Link className="flex justify-center items-center gap-x-2" href={"/"}>
-				<Image height={60} width={60} src={Logo} priority alt="Logo Image" />
+			<Link
+				className="flex justify-center items-center gap-x-2 tracking-widest font-bold"
+				href={"/"}
+			>
+				<Image height={25} width={25} src={Logo2} priority alt="Logo Image" />
 				<h2>Space Cards</h2>
 			</Link>
 
@@ -32,11 +36,11 @@ function Header() {
 				{/* Theme Toggler */}
 				<div
 					onClick={() =>
-						theme === "dark" ? setTheme("light") : setTheme("dark")
+						resolvedTheme === "dark" ? setTheme("light") : setTheme("dark")
 					}
 					className="hover:cursor-pointer"
 				>
-					{theme === "dark" ? (
+					{resolvedTheme === "dark" ? (
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
