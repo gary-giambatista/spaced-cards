@@ -7,7 +7,9 @@ import Study from "@/components/hud/Study/Study";
 import { fetchDecks, setDecksInDB } from "@/library/database_functions";
 import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import { refreshDeck, refreshDecks } from "@/library/srs";
 
 export default function Home() {
 	const [mode, setMode] = useState("overview");
@@ -17,10 +19,20 @@ export default function Home() {
 	);
 	const [isAddCardModalOpen, setIsAddCardModalOpen] = useState(false);
 	const [isEditDeckModalOpen, setIsEditDeckModalOpen] = useState(false);
-	const [decks, setDecks] = useState(() => {
-		return JSON.parse(localStorage.getItem("decks"));
-	});
-	const [selectedDeck, setSelectedDeck] = useState(null);
+	const [decks, setDecks] = useState(null);
+	const [storageReady, setStorageReady] = useState(false);
+	const [rawSelectedDeck, setSelectedDeck] = useState(null);
+	const [now, setNow] = useState(Date.now);
+	const selectedDeck = useMemo(() => rawSelectedDeck ? refreshDeck(rawSelectedDeck, now) : null, [rawSelectedDeck, now]);
+	useEffect(() => {
+		const tick = () => setNow(Date.now());
+		const timer = setInterval(tick, 1000);
+		window.addEventListener("focus", tick);
+		return () => { clearInterval(timer); window.removeEventListener("focus", tick); };
+	}, []);
+	useEffect(() => {
+		if (storageReady && decks !== null) localStorage.setItem("decks", JSON.stringify(decks));
+	}, [decks, storageReady]);
 	let timeout = false;
 
 	// Clerk user data
@@ -60,7 +72,10 @@ export default function Home() {
 				if (
 					isSelectedDeck &&
 					noChangesToLastModified &&
-					noChangesToLastReviewed
+					noChangesToLastReviewed &&
+                    deck.name === selectedDeck.name &&
+                    deck.reviews_due === selectedDeck.reviews_due &&
+                    JSON.stringify(deck.cards) === JSON.stringify(selectedDeck.cards)
 				) {
 					return;
 				}
@@ -73,7 +88,7 @@ export default function Home() {
 				if (deck.id === selectedDeck.id) {
 					return {
 						...deck,
-						cards: updateReviewsDue([], selectedDeck),
+						cards: selectedDeck.cards,
 						reviews_due: selectedDeck.reviews_due,
 						last_modified: selectedDeck.last_modified,
 						last_reviewed: selectedDeck.last_reviewed,
@@ -85,7 +100,6 @@ export default function Home() {
 			});
 			// console.log("3 UPDATED DECKS: ", updatedDecks);
 
-			sortDecksByReviewsDue(updatedDecks);
 			// console.log("CONFIRMED DECKS UPDATED VIA UE");
 			// TODO: create an update decks function here for LS/DB and get rid of end useEffect for when decks changes << 0
 
@@ -101,118 +115,39 @@ export default function Home() {
 			//TODO: 🔑 possibly need to pass in setDecks to setDecksInDB in case of user logging in for the firs time. I'm betting LS will keep accurate state and just set in DB for parody
 			//3. setDecks
 			console.log("Setting updatedDecks in React State");
-			return setDecks(updatedDecks);
+			return setDecks(refreshDecks(updatedDecks));
 
 			//4. setSelectedDeck in fetchDecks()
 		}
 		updateDecks();
 		console.log("4 decks: DID decks UPDATE? ", decks);
-	}, [selectedDeck]);
+	}, [selectedDeck, decks, userId]);
 
-	/**
-	 * Sorts all decks so the decks with the most reviews_due come first
-	 * @param {object[]} decks - decks object
-	 * @returns {object[]} - sorted decks object
-	 */
-	function sortDecksByReviewsDue(decks) {
-		// decks.sort((a, b) => b.reviews_due - a.reviews_due);
-		if (!Array.isArray(decks)) {
-			console.error("Invalid input: decks must be an array");
-			return [];
-		}
-		return [...decks].sort((a, b) => {
-			if (
-				typeof a.reviews_due !== "number" ||
-				typeof b.reviews_due !== "number"
-			) {
-				console.error("Invalid reviews_due value: must be a number");
-				return 0;
-			}
-			return b.reviews_due - a.reviews_due;
-		});
-	}
-
-	//TODO: potential issue: DIRECTLY modifying deck("selectedDeck")'s state!
-	/**
-	 * Update deck.reviews_due & card.review_due
-	 * @param {object[]} [decks] -  represents an array of decks
-	 * @param {object} [deck] - represents 1 deck
-	 * @returns {object[]} - if a deck is passed in, returns the updated deck's cards, otherwise returns the the full updated decks'
-	 */
-	function updateReviewsDue(decks = [], deck) {
-		console.log("UPDATE DECKS CALLED, DECKS: ", decks);
-		// Unix Epoch time - milliseconds
-		const nowInMilliseconds = Date.now();
-
-		// Handle updating ONLY a deck -> if deck is passed in
-		if (deck) {
-			// Reset reviews to 0 to avoid over counting
-			deck.reviews_due = 0;
-
-			const cards = deck.cards;
-
-			if (!cards.length) {
-				return cards;
-			}
-
-			for (const card of cards) {
-				if (card.due_date < nowInMilliseconds) {
-					card.review_due = true;
-					// need to accept deck, instead of deck.cards
-					deck.reviews_due += 1; //todo - is okay because of the ...deck?
-				} else if (card.due_date > nowInMilliseconds) {
-					// Needed for after practicing a card
-					card.review_due = false;
-					// deck.reviews_due -= 1; //todo ""
-				}
-			}
-			return cards;
-		}
-
-		// Handle Updating every deck of decks
-		for (const deck of decks) {
-			// Reset reviews to 0 to avoid over counting
-			deck.reviews_due = 0;
-
-			const cards = deck.cards;
-
-			if (!cards.length) {
-				break;
-			}
-
-			for (const card of cards) {
-				if (card.due_date < nowInMilliseconds) {
-					card.review_due = true;
-					deck.reviews_due += 1;
-				}
-			}
-		}
-		console.log("How are the decks?", sortDecksByReviewsDue(decks));
-		return sortDecksByReviewsDue(decks);
-	}
+	function updateReviewsDue(decks) { return refreshDecks(decks); }
 
 	// Set decks and selectedDeck on page load from LS
 	useEffect(() => {
 		const localStorageDecks = JSON.parse(localStorage.getItem("decks"));
 
 		// Only Set decks from LS if no user -> DB state takes priority
-		if (localStorageDecks && !userId) {
+		if (localStorageDecks) {
 			console.log("Decks set from LS 📰");
-			updateReviewsDue(localStorageDecks);
-			setDecks(localStorageDecks);
+			const refreshed = updateReviewsDue(localStorageDecks);
+			setDecks(refreshed);
 			// Set selectedDeck to first deck
-			setSelectedDeck(localStorageDecks[0]);
+			setSelectedDeck(refreshed[0]);
 		}
+		setStorageReady(true);
 	}, []);
 
 	// Todo: validate updateReviewsDue/setSelectedDeck doesn't need to be called via the DB flow -> delete LS and login (add new card signed out > delete LS > sign in) -> represents logging into a new device for the first time or having no LS, solution: could move to fetchDecks db function -> should be 👍
 	// Fetch decks from DB, ONLY if there is a userId
 	// Only happens 1 TIME on page mount, thereafter, State is local via React/LS
 	const { isFetching } = useQuery({
-		queryKey: ["decks"],
+		queryKey: ["decks", userId],
 		queryFn: () =>
 			fetchDecks(userId, decks, setDecks, setSelectedDeck, updateReviewsDue),
-		enabled: !!userId,
+		enabled: !!userId && storageReady,
 		staleTime: Infinity,
 		refetchOnWindowFocus: false,
 	});
@@ -249,7 +184,7 @@ export default function Home() {
 			<Deck_Selector
 				drawerOpen={drawerOpen}
 				setDrawerOpen={setDrawerOpen}
-				decks={decks}
+				decks={refreshDecks(decks, now)}
 				setDecks={setDecks}
 				selectedDeck={selectedDeck}
 				setSelectedDeck={setSelectedDeck}
