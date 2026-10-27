@@ -5,7 +5,7 @@ dayjs.extend(relativeTime);
 
 function Mini_Card({ card, setSelectedCardId, color }) {
 	const [isFlipped, setIsFlipped] = useState(false);
-	const isDue = card.due_date < Date.now();
+	const isDue = card.review_due;
 
 	const handleFlip = (e) => {
 		e.stopPropagation();

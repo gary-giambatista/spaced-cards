@@ -14,17 +14,17 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-	return (
-		<ClerkProvider afterSignOutUrl="/loggedout">
-			<html lang="en">
-				<body className={`${nunito.className} flex flex-col h-dvh`}>
-					<Theme_Provider>
-						<Header />
-						<Query_Provider>{children}</Query_Provider>
-						<Footer />
-					</Theme_Provider>
-				</body>
-			</html>
-		</ClerkProvider>
-	);
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${nunito.className} flex flex-col h-dvh`}>
+        <ClerkProvider afterSignOutUrl="/loggedout">
+          <Theme_Provider>
+            <Header />
+            <Query_Provider>{children}</Query_Provider>
+            <Footer />
+          </Theme_Provider>
+        </ClerkProvider>
+      </body>
+    </html>
+  );
 }

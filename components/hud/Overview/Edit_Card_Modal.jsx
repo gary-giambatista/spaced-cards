@@ -16,10 +16,10 @@ function Edit_Card_Modal({
 		const formJson = Object.fromEntries(formData.entries());
 
 		// Create a copy of the card and update it
-		const editedCard = selectedCard;
+		const editedCard = {...selectedCard};
 		editedCard.question = formJson.question_input;
 		editedCard.answer = formJson.answer_input;
-		editedCard.hinter = formJson.hint_input;
+		editedCard.hint = formJson.hint_input;
 		editedCard.note = formJson.notes_input;
 
 		// Update selectedDeck with the edited card

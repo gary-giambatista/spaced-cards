@@ -1,5 +1,5 @@
 import { useTheme } from "next-themes";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { HashLoader } from "react-spinners";
 import Add_Card_Modal from "./Add_Card_Modal";
 import Card_Rows from "./Card_Rows";
@@ -20,31 +20,14 @@ function Overview({
 	setIsEditDeckModalOpen,
 	isFetching,
 }) {
-	const [selectedCardId, setSelectedCardId] = useState(0);
 	const [selectedCard, setSelectedCard] = useState(null);
 	const { theme } = useTheme();
 
 	const color = theme === "light" ? "#000" : "#ffffff";
 
-	// Re-render optimization Note -- these set states can be moved to children nodes to reduce the number of re-renders, but I don't believe this is necessary, and state flow is more manageable with his design
-	// console.log("Overview -- SELECTED CARD ID: ", selectedCardId);
-	// console.log("Overview -- SELECTED CARD: ", selectedCard);
-
-	// setSelectedCard when edit is clicked
-	useEffect(() => {
-		// 0 falsy -- short circuit if nothing to set
-		if (!selectedCardId) return;
-		setSelectedCard(
-			selectedDeck.cards[
-				selectedDeck.cards.findIndex((card) => card.id === selectedCardId)
-			]
-		);
-	}, [selectedCardId]);
-
-	// Reset selectedCardId to 0 (undefined) when a card is clicked (this allows the same card's Edit_Card_Modal to be opened more than once in a row since otherwise, selectedCardId doesn't change in state)
-	useEffect(() => {
-		setSelectedCardId(0);
-	}, [selectedCard]);
+	function setSelectedCardId(id) {
+    setSelectedCard(selectedDeck?.cards.find(card => card.id === id) || null);
+  }
 
 	// Handle fetching decks in DB
 	if (isFetching) {
@@ -96,7 +79,6 @@ function Overview({
 					setSelectedDeck={setSelectedDeck}
 					selectedCard={selectedCard}
 					setSelectedCard={setSelectedCard}
-					selectedCardId={selectedCardId}
 					setSelectedCardId={setSelectedCardId}
 					setIsEditDeckModalOpen={setIsEditDeckModalOpen}
 					setIsAddCardModalOpen={setIsAddCardModalOpen}
