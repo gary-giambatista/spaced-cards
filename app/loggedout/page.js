@@ -1,8 +1,7 @@
 "use client";
 
 function page() {
-	// Clear LS to avoid syncing issues between LS and DB on next login
-	localStorage.setItem("decks", null);
+	// Account-scoped local copies are retained for recovery.
 
 	return (
 		<div className="h-full w-full flex flex-col justify-center items-center gap-4">
