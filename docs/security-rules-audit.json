@@ -1,0 +1,5 @@
+{
+  "score": 5,
+  "summary": "Proposed deny-all Firestore client rules pass the scoped security review for a server-only architecture. This score applies only to direct client access, not server authorization, IAM, credentials, or the overall application. All 47 tests passed on 2026-10-27, including 72 denied operations across four client identities. Rules are not deployed.",
+  "findings": []
+}
