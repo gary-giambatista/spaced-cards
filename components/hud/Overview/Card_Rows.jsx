@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Edit_Card_Modal from "./Edit_Card_Modal";
 import Mini_Card from "./Mini_Card";
 import No_Filter_Or_Search_Results from "./No_Filter_Or_Search_Results";
@@ -12,7 +12,6 @@ function Card_Rows({
 	setIsEditDeckModalOpen,
 	setIsAddCardModalOpen,
 }) {
-	const [cards, setCards] = useState(selectedDeck.cards);
 	const [filterText, setFilterText] = useState("");
 	const [sortOption, setSortOption] = useState("");
 	const [isInputFocused, setIsInputFocused] = useState(false);
@@ -87,29 +86,9 @@ function Card_Rows({
 		return cards.filter((card) => card.review_due === true);
 	}
 
-	// Handles setting cards, when is used to render the Mini_Card's into rows
-	useEffect(() => {
-		// No filter input text or sort by select options: no sorting/filtering
-		if (!filterText && !sortOption) {
-			console.log("NO sorting/filters applied to cards");
-			return setCards(selectedDeck.cards);
-		}
-
-		// Sort and filtering happens here
-		if (sortOption === "is-due") {
-			return setCards(() => showOnlyDueCards(selectedDeck.cards));
-		}
-		if (sortOption && !filterText) {
-			console.log("Filtering by SELECT");
-			return setCards(() => sortAndFilterCards(selectedDeck.cards, true));
-		} else if (sortOption && filterText) {
-			console.log("Filtering by INPUT and SELECT");
-			return setCards(() => sortAndFilterCards(selectedDeck.cards, true));
-		} else if (filterText && !sortOption) {
-			console.log("Filtering by INPUT");
-			return setCards(() => sortAndFilterCards(selectedDeck.cards, false));
-		}
-	}, [filterText, sortOption, selectedDeck.cards]);
+	const cards = sortOption === "is-due"
+    ? showOnlyDueCards(selectedDeck.cards)
+    : sortAndFilterCards(selectedDeck.cards, Boolean(sortOption));
 
 	// Colors array for repeating background colors on just created cards
 	const colors = ["bg-[#5FB55D]", "bg-[#CBD748]", "bg-[#D74848]"];

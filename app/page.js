@@ -85,6 +85,7 @@ export default function Home() {
 				/>
 				{mode === "overview" ? (
 					<Overview
+                        key={`${userId || "guest"}:${selectedDeck?.id || "empty"}`}
 						setMode={setMode}
 						isAddCardModalOpen={isAddCardModalOpen}
 						setIsAddCardModalOpen={setIsAddCardModalOpen}

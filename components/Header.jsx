@@ -2,7 +2,7 @@
 
 import Logo from "@/public/Logo.png";
 import Logo2 from "@/public/Logo2.png";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
@@ -73,12 +73,12 @@ function Header() {
 					)}
 				</div>
 				{/* Clerk User Management */}
-				<SignedOut>
+				<Show when="signed-out">
 					<SignInButton mode="modal" />
-				</SignedOut>
-				<SignedIn>
+				</Show>
+				<Show when="signed-in">
 					<UserButton />
-				</SignedIn>
+				</Show>
 			</div>
 		</header>
 	);
