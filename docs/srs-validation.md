@@ -31,13 +31,5 @@ Run `npm ci` then `npm test -- --runInBand`.
 
 These tests validate deterministic scheduling/application behavior, not real-world retention efficacy.
 
-## Database limitations requiring follow-up
-Live Firebase inspection is blocked until connector login is completed. The mock tests do not prove production database access or security.
-- firebase.js targets project `spaced-cards`, default Firestore database.
-- There is no Firebase Auth sign-in or Clerk-to-Firebase token exchange in the repository. A Clerk user ID used in a document path is not Firebase authentication. Deployed rules must be checked before concluding whether access is denied or overly permissive.
-- Read/write helpers catch and log errors without surfacing them to the UI. fetchDecks also returns undefined, which is incompatible with a successful TanStack Query v5 result.
-- Cloud writes do not consistently cover empty-deck creation, and concurrent full-deck writes can overwrite changes from another device.
-- firebase.js references getApp without importing it when an app already exists.
-- Local storage uses a shared `decks` key rather than an account-specific key. Account switching and offline/cloud conflict handling need a separate persistence repair.
-
-No Firebase rules were weakened and no existing user documents were changed. This repair should be reviewed before production release. The application's older dependencies also need a separate security update; npm reported vulnerabilities during installation.
+## Persistence follow-up
+Firebase login now works. The deployed rules expired January 6, 2025, explaining rejected client access. The subsequent authenticated-server persistence implementation and remaining deployment requirements are documented in [cloud-persistence.md](cloud-persistence.md). The original Firestore adapter mocks were replaced with API and synchronization tests; the original 18-test count above records the initial SRS repair, not the expanded suite. The source still uses SM-2 and retains existing schedules.

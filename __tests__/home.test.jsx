@@ -8,15 +8,16 @@ jest.mock('@/components/hud/Deck_Selector/Deck_Selector', () => function Decks({
 jest.mock('@/components/hud/Hud_Header', () => () => null);
 jest.mock('@/components/hud/Overview/Overview', () => () => null);
 jest.mock('@/components/hud/Study/Study', () => () => null);
+function writeLocal(decks) { localStorage.setItem('spaced-cards:v1:guest', JSON.stringify({decks, version: null, dirty: false})); }
 const now = Date.UTC(2026, 9, 26, 12);
 beforeEach(() => { localStorage.clear(); jest.spyOn(Date, 'now').mockReturnValue(now); jest.spyOn(console, 'log').mockImplementation(() => {}); jest.spyOn(console, 'group').mockImplementation(() => {}); jest.spyOn(console, 'groupEnd').mockImplementation(() => {}); });
 afterEach(() => jest.restoreAllMocks());
 test('reload recomputes all decks, including after an empty deck and at the exact due time', () => {
-  localStorage.setItem('decks', JSON.stringify([
-    {id: 1, cards: [], reviews_due: 0},
-    {id: 2, cards: [{id: 2, due_date: now, review_due: false}], reviews_due: 0},
-    {id: 3, cards: [{id: 3, due_date: now + 1000, review_due: true}], reviews_due: 1},
-  ]));
+  writeLocal([
+    {id: 1, name: 'Empty', cards: [], reviews_due: 0},
+    {id: 2, name: 'Due', cards: [{id: 2, question: 'Q', answer: 'A', interval: 0, repetition: 0, efactor: 2.5, due_date: now, review_due: false}], reviews_due: 0},
+    {id: 3, name: 'Future', cards: [{id: 3, question: 'Q', answer: 'A', interval: 0, repetition: 0, efactor: 2.5, due_date: now + 1000, review_due: true}], reviews_due: 1},
+  ]);
   render(<Home/>);
   const decks = JSON.parse(screen.getByTestId('decks').textContent);
   expect(decks.find(d => d.id === 2).reviews_due).toBe(1);
