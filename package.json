@@ -24,6 +24,7 @@
 		"supermemo": "^2.0.17"
 	},
 	"devDependencies": {
+		"@firebase/rules-unit-testing": "3.0.4",
 		"@tanstack/eslint-plugin-query": "^5.50.1",
 		"@testing-library/jest-dom": "^6.4.5",
 		"@testing-library/react": "^14.3.1",
