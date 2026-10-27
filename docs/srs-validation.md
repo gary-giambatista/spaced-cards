@@ -1,6 +1,8 @@
 # SRS validation — October 26, 2026
 
 ## Result
+Historical investigation, followed by deployment on October 27, 2026. The current expanded suite contains 48 tests; the counts below describe the initial repair.
+
 The installed SuperMemo 2.0.17 scheduler produces expected SM-2 schedules. The surrounding application had reproducible defects. Keep SM-2 for this repair so existing interval, repetition, ease, and due dates remain compatible. FSRS would need an explicit migration and separate validation; replacing the library alone would not fix these defects.
 
 ## Reproduced before changes
@@ -17,7 +19,7 @@ Additional code findings fixed:
 - Due indicators did not advance while the page remained open.
 
 ## Changes
-Pure functions in library/srs.js handle scheduling, immutable due-state refresh, oldest-due selection, grade validation, and duplicate-review rejection. Due dates, not persisted booleans, determine eligibility. Study resets card presentation and recalculates review counts. Home refreshes due state, loads storage after mounting, and persists deck changes. Existing card fields and JSON format are retained; no data migration or production data writes were performed.
+Pure functions in library/srs.js handle scheduling, immutable due-state refresh, oldest-due selection, grade validation, and duplicate-review rejection. Due dates, not persisted booleans, determine eligibility. Study resets card presentation and recalculates review counts. Home refreshes due state, loads storage after mounting, and persists deck changes. Existing card fields and JSON format are retained; the initial investigation performed no production data writes. The repaired implementation was subsequently deployed.
 
 ## Automated verification
 Run `npm ci` then `npm test -- --runInBand`.
