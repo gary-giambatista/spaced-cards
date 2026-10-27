@@ -1,5 +1,7 @@
 # Firestore rules review — October 27, 2026
 
+**Historical pre-deployment audit.** The replacement rules and API were subsequently deployed on October 27, production-only credentials were configured, and live save/reload and two-account separation were verified. Observations below record the state at audit time.
+
 The proposed firestore.rules denies every direct client read and write, including authenticated users. This is appropriate for the new Clerk-authenticated server API, which uses Firebase Admin. Admin SDK access bypasses these rules; server authorization, validation, IAM and credential protection are separate security boundaries.
 
 Scoped rules assessment: 5/5, no direct-client authorization bypass found. This is not an overall application security score.

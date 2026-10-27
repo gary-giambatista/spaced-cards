@@ -1,6 +1,6 @@
 # Cloud persistence rollout
 
-Status: implemented and locally tested; NOT deployed. Production still uses the old client and its expired Firestore rules. No production user documents or credentials were changed by this implementation.
+Status: deployed October 27, 2026. The Clerk-authenticated API and deny-all client rules are live. Two-account separation and signed-in cloud save/reload were verified; the subsequent dependency modernization is also deployed.
 
 ## Architecture
 
@@ -25,7 +25,7 @@ Admin SDK access bypasses Firestore rules. Server authentication/authorization a
 
 ## Required deployment configuration
 
-A Firebase CLI login does not grant the Vercel server access. Configure server credentials before releasing this code:
+A Firebase CLI login does not grant the Vercel server access. For a new deployment, configure server credentials before releasing this code:
 
 1. Create a dedicated Google service account for this app in project `spaced-cards`. Grant the Firestore data access role `roles/datastore.user` (not Owner/Editor), scoped to the intended database where supported. The server account can access that database; per-user restrictions are enforced by the API.
 2. For this implementation's supported secret-based setup, add the dedicated account's JSON credential directly to Vercel as a **Production-only secret** named `FIREBASE_SERVICE_ACCOUNT_JSON`. Never paste it into chat, commit it, or prefix it `NEXT_PUBLIC_`. Set `FIREBASE_PROJECT_ID=spaced-cards` in Production. Alternatively configure a working Google ADC/workload identity setup; the code uses ADC when the JSON secret is absent.
@@ -33,7 +33,7 @@ A Firebase CLI login does not grant the Vercel server access. Configure server c
 4. Keep Clerk's existing keys in Production. Node 24 is already configured on Vercel.
 5. Take a controlled cloud export/snapshot before production release if broader disaster recovery is needed. The implementation adds per-user pre-migration backups atomically at first save; it has not performed a project-wide export.
 6. Deploy and verify a preview against test data: signed-out requests, two-account ownership isolation, create/edit/delete, review, reload, retry after failure and concurrent-tab conflict. Then stage a production build and verify before promotion.
-7. Deploy the explicit deny-all rules with `firebase deploy --only firestore:rules --project spaced-cards` only as part of the reviewed release. The current expired rules already deny clients; do not extend their expiration.
+7. Deploy the explicit deny-all rules with `firebase deploy --only firestore:rules --project spaced-cards` only as part of the reviewed release. The deployed rules explicitly deny clients; do not replace them with a time-based access grant.
 
 ## Tests
 
@@ -42,7 +42,7 @@ A Firebase CLI login does not grant the Vercel server access. Configure server c
 With Java 21+ and the Firebase CLI:
 
 ```
-firebase emulators:exec --only firestore --project demo-spaced-cards 'RUN_FIRESTORE_INTEGRATION=1 npm test -- --runInBand __tests__/firestore.integration.test.js'
+firebase emulators:exec --only firestore --project demo-spaced-cards 'RUN_FIRESTORE_INTEGRATION=1 npm test -- --runInBand '
 ```
 
 The integration suite requires a localhost emulator and uses only project `demo-spaced-cards`. It tests real transactional contention, immutable original backup, user-path separation and denied direct reads/writes/queries. It never contacts the production database.
@@ -55,7 +55,7 @@ firebase deploy --only firestore:rules --dry-run --project spaced-cards
 
 ## Remaining limits
 
-- Live two-account Clerk/Vercel verification awaits deployment credentials and test accounts.
+- Normal two-account switch/save/reload behavior was verified live. This does not constitute a full penetration test.
 - Conflicts are surfaced, not automatically merged. Export/reload is the initial recovery path.
 - Deck collections remain a single bounded document (700KB request maximum), preserving compatibility. Large collections need a future per-deck document migration.
-- Dependency security upgrades and FSRS migration are separate work. Do not interpret a successful build as a dependency security audit.
+- Dependency modernization was completed; see [dependency-modernization.md](dependency-modernization.md). FSRS remains deferred. Do not interpret a successful build as a dependency security audit.
